@@ -1,6 +1,6 @@
 # 싸피 2반 3팀
 
-2022-07-11 권순석 https://foregoing-circle-47e.notion.site/Web-RTC-aac4845e86d442b1bff36e47d5162c4b
+2022-07-11 권순석 - WebRTC 이론 - https://foregoing-circle-47e.notion.site/Web-RTC-aac4845e86d442b1bff36e47d5162c4b
 
 2022-07-11 김도연 - 홈 화면 설계 및 제작
 
@@ -9,3 +9,8 @@
 2022-07-11 염수홍 - 카카오 오븐 회원가입 페이지 화면 설계 https://wooss.notion.site/b6ce3efb0fef4871ad2e5b7cf5f814bb
 
 2022-07-11 이상진 - Kurento 사용에 대한 검토
+
+---
+
+2022-07-12 권순석 - Gradle - https://foregoing-circle-47e.notion.site/Intellij-Git-Springboot-9efb1d81d2ea4f119c4bad55d4a7620e
+
