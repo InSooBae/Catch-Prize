@@ -19,3 +19,5 @@
 2022-07-12 염수홍 - 로비 화면 설계 및 오프라인(7/13~7/15)간의 계획 수립
 
 2022-07-12 김도연 - front 스케치 - https://cerulean-lathe-7d8.notion.site/front-b50d31a0ad364a458f1f8976aef43651
+
+2022-07-12 이상진 - Kurento 미디어 서버 설치
