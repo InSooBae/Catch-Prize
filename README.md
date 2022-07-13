@@ -27,3 +27,5 @@
 2022-07-13 권순석 - Git - https://soonseok2.notion.site/Git-Springboot-JPA-a65f7f07d71149cdaefc69ecb879d88a
 
 2022-07-13 이상진 - Coturn 설치, 게임 세부 룰 및 컨셉 기획 참여
+
+2022-07-13 배인수 - 백엔드 세팅(QueryDSL, jasypt), 게임 세부 룰 및 컨셉 기획
