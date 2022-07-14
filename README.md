@@ -44,7 +44,7 @@
 
 2022-07-14 이상진 - 
 
-2022-07-14 배인수 - 
+2022-07-14 배인수 - 요구사항 정리, ERD 논의, [JPA 공부](https://awesome-gardenia-42a.notion.site/eaf33cd0c1f844b8ae5e72583e1573f7?v=96e50ff3266d47a8831b98214cd17bfa)
 
 2022-07-14 황태희 - 
 
