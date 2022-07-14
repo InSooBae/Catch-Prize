@@ -7,8 +7,14 @@
     "preview": "vite preview --port 4173"
   },
   "dependencies": {
+    "axios": "^0.27.2",
+    "core-js": "^3.23.4",
+    "element-plus": "^2.2.9",
+    "lodash": "^4.17.21",
     "vue": "^3.2.37",
-    "vue-router": "^4.1.2"
+    "vue-axios": "^3.4.1",
+    "vue-router": "^4.1.2",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
