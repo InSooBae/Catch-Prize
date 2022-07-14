@@ -42,7 +42,7 @@
 
 2022-07-14 권순석 - 요구사항 정리, ERD 논의, Git 공부 이어서 진행
 
-2022-07-14 이상진 - 
+2022-07-14 이상진 - 요구사항 정리, ERD 논의, STUN/TURN 테스트
 
 2022-07-14 배인수 - 요구사항 정리, ERD 논의, [JPA 공부](https://awesome-gardenia-42a.notion.site/eaf33cd0c1f844b8ae5e72583e1573f7?v=96e50ff3266d47a8831b98214cd17bfa)
 
