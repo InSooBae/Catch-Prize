@@ -1,9 +1,19 @@
 <template>
   <div>
-    
-    <label class="input-file-button" for="img-upload">
-      File Upload
-    </label>
+    <!-- 배경적용 -->
+    <!-- 인풋 color opatcity 적용 -->
+    <!-- profile 이미지 생성 -->
+    <!-- nickname, email, birthday, profile사진 받아서 넘겨주기 -->
+
+    <!-- profile box -->
+    <div class="profile-box">
+      <img>
+      <label class="input-file-button" for="img-upload">
+        File Upload
+      </label>
+    </div>
+
+    <!-- nickname, email, birthday input and submit button for signup -->
     <ul class="signup_input">
       <input 
         type="file"
@@ -18,6 +28,8 @@
           maxlength="10"
           placeholder="Enter your nickname"
           pattern="[A-Za-z]+"
+          autocomplete='off'
+          spellcheck="false"
           required
         />
       <p>* email</p>
@@ -27,6 +39,8 @@
           id="email"
           :v-model="email"
           placeholder="Enter your email"
+          autocomplete='off'
+          spellcheck="false"
           required
         />
       <p>birthday</p>
@@ -34,6 +48,7 @@
           id="birthday"
           type="date"
           v-model="birthday"  
+          max="2999-12-31"
         />
       <div>
         <!-- 제출 버튼 -->

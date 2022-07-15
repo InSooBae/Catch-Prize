@@ -30,7 +30,7 @@
   ime-mode: disabled;
   /* border */
   border: 0;
-  border-bottom: 1px solid #00BD9D;
+  border-bottom: 0.7px solid #00BD9D;
 }
 /* input focused 설정 */
 .signup_input input:focus {
@@ -39,7 +39,7 @@
   /* outline */
   padding-bottom: 1em;
   border-radius: 7px;
-  box-shadow: 0 0 0 1px #00BD9D;
+  box-shadow: 0 0 0 0.7px #00BD9D;
   outline: none;
   /* font */
   color: white;
