@@ -1,5 +1,5 @@
 <script setup>
-import PhaserContainer from '@/components/PhaserContainer.vue'
+import PhaserContainer from '@/components/sample-game/SamplePhaserContainer.vue'
 </script>
 
 <template>
