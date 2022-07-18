@@ -59,3 +59,8 @@
 2022-07-15 김도연 - Phaser 학습 및 샘플 게임 제작
 
 2022-07-15 염수홍 - Lobby, SideBar(친구목록, 전적, 회원정보 수정), Login, SignUp 화면 설계 마무리, Signup 요소 설계
+
+---
+
+2022-07-18 권순석 - DB 설계 https://www.erdcloud.com/d/vxrctjyZSWAZWwrkv
+
