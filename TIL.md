@@ -64,3 +64,4 @@
 
 2022-07-18 권순석 - DB 설계 https://www.erdcloud.com/d/vxrctjyZSWAZWwrkv
 
+2022-07-18 김도연 - 게임 장면 설계 및 샘플 게임 제작후 업로드
