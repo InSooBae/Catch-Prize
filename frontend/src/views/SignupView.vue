@@ -1,7 +1,11 @@
+<script setup>
+  import StarBackground from '@/components/StarBackground.vue'
+</script>
+
 <template>
   <div>
-    <!-- 배경적용 -->
-    <!-- 인풋 color opatcity 적용 -->
+    <StarBackground />
+
     <!-- profile 이미지 생성 -->
     <!-- nickname, email, birthday, profile사진 받아서 넘겨주기 -->
 
@@ -62,8 +66,4 @@
 <style>
 /* signup.css파일  */
 @import '../assets/signup.css';
-/* galmuri 한글폰트 cdn */
-@import url('https://cdn.jsdelivr.net/npm/galmuri@latest/dist/galmuri.css');
-/* press start 2p font cdn */
-@import url('http://fonts.cdnfonts.com/css/press-start-2p');
 </style>
