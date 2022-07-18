@@ -1,8 +1,18 @@
 import { Scene } from 'phaser'
+import sky from '@/game/assets/sky.png'
+import bomb from '@/game/assets/bomb.png'
+import thudMp3 from '@/game/assets/thud.mp3'
+import thudOgg from '@/game/assets/thud.ogg'
 
-export default class PlayScene extends Scene {
+export default class Sample2GameScene extends Scene {
   constructor () {
-    super({ key: 'PlayScene' })
+    super({ key: 'Sample2GameScene' })
+  }
+
+  preload () {
+    this.load.image('sky', sky)
+    this.load.image('bomb', bomb)
+    this.load.audio('thud', [thudMp3, thudOgg])
   }
 
   create () {
@@ -18,8 +28,5 @@ export default class PlayScene extends Scene {
     this.physics.world.on('worldbounds', () => {
       this.sound.play('thud', { volume: 0.75 })
     })
-  }
-
-  update () {
   }
 }
