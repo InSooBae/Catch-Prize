@@ -67,3 +67,5 @@
 2022-07-18 김도연 - 게임 장면 설계 및 샘플 게임 제작후 업로드
 
 2022-07-18 배인수 - ERD Cloud를 통한 DB 설계 https://www.erdcloud.com/d/vxrctjyZSWAZWwrkv
+
+2022-07-18 염수홍 - 게임 장면 설계, CSS 선언 규칙 적용, 게임 로직 파악
