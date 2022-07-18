@@ -1,6 +1,6 @@
 # 싸피 2반 3팀
 
-2022-07-11 권순석 - WebRTC 이론 - https://foregoing-circle-47e.notion.site/Web-RTC-aac4845e86d442b1bff36e47d5162c4b
+2022-07-11 권순석 - WebRTC 이론 - https://soonseok2.notion.site/Web-RTC-aac4845e86d442b1bff36e47d5162c4b
 
 2022-07-11 김도연 - 홈 화면 설계 및 제작
 
@@ -12,8 +12,20 @@
 
 ---
 
-2022-07-12 권순석 - Gradle - https://foregoing-circle-47e.notion.site/Intellij-Git-Springboot-9efb1d81d2ea4f119c4bad55d4a7620e
+2022-07-12 권순석 - Gradle - https://soonseok2.notion.site/Intellij-Springboot-Maven-Gradle-9efb1d81d2ea4f119c4bad55d4a7620e
 
 2022-07-12 황태희 - front 계획 - https://moored-submarine-4a9.notion.site/Front-927daf8e46ef4dbab7a807a186442c0e
 
 2022-07-12 염수홍 - 로비 화면 설계 및 오프라인(7/13~7/15)간의 계획 수립
+
+2022-07-12 김도연 - front 스케치 - https://cerulean-lathe-7d8.notion.site/front-b50d31a0ad364a458f1f8976aef43651
+
+2022-07-12 이상진 - Kurento 미디어 서버 설치
+
+---
+
+2022-07-13 권순석 - Git - https://soonseok2.notion.site/Git-Springboot-JPA-a65f7f07d71149cdaefc69ecb879d88a
+
+2022-07-13 이상진 - Coturn 설치, 게임 세부 룰 및 컨셉 기획 참여
+
+2022-07-13 배인수 - 백엔드 세팅(QueryDSL, jasypt), 게임 세부 룰 및 컨셉 기획

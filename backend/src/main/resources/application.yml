@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/catchprize?serverTimezone=Asia/Seoul
+    username: ssafy
+    password: ssafy
+
+  jpa:
+    hibernate:
+      # 개발 단계에서만 이용
+      ddl-auto: create-drop
+      # ddl-auto: validate
+    properties:
+      hibernate:
+        #        show_sql: true
+        format_sql: true
+
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
