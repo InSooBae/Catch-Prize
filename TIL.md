@@ -75,4 +75,7 @@
 ---
 
 2022-07-19 권순석 - Springboot + JPA 학습 https://soonseok2.notion.site/Springboot-JPA-65751a25437c4553a07fec28eaca0556
+
 2022-07-19 배인수 - JPA 학습 https://awesome-gardenia-42a.notion.site/eaf33cd0c1f844b8ae5e72583e1573f7?v=96e50ff3266d47a8831b98214cd17bfa
+
+2022-07-19 김도연 - 샘플 게임 세팅 및 게임 카드 디자인
