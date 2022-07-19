@@ -71,3 +71,7 @@
 2022-07-18 염수홍 - 게임 장면 설계, CSS 선언 규칙 적용, 게임 로직 파악
 
 2022-07-18 이상진 - 시그널링 서버 구축
+
+---
+
+2022-07-19 권순석 - Springboot + JPA 학습 https://soonseok2.notion.site/Springboot-JPA-65751a25437c4553a07fec28eaca0556
