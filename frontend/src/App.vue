@@ -15,3 +15,15 @@ import { RouterLink, RouterView } from 'vue-router'
   </header>
   <RouterView />
 </template>
+
+
+<style>
+.v-application {
+  font-family: 'PressStart2P', sans-serif !important;
+}
+@font-face {
+  font-family:'PressStart2P';
+  src: url('assets/fonts/PressStart2P-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+</style>
