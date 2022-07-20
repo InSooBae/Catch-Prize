@@ -31,7 +31,6 @@ export default class SampleGameScene extends Scene {
 
   create () {
     this.add.image(400, 300, 'sky')
-    this.add.image(400, 300, 'star')
 
     platforms = this.physics.add.staticGroup();
 
