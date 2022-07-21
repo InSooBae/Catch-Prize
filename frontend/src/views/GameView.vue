@@ -1,7 +1,7 @@
 <script setup>
-import Game from '@/components/sample-game/SampleGame.vue'
+import Game from "../components/hobulho-game/HobulhoGame.vue"
 </script>
 
 <template>
-  <Game />
+  <Game/>
 </template>
