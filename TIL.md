@@ -95,3 +95,7 @@
 2022-07-20 김도연 - 게임 장면 설계, 게임 로직 설계
 
 2022-07-20 이상진 - WebRTC 연결(WAN)
+
+---
+
+2022-07-21 권순석 - JPA https://soonseok2.notion.site/JPA-3869b4ebf5e54ad49356ddccf4d4be0f Nginx https://soonseok2.notion.site/NGINX-WS-WAS-fd85d62e22154034854f073632839b25
