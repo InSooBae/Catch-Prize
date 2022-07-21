@@ -27,8 +27,14 @@ const app = https.createServer(options, function(req, res) {
 }).listen(SERVER_PORT);
 
 const io = socketIO.listen(app);
-io.sockets.on("connection", function(socket) {
-  socket.on("event", (data) => {
 
+const rooms = {};
+
+io.sockets.on("connection", function(socket) {
+  socket.on("enter", ({userName, roomName}) => {
+    rooms[roomName] = [userName];
+    socket.join(roomName);
+    io.to(roomName).emit("ROOM-notify-join", userName);
+    console.log("userName: ", userName, "roomName: ", roomName);
   });
 });
