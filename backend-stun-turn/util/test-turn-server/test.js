@@ -1,6 +1,6 @@
 // https://stackoverflow.com/questions/28772212/stun-turn-server-connectivity-test
 
-const TURN_SERVER_URI = "turn:ec2-15-164-220-76.ap-northeast-2.compute.amazonaws.com";
+const TURN_SERVER_URI = "turn:13.125.182.230:3478";
 
 function checkTURNServer(turnConfig, timeout) {
   return new Promise(function (resolve, reject) {
