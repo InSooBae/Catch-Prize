@@ -1,6 +1,8 @@
 "use strict";
 
-const socket = io.connect();
+const SERVER_ROOM_URL = "https://localhost:3010";
+
+const socket = io.connect(SERVER_ROOM_URL);
 
 const userName = (Math.random() + 1).toString(36).substring(7);
 document.querySelector("#userName").innerHTML = userName;
