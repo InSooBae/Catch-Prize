@@ -26,19 +26,17 @@ export default {
 .ingame-profile{
   
   height: 100%;
-  width: 500px;
-  background-size: cover;
-  background-color: #1B2130;
-  position: relative;
+  width: 100%;
   display: flex;
+  background-color: #1B2130;
   border-radius: 20px;
 }
 .left-container{
-  position: relative;
   border: none;
   padding: 20px;
   display: flex;
   flex-direction: row;
+
 }
 .status-text{
   color: white;

@@ -15,6 +15,6 @@ export default {
   color: white;
   font-family: "PressStart2P";
   font-size: 10px;
-  width: 500px;
+  width: 100%;
 }
 </style>

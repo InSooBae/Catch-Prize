@@ -34,15 +34,16 @@ export default {
   background-color: #1B2130;
   border-radius: 20px;
   height: 100%;
-  width: 100%;
 }
 
 .timer{
+  width: 20%;
   position: absolute;
-  right: 15px;
+  right: 10%;
 }
 .guide{
+  width: 60%;
   position: absolute;
-  left: 15px;
+  left: 10%;
 }
 </style>

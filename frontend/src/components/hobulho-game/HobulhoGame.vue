@@ -39,11 +39,21 @@ export default {
 }
 .header-container{
   height: 100%;
+  width: 100%;
   margin-bottom: 20px;
 }
 .main-container{
-  height: 650px;
   display: flex;
   flex-direction: row;
+}
+.left-home{
+  width: 30%;
+  min-width: 400px;
+  min-height: 800px;
+}
+.right-home{
+  width: 70%;
+  margin-left: 20px;
+  min-height: 800px;
 }
 </style>

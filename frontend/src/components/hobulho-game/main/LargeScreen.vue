@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img src="../assets/Person.png" alt="비디오">
+    <img class="large-face-cam" src="../assets/Person.png" alt="비디오">
   </div>
 </template>
 
@@ -14,5 +14,8 @@ export default {
 </script>
 
 <style>
-
+.large-face-cam{
+  width: 100%;
+  height: 100%;
+}
 </style>

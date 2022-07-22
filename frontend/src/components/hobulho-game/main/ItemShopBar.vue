@@ -1,26 +1,45 @@
 <template>
   <div class="itemshop-container">
-    <img src="../assets/loginButton.png" alt="">
-    <img src="../assets/loginButton.png" alt="">
-    <img src="../assets/loginButton.png" alt="">
-    <img src="../assets/loginButton.png" alt="">
-    <img src="../assets/loginButton.png" alt="">
-    <img src="../assets/loginButton.png" alt="">
+    <div>
+      <img src="../assets/loginButton.png" alt="" />
+    </div>
+    <div>
+      <img src="../assets/loginButton.png" alt="" />
+    </div>
+    <div>
+      <img src="../assets/loginButton.png" alt="" />
+    </div>
+    <div>
+      <img src="../assets/loginButton.png" alt="" />
+    </div>
+    <div>
+      <img src="../assets/loginButton.png" alt="" />
+    </div>
+    <div>
+      <img src="../assets/loginButton.png" alt="" />
+    </div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "itemshop",
-  components:{
-    
-  }
+  components: {},
 };
 </script>
 
 <style>
-.itemshop-container img{
-  /* max-width: 100px; */
+.itemshop-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+.itemshop-container div{
+  width: 16%;
+}
+.itemshop-container img {
+  width: 100%;
+  height: 100%;
 }
 </style>

@@ -57,8 +57,9 @@ export default {
 
 <style>
 .player-container{
-  width: 475px;
-  height: 233px;
+  width: 100%;
+  /* width: 100%; */
+  height: 100%;
   margin: 5px;
   padding-top: 10px;
   background-color: #1B2130;
@@ -67,29 +68,33 @@ export default {
 .status-container {
   
   margin-left: 30px;
+  padding-bottom: 10px;
+  height: 40%;
   display: flex;
   flex-direction: row;
 }
 .card{
+  margin: 5px;
+  width: 14%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .card-field {
-  margin-left: 30px;
+  height: 60%;
+  /* margin-left: 30px; */
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  /* border: 1px solid white; */
 }
 .card-img {
-  border: 1px solid white;
-  border-radius: 10px;
-  width: 70px;
-  height: 90px;
+  width: 100%;
 }
 .card img{
-  border-radius: 10px;
+  border-radius: 10%;
   width: 100%;
-  height: 100%;
+  border: 1px solid white;
 }
 .num{
   color: white;
