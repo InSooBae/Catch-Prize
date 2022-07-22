@@ -2,39 +2,46 @@
 
 const SERVER_PORT = 3010;
 
-const https = require("https");
-const fs = require("fs");
-const nodeStatic = require("node-static");
-const socketIO = require("socket.io");
-const fileServer = new(nodeStatic.Server)();
+const base64url = require("base64url");
+const { randomBytes } = require("crypto");
+const { readFileSync } = require("fs");
+const { createServer } = require("https");
+const { Server:SocketServer } = require("socket.io");
+const { Server:nodeStaticServer } = require("node-static");
+
 const options = {
-	key: fs.readFileSync("./private.pem"),
-	cert: fs.readFileSync("./public.pem")
+	key: readFileSync("./private.pem"),
+	cert: readFileSync("./public.pem")
 };
 
-const app = https.createServer(options, function(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET");
-  res.setHeader("Access-Control-Max-Age", 2592000); // 30 days
-
+const fileServer = new nodeStaticServer("./public");
+const httpsServer = createServer(options, (req, res) => {
   if (req.method === "OPTIONS") {
     res.writeHead(204, headers);
     res.end();
     return;
   }
 
-  fileServer.serve(req, res);
+  res.statusCode = 200;
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "OPTIONS, GET");
+  res.setHeader("Access-Control-Max-Age", 2592000); // 30 days
+  res.setHeader("Content-Type", "text/html");
+
+  req.addListener("end", () => {
+    fileServer.serve(req, res);
+  }).resume();
 }).listen(SERVER_PORT);
 
-const io = socketIO.listen(app);
+const io = new SocketServer(httpsServer);
 
 const rooms = {};
 
 io.sockets.on("connection", function(socket) {
-  socket.on("enter", ({userName, roomName}) => {
-    rooms[roomName] = [userName];
+  socket.on("create-room-req", ({userName, roomName}) => {
+    rooms[roomName] = {}
     socket.join(roomName);
-    io.to(roomName).emit("ROOM-notify-join", userName);
+    io.to(roomName).emit("", userName);
     console.log("userName: ", userName, "roomName: ", roomName);
   });
 });
