@@ -17,6 +17,11 @@ joinRoomBtn.addEventListener("click", (event) => {
   socket.emit("join-room-req", { userName, roomId });
 });
 
+const getRoomsBtn = document.querySelector("#getRoomsBtn");
+getRoomsBtn.addEventListener("click", (event) => {
+  socket.emit("get-rooms-req");
+});
+
 socket.on("created-room-notify", (name) => {
   console.log(`You ${name} has created the room!`);
 });
@@ -25,6 +30,9 @@ socket.on("joined-room-notify", (name) => {
   console.log(`${name} has joined the room!`);
 });
 
+socket.on("get-rooms-resp", (rooms) => {
+  console.log(rooms);
+});
 
 // socket.emit("event", "data");
 

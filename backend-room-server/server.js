@@ -58,6 +58,10 @@ io.sockets.on("connection", function(socket) {
     io.to(roomId).emit("joined-room-notify", userName);
   });
 
+  socket.on("get-rooms-req", () => {
+    io.to(socket.id).emit("get-rooms-resp", rooms);
+  });
+
   // socket.on("event", (data) => {
   //   io.emit("event", "broadcast to all peers include sender");
   //   io.to(socket.id).emit("event", "private msg to sender");
