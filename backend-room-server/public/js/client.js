@@ -7,19 +7,27 @@ document.querySelector("#userName").innerHTML = userName;
 
 const createRoomBtn = document.querySelector("#createRoomBtn");
 const joinRoomBtn = document.querySelector("#joinRoomBtn");
-
 createRoomBtn.addEventListener("click", (event) => {
   const roomName = document.querySelector("#createRoomInput").value;
   document.querySelector("#roomName").innerHTML = roomName;
   socket.emit("create-room-req", { userName, roomName });
 });
-
-socket.emit("event", "data");
-
-socket.on("event", (data) => {
-  // logic
-})
+joinRoomBtn.addEventListener("click", (event) => {
+  const roomId = document.querySelector("#joinRoomInput").value;
+  socket.emit("join-room-req", { userName, roomId });
+});
 
 socket.on("created-room-notify", (name) => {
-  console.log(`${name} has joined the room!!!`);
+  console.log(`You ${name} has created the room!`);
 });
+
+socket.on("joined-room-notify", (name) => {
+  console.log(`${name} has joined the room!`);
+});
+
+
+// socket.emit("event", "data");
+
+// socket.on("event", (data) => {
+//   console.log("got an event");
+// });

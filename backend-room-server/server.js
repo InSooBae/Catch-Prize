@@ -47,10 +47,22 @@ io.sockets.on("connection", function(socket) {
       users
     };
     socket.join(roomId);
-    console.log(rooms);
     io.to(roomId).emit("created-room-notify", userName);
-    console.log("userName: ", userName, "roomName: ", roomName);
   });
+
+  socket.on("join-room-req", ({ userName, roomId }) => {
+    if (!roomId in rooms) {
+      return;
+    }
+    socket.join(roomId);
+    io.to(roomId).emit("joined-room-notify", userName);
+  });
+
+  // socket.on("event", (data) => {
+  //   io.emit("event", "broadcast to all peers include sender");
+  //   io.to(socket.id).emit("event", "private msg to sender");
+  //   io.to(roomId).emit("event", "msg to peers in room");
+  // });
 });
 
 function generateRandomUrlSafeString(len) {
