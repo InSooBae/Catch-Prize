@@ -32,16 +32,20 @@ const httpsServer = createServer(options, (req, res) => {
     fileServer.serve(req, res);
   }).resume();
 }).listen(SERVER_PORT);
-
 const io = new SocketServer(httpsServer);
 
 const rooms = {};
 
 io.sockets.on("connection", function(socket) {
   socket.on("create-room-req", ({userName, roomName}) => {
+    const roomId = generateRandomUrlSafeString(20);
     rooms[roomName] = {}
     socket.join(roomName);
     io.to(roomName).emit("", userName);
     console.log("userName: ", userName, "roomName: ", roomName);
   });
 });
+
+function generateRandomUrlSafeString(len) {
+  return base64url(randomBytes(len));
+}
