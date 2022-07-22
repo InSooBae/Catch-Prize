@@ -1,6 +1,12 @@
 "use strict";
 
-const SERVER_PORT = 3010;
+const args = {};
+for (let i = 2; i < process.argv.length; i++) {
+  const splitted = process.argv[i].split('=');
+  args[splitted[0]] = splitted[1];
+}
+
+const SERVER_PORT = args.ROOM_SERVER_PORT || 3010;
 
 const base64url = require("base64url");
 const { randomBytes } = require("crypto");
