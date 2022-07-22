@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Member {
 
     @Id
-    @Column(columnDefinition = "binary(16)", updatable = false)
+    @Column(name = "member_id",columnDefinition = "binary(16)", updatable = false)
     private UUID id;
 
     @Column(name = "nickname")
