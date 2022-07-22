@@ -2,10 +2,19 @@ package com.ssafy.webrtc.domain.membergame.domain;
 
 import com.ssafy.webrtc.domain.game.domain.Game;
 import com.ssafy.webrtc.domain.member.domain.Member;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@Table(name = "member_game")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+// FIXME: 우선 Setter 열어두고 개발 추후 생성자로 변경 예정
+@Setter
 public class MemberGame {
 
     @Id @GeneratedValue
