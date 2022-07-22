@@ -17,10 +17,10 @@ import java.util.UUID;
 public class Member {
 
     @Id
-    @Column(name = "member_id",columnDefinition = "binary(16)", updatable = false)
+    @Column(name = "member_id", columnDefinition = "binary(16)", updatable = false)
     private UUID id;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname", length = 20)
     private String nickname;
 
     @Column(name = "token")
@@ -68,6 +68,6 @@ public class Member {
     private String getUUIDString() {
         UUID uuid = Generators.timeBasedGenerator().generate();
         String[] uuidArr = uuid.toString().split("-");
-        return uuidArr[2]+uuidArr[1]+uuidArr[0]+uuidArr[3]+uuidArr[4];
+        return uuidArr[2] + uuidArr[1] + uuidArr[0] + uuidArr[3] + uuidArr[4];
     }
 }
