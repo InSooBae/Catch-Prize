@@ -101,3 +101,5 @@
 2022-07-21 권순석 - JPA https://soonseok2.notion.site/JPA-3869b4ebf5e54ad49356ddccf4d4be0f Nginx https://soonseok2.notion.site/NGINX-WS-WAS-fd85d62e22154034854f073632839b25
 
 2022-07-21 배인수 - JPA https://awesome-gardenia-42a.notion.site/eaf33cd0c1f844b8ae5e72583e1573f7?v=96e50ff3266d47a8831b98214cd17bfa
+
+2022-07-21 염수홍 - 컴포넌트 업데이트, timer 제작, vue3 공부
