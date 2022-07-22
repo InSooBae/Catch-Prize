@@ -32,29 +32,4 @@ const formLabelAlign = reactive({
 </script>
 
 <style>
-.update-form {
-  height: 100%;
-  overflow: auto;
-}
-
-.el-input__wrapper {
-  box-shadow: 0 0 0 2px #00bd9d inset;
-  border: solid 2px #00bd9d;
-  background-color: transparent;
-}
-
-.profile-update-button {
-  border: none;
-  font-family: "PressStart2P";
-  font-size: medium;
-  width: 100%;
-  height: 38px;
-  border-radius: 8px;
-  color: white;
-  margin-top: 5px;
-}
-
-.profile-update-button:hover {
-  color: gray;
-}
 </style>

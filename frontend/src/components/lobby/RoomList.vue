@@ -61,9 +61,5 @@ import RoomItem from '@/components/lobby/RoomItem.vue'
   </ul>
 </template>
 
-<style>
-.room-list {
-  padding: 0;
-  width: 100%;
-}
+<style> 
 </style>

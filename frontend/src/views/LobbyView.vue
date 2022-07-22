@@ -24,33 +24,5 @@ import SideBar from '@/components/lobby/SideBar.vue'
 </template>
 
 <style>
-.lobby-layout .el-container{
-  height: 100vh;
-  font-family: "PressStart2P";
-}
-.lobby-layout .el-aside{
-  /* color: #0F1E33; */
-  background-color: #0F1E33;
-  padding: 0 40px 40px 40px;
-}
-.lobby-layout .el-header{
-  height: 80px;
-  background-color: #0F1E33;
-  padding: 28px 10px 0px 10px;
-}
-.lobby-layout .el-header span{
-  font-size: 15px;
-  color: white;
-}
-.el-main::-webkit-scrollbar {
-  width: 10px;
-}
-.el-main::-webkit-scrollbar-thumb {
-  background-color: #0F1E33;
-  border-radius: 10px;
-}
-.el-main::-webkit-scrollbar-track {
-  background-color: transparent;
-  border-radius: 10px;
-}
+@import '../assets/lobby.css';
 </style>

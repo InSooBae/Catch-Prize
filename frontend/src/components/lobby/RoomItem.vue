@@ -7,12 +7,4 @@
 </template>
 
 <style>
-.room-item{
-  background-color: #0F1E33;
-  padding: 10px;
-  margin: 15px;
-  border-radius: 15px;
-  width: 330px;
-  height: 150px;
-}
 </style>
