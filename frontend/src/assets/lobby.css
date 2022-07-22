@@ -1,0 +1,343 @@
+.lobby-layout .el-container {
+  /* layout */
+  /* BOX */
+  height: 100vh;
+  /* background */
+  /* font */
+  font-family: "PressStart2P";
+  /* border */
+
+}
+
+.lobby-layout .el-aside {
+  /* layout */
+  padding: 0 40px 40px 40px;
+  /* BOX */
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+}
+
+.lobby-layout .el-header {
+  /* layout */
+  padding: 28px 10px 0px 10px;
+  /* BOX */
+  height: 80px;
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+}
+
+.lobby-layout .el-header span {
+  /* layout */
+  /* BOX */
+  /* background */
+  /* font */
+  font-size: 15px;
+  color: white;
+  /* border */
+}
+
+.el-main::-webkit-scrollbar {
+  width: 10px;
+}
+
+.el-main::-webkit-scrollbar-thumb {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+  border-radius: 10px;
+}
+
+.el-main::-webkit-scrollbar-track {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  /* border */
+  border-radius: 10px;
+}
+
+#sidebar {
+  /* layout */
+  margin-bottom: 10px;
+  /* BOX */
+  /* background */
+  background-color: #262C3A;
+  /* font */
+  /* border */
+  border-radius: 10px;
+}
+
+.sidebar-profile {
+  /* layout */
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  /* BOX */
+  /* background */
+  /* font */
+  font-family: sans-serif;
+  color: whitesmoke;
+  /* border */
+  border-bottom: solid 1px;
+  border-color: #2c3e50;
+}
+
+.sidebar-element {
+  height: 50vh;
+}
+
+@media (max-height: 850px) {
+  .sidebar-element {
+    height: 46vh;
+  }
+}
+
+@media (max-height: 800px) {
+  .sidebar-element {
+    height: 44vh;
+  }
+}
+
+@media (max-height: 770px) {
+  .sidebar-element {
+    height: 43vh;
+  }
+}
+
+@media (max-height: 730px) {
+  .sidebar-element {
+    height: 42vh;
+  }
+}
+
+@media (max-height: 700px) {
+  .sidebar-element {
+    height: 37vh;
+  }
+}
+
+@media (max-height: 650px) {
+  .sidebar-element {
+    height: 31vh;
+  }
+}
+
+@media (max-height: 600px) {
+  .sidebar-element {
+    height: 26vh;
+  }
+}
+
+@media (max-height: 550px) {
+  .sidebar-element {
+    height: 17vh;
+  }
+}
+
+#sidebar>.el-tabs__content {
+  /* layout */
+  padding: 15px;
+  /* BOX */
+  /* background */
+  background-color: #262C3A;
+  /* font */
+  /* border */
+  border-radius: 15px;
+}
+
+.el-tabs__active-bar {
+  background-color: white;
+}
+
+.el-tabs__nav {
+  /* layout */
+  padding: 0px 25px;
+  /* BOX */
+  /* background */
+  /* font */
+  /* border */
+  border-bottom: solid #0F1E33;
+}
+
+.el-tabs__item {
+  /* layout */
+  padding: 0px 5px;
+  margin: 0px 5px;
+  /* BOX */
+  /* background */
+  /* font */
+  /* border */
+  background-color: #262C3A;
+}
+
+.start-button {
+  /* layout */
+  height: 60px;
+  /* BOX */
+  width: 100%;
+  /* background */
+  /* font */
+  font-family: "PressStart2P";
+  font-size: medium;
+  color: whitesmoke;
+  /* border */
+  border: none;
+  border-radius: 10px;
+}
+
+.start-button:hover {
+  color: gray;
+}
+
+.el-dialog {
+  /* layout */
+  /* BOX */
+  width: 500px;
+  /* background */
+  background-color: #262C3A;
+  /* font */
+  /* border */
+  border-radius: 10px;
+  border: solid #f2e53bCC;
+}
+
+.el-dialog__title {
+  color: whitesmoke;
+}
+
+.el-dialog__body {
+  color: whitesmoke;
+}
+
+.el-form::-webkit-scrollbar {
+  width: 5px;
+}
+
+.el-form::-webkit-scrollbar-thumb {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+  border-radius: 5px;
+}
+
+.el-form::-webkit-scrollbar-track {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  /* border */
+  border-radius: 5px;
+}
+
+.friends-item {
+  /* layout */
+  /* BOX */
+  /* background */
+  /* font */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: whitesmoke;
+  /* border */
+  border-bottom: solid 1px #2c3e50;
+}
+
+.el-tab-pane {
+  overflow: auto;
+}
+
+.el-tab-pane::-webkit-scrollbar {
+  width: 5px;
+}
+
+.el-tab-pane::-webkit-scrollbar-thumb {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+  border-radius: 5px;
+}
+
+.el-tab-pane::-webkit-scrollbar-track {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  /* border */
+  border-radius: 5px;
+}
+
+.update-form {
+  height: 100%;
+  overflow: auto;
+}
+
+.el-input__wrapper {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  /* border */
+  box-shadow: 0 0 0 1px #00bd9d inset;
+  border: solid 1px #00bd9d;
+}
+
+.profile-update-button {
+  /* layout */
+  margin-top: 5px;
+  /* BOX */
+  width: 100%;
+  height: 38px;
+  /* background */
+  /* font */
+  font-family: "PressStart2P";
+  font-size: medium;
+  color: whitesmoke;
+  /* border */
+  border: none;
+  border-radius: 8px;
+}
+
+.profile-update-button:hover {
+  color: gray;
+}
+
+.profile-update-button:active {
+  color: whitesmoke;
+}
+
+
+.el-input__inner {
+  color: whitesmoke;
+}
+
+.room-item {
+  /* layout */
+  padding: 10px;
+  margin: 15px;
+  /* BOX */
+  width: 330px;
+  height: 150px;
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+  border-radius: 15px;
+}
+
+.start-form {
+  padding: 0 10px;
+}
