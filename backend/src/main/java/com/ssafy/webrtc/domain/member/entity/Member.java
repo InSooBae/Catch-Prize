@@ -1,4 +1,4 @@
-package com.ssafy.webrtc.domain.member.domain;
+package com.ssafy.webrtc.domain.member.entity;
 
 import com.fasterxml.uuid.Generators;
 import lombok.*;

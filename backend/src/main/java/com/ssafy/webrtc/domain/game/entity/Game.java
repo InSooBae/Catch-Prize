@@ -1,4 +1,4 @@
-package com.ssafy.webrtc.domain.game.domain;
+package com.ssafy.webrtc.domain.game.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,6 +1,6 @@
-package com.ssafy.webrtc.domain.notice.domain;
+package com.ssafy.webrtc.domain.notice.entity;
 
-import com.ssafy.webrtc.domain.member.domain.Member;
+import com.ssafy.webrtc.domain.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
