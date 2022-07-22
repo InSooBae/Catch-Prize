@@ -51,7 +51,7 @@ io.sockets.on("connection", function(socket) {
   });
 
   socket.on("join-room-req", ({ userName, roomId }) => {
-    if (!roomId in rooms) {
+    if (!(roomId in rooms)) {
       return;
     }
     socket.join(roomId);
