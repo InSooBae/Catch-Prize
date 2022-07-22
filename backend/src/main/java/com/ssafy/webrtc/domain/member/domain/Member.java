@@ -1,10 +1,7 @@
 package com.ssafy.webrtc.domain.member.domain;
 
 import com.fasterxml.uuid.Generators;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +12,8 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString(of = {"nickname"})
+// FIXME: 우선 Setter 열어두고 개발 추후 생성자로 변경 예정
+@Setter
 public class Member {
 
     @Id
@@ -43,7 +42,6 @@ public class Member {
 
     @Column(name = "point", columnDefinition = "integer default 0")
     private Integer point;
-
 
     @PrePersist
     public void createMemberUniqueId() {
