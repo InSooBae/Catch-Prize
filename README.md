@@ -110,6 +110,7 @@
 |  🚗   |   `test`   |   테스트 관련 코드   |
 |  🌵   |  `chore`   |      설정 변경       |
 |  🐋   |   `cicd`   | ci/cd 관련 파일 수정 |
+|  ✒️   |   `comment`   | 필요한 주석 추가 및 변경 |
 
 ```yaml
 emoji type : subject
