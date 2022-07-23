@@ -28,10 +28,10 @@ const drawer = ref(false)
             </el-col>
             <el-col :xs="24" :sm="24" :md="12" :lg="10" :xl="8" style="margin-top: 8vh;">
               <div class="catch_prize d-flex justify-content-center">
-                <b class="text_white me-3">CATCH!</b>
-                <b class="text_green">P</b>
-                <b class="text_yello">R</b>
-                <b class="text_green">IZE</b>
+                <b class="text-white me-3">CATCH!</b>
+                <b class="text-green">P</b>
+                <b class="text-yello">R</b>
+                <b class="text-green">IZE</b>
               </div>
               <div class="d-flex flex-column">
                 <button type="button" class="login_button">
@@ -56,15 +56,7 @@ const drawer = ref(false)
   font-family: "PressStart2P";
   font-size: 30px;
 }
-.text_white {
-  color: #ffffff;
-}
-.text_green {
-  color: #00bd9d;
-}
-.text_yello {
-  color: #f2e63c;
-}
+
 .login_button {
   padding: 0px;
   border-width: 0px;
