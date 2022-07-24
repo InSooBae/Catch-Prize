@@ -24,8 +24,18 @@ public class Game {
     private String title;
 
     @Column(name = "min_participant")
-    private Integer minParticipant;
+    private int minParticipant;
 
     @Column(name = "max_participant")
-    private Integer maxParticipant;
+    private int maxParticipant;
+
+    private Game(String title, int minParticipant, int maxParticipant) {
+        this.title = title;
+        this.minParticipant = minParticipant;
+        this.maxParticipant = maxParticipant;
+    }
+
+    public static Game of(String title, int minParticipant, int maxParticipant) {
+        return new Game(title, minParticipant, maxParticipant);
+    }
 }

@@ -23,10 +23,10 @@ public class MemberGame {
     private Long id;
 
     @Column(name = "win_cnt")
-    private Integer winCnt;
+    private int winCnt;
 
     @Column(name = "lose_cnt")
-    private Integer loseCnt;
+    private int loseCnt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -35,6 +35,4 @@ public class MemberGame {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
     private Game game;
-
-
 }
