@@ -35,4 +35,14 @@ public class Notice {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    private Notice(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.regDate = LocalDateTime.now();
+    }
+
+    public static Notice of(String title, String content) {
+        return new Notice(title, content);
+    }
 }

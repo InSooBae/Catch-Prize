@@ -38,10 +38,24 @@ public class Member {
     private RoleType role;
 
     @Column(name = "active", columnDefinition = "boolean default true")
-    private boolean isActive;
+    private boolean active;
 
     @Column(name = "point", columnDefinition = "integer default 0")
-    private Integer point;
+    private int point;
+
+    private Member(String nickname, String token, JoinPathType joinPath, RoleType role) {
+        this.nickname = nickname;
+        this.token = token;
+        this.joinDate = LocalDateTime.now();
+        this.joinPath = joinPath;
+        this.role = role;
+        this.active = true;
+        this.point = 0;
+    }
+
+    static public Member of(String nickname, String token, JoinPathType joinPath, RoleType role) {
+        return new Member(nickname, token, joinPath, role);
+    }
 
     @PrePersist
     public void createMemberUniqueId() {
