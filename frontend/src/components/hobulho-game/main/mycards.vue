@@ -51,8 +51,8 @@ export default {
 }
 .mycards-wrapper {
   margin-bottom: 10px;
-  width: 100%;
-  height: 90%;
+  width: 40vw;
+  height: 40vh;
   
 }
 .up-cards-wrapper{
@@ -66,10 +66,18 @@ export default {
   width: 25%;
   height: 100%;
 }
+
 .up-cards-wrapper img{
   width: 90%;
   height: 100%;
+  transition: all 0.2s linear;
 }
+
+.up-cards-wrapper img:hover{
+  transform: scale(2.5) translateX(30px) translateY(-30px);
+  z-index: 1;
+}
+
 .down-cards-wrapper{
   display: flex;
   flex-direction: row;
@@ -82,6 +90,11 @@ export default {
 .down-cards-wrapper img{
   width: 90%;
   height: 100%;
+  transition: all 0.2s linear;
+}
+.down-cards-wrapper img:hover{
+  transform: scale(2.5) translateX(30px) translateY(-30px);
+  z-index: 1;
 }
 .text {
   margin-bottom: 10px;

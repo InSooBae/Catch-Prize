@@ -30,21 +30,21 @@ export default {
   flex-direction: column;
   border-radius: 20px;
   width: 100%;
-  height: 87%;
+  height: 83vh;
   align-items: center;
   justify-content: center;
 }
 .large-face-cam-wrapper{
-  height: 40%;
-  width: 80%;
+  height: 40vh;
+  width: 40vh;
 }
 .mycard-list{
-  width: 90%;
-  height: 45%;
+  width: 25vw;
+  height: 40vh;
 }
 .item-shop{
-  width: 90%;
-  height: 5%;
+  width: 25vw;
+  height: 10vh;
   margin-top: 20px;
 }
 </style>
