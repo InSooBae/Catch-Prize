@@ -107,7 +107,6 @@ export default class SampleGameScene extends Scene {
     
     if(gameOver)
     {
-      setTimeout(() => {this.scene.start('Sample2GameScene');}, 1000);
       
       return;
     }

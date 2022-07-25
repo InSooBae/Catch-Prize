@@ -59,3 +59,25 @@
 2022-07-15 김도연 - Phaser 학습 및 샘플 게임 제작
 
 2022-07-15 염수홍 - Lobby, SideBar(친구목록, 전적, 회원정보 수정), Login, SignUp 화면 설계 마무리, Signup 요소 설계
+
+---
+
+2022-07-18 권순석 - DB 설계 https://www.erdcloud.com/d/vxrctjyZSWAZWwrkv
+
+2022-07-18 김도연 - 게임 장면 설계 및 샘플 게임 제작후 업로드
+
+2022-07-18 배인수 - ERD Cloud를 통한 DB 설계 https://www.erdcloud.com/d/vxrctjyZSWAZWwrkv
+
+2022-07-18 염수홍 - 게임 장면 설계, CSS 선언 규칙 적용, 게임 로직 파악
+
+2022-07-18 이상진 - 시그널링 서버 구축
+
+---
+
+2022-07-19 권순석 - Springboot + JPA 학습 https://soonseok2.notion.site/Springboot-JPA-65751a25437c4553a07fec28eaca0556
+
+2022-07-19 배인수 - JPA 학습 https://awesome-gardenia-42a.notion.site/eaf33cd0c1f844b8ae5e72583e1573f7?v=96e50ff3266d47a8831b98214cd17bfa
+
+2022-07-19 김도연 - 샘플 게임 세팅 및 게임 카드 디자인
+
+2022-07-19 염수홍 - 게임 화면 설계, 호불호 카드 디자인
