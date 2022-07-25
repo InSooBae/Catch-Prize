@@ -1,35 +1,38 @@
 <template>
   <ul class="friends-list" style="padding: 0px;">
-    <li class="d-flex p-1 friends-item">
-      <img src="https://placekitten.com/28/28/" alt="placeholder" style="margin-right: 5px;">
-      <p>황태희</p>
-    </li>
-    <li class="d-flex p-1 friends-item">
-      <img src="https://placekitten.com/28/28/" alt="placeholder" style="margin-right: 5px;">
-      <p>김태희</p>
-    </li>
-    <li class="d-flex p-1 friends-item">
-      <img src="https://placekitten.com/28/28/" alt="placeholder" style="margin-right: 5px;">
-      <p>이태희</p>
-    </li>
-    <li class="d-flex p-1 friends-item">
-      <img src="https://placekitten.com/28/28/" alt="placeholder" style="margin-right: 5px;">
-      <p>박태희</p>
-    </li>
-    <li class="d-flex p-1 friends-item">
-      <img src="https://placekitten.com/28/28/" alt="placeholder" style="margin-right: 5px;">
-      <p>고태희</p>
-    </li>
-    <li class="d-flex p-1 friends-item">
-      <img src="https://via.placeholder.com/28x28" alt="placeholder" style="margin-right: 5px;">
-      <p>스탑태희</p>
-    </li>
-    <li class="d-flex p-1 friends-item">
-      <img src="https://via.placeholder.com/28x28" alt="placeholder" style="margin-right: 5px;">
-      <p>돈스탑태희</p>
+    <li v-for="friend in friendsList" :key="friend" class="d-flex p-1 friends-item">
+      <el-avatar shape="circle" class="me-1" :size="28"
+        :src="`https://placekitten.com/${friend.profile}/${friend.profile}`" />
+      <p class="friends-name">{{ friend.name }}</p>
     </li>
   </ul>
 </template>
+
+<script setup>
+import { reactive, toRefs } from 'vue'
+
+const friends = reactive({
+  friendsList: [
+    { profile: '100', name: '황태희' },
+    { profile: '200', name: '김태희' },
+    { profile: '300', name: '이태희' },
+    { profile: '123', name: '박태희' },
+    { profile: '124', name: '고태희' },
+    { profile: '125', name: '스탑태희' },
+    { profile: '126', name: '돈스탑태희' },
+    { profile: '100', name: '황태희' },
+    { profile: '200', name: '김태희' },
+    { profile: '300', name: '이태희' },
+    { profile: '123', name: '박태희' },
+    { profile: '124', name: '고태희' },
+    { profile: '125', name: '스탑태희' },
+    { profile: '126', name: '돈스탑태희' },
+  ],
+})
+
+const { friendsList } = toRefs(friends)
+
+</script>
 
 <style>
 </style>

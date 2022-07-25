@@ -1,15 +1,16 @@
-<script setup>
-import LobbyMain from '@/components/lobby/LobbyMain.vue'
-import SideBar from '@/components/lobby/SideBar.vue'
-</script>
-
 <template>
   <div class="lobby-layout">
-    <el-container>
-      <el-header class="hidden-xs-only">
-        <span>
-          <MARQUEE>Notice: [New] Game released on 2022</MARQUEE>
+    <el-dialog v-model="noticeVisible" title="Notice" center>
+      <span>Notice의 내용입니다.</span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="noticeVisible = false">Close</el-button>
         </span>
+      </template>
+    </el-dialog>
+    <el-container>
+      <el-header class="hidden-xs-only" @click="noticeVisible = true">
+        <marquee class="notice-marquee" scrollamount="12" onmouseover="this.stop();" onmouseout="this.start();">Notice: [New] Game released on 2022</marquee>
       </el-header>
       <el-container>
         <el-aside class="hidden-sm-and-down" width="310px">
@@ -22,6 +23,15 @@ import SideBar from '@/components/lobby/SideBar.vue'
     </el-container>
   </div>
 </template>
+
+<script setup>
+import LobbyMain from '@/components/lobby/LobbyMain.vue'
+import SideBar from '@/components/lobby/SideBar.vue'
+
+import { ref } from 'vue'
+
+const noticeVisible = ref(false)
+</script>
 
 <style>
 @import '../assets/lobby.css';

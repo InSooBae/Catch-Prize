@@ -18,9 +18,12 @@ import { RouterLink, RouterView } from 'vue-router'
 
 
 <style>
+@import "./assets/bootstrap-grid.css";
+
 .v-application {
   font-family: 'PressStart2P', sans-serif !important;
 }
+
 @font-face {
   font-family:'PressStart2P';
   src: url('assets/fonts/PressStart2P-Regular.ttf') format('truetype');

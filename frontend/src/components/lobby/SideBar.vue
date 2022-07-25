@@ -1,14 +1,18 @@
 <template>
   <img src="@/assets/logo.svg" width="250" alt="logo" style="opacity: 0.9; margin: 0px 0px 0px 0px;">
-  <el-tabs id="sidebar" tabPosition="bottom" stretch="true">
-    <div class="d-flex sidebar-profile p-1 pt-2">
-      <img src="https://placekitten.com/50/50/" alt="placeholder" style="margin-right: 10px;">
-      <div>
-        <p>PlayerName</p>
-        <p style="font-size: smaller; color: gray;">email@gmail.com</p>
-      </div>
+  <el-tabs id="sidebar" tabPosition="bottom" :stretch=true @tab-click="changeTab">
+    <SideProfile />
+    <div v-if="isAddFriends" class="d-flex add-friend-container">
+      <el-input v-model="addFriend" placeholder="이름을 입력하세요.">
+        <template #suffix>
+          <el-button color="#00bd9d" type="info" class="add-button" @click="startVisible = true">
+            <img src="@/assets/icons/person_add.svg" alt="add_friends">
+          </el-button>
+        </template>
+      </el-input>
+
     </div>
-    <el-tab-pane class="sidebar-element">
+    <el-tab-pane label="friends" class="sidebar-friends-element">
       <template #label>
         <div class="custom-tabs-label">
           <img src="@/assets/icons/group.svg" alt="group">
@@ -16,7 +20,7 @@
       </template>
       <SideBarFriends />
     </el-tab-pane>
-    <el-tab-pane class="sidebar-element">
+    <el-tab-pane label="record" class="sidebar-element">
       <template #label>
         <div class="custom-tabs-label">
           <img src="@/assets/icons/auto_stories.svg" alt="group">
@@ -24,7 +28,7 @@
       </template>
       <SideBarMyRecord />
     </el-tab-pane>
-    <el-tab-pane class="sidebar-element">
+    <el-tab-pane label="edit" class="sidebar-element">
       <template #label>
         <div class="custom-tabs-label">
           <img src="@/assets/icons/manage_accounts.svg" alt="group">
@@ -33,27 +37,26 @@
       <SideBarSetProfile />
     </el-tab-pane>
   </el-tabs>
-  <el-button color="#00bd9d" size="large" type="info" class="start-button" @click="startVisible = true">GAME START!
-  </el-button>
-  <el-dialog class="start-modal" v-model="startVisible" :show-close="false">
-    <template #header="{ titleId, titleClass }">
-      <div class="my-header">
-        <h4 :id="titleId" :class="titleClass">START YOUR GAME!</h4>
-      </div>
-    </template>
-    <GameStart />
-  </el-dialog>
+  <GameStart />
 </template>
 
 <script setup>
+import SideProfile from '@/components/lobby/SideProfile.vue'
 import SideBarFriends from '@/components/lobby/SideBarFriends.vue'
 import SideBarMyRecord from '@/components/lobby/SideBarMyRecord.vue'
 import SideBarSetProfile from '@/components/lobby/SideBarSetProfile.vue'
 import GameStart from '@/components/lobby/GameStart.vue';
+import { ref } from 'vue';
 
-import { ref } from 'vue'
+const isAddFriends = ref(true)
+const addFriend = ref('')
 
-const startVisible = ref(false)
+const changeTab = (data) => {
+  if (data.props.label == "friends")
+    isAddFriends.value = true
+  else
+    isAddFriends.value = false
+}
 </script>
 
 <style>
