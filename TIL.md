@@ -103,3 +103,7 @@
 2022-07-21 배인수 - JPA https://awesome-gardenia-42a.notion.site/eaf33cd0c1f844b8ae5e72583e1573f7?v=96e50ff3266d47a8831b98214cd17bfa
 
 2022-07-21 염수홍 - 컴포넌트 업데이트, timer 제작, vue3 공부
+
+---
+
+2022-07-26 이상진 - 인게임 서버 및 방 서버 프로토콜 작성
