@@ -1,4 +1,4 @@
-package com.ssafy.webrtc.domain.notice.entity;
+package com.ssafy.webrtc.domain.notice;
 
 import com.ssafy.webrtc.domain.member.entity.Member;
 import lombok.AccessLevel;
@@ -36,13 +36,20 @@ public class Notice {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private Notice(String title, String content) {
+    private Notice(String title, String content, Member member) {
         this.title = title;
         this.content = content;
         this.regDate = LocalDateTime.now();
+        // 작성자 찾아와서 초기화
+        this.member = member;
     }
 
-    public static Notice of(String title, String content) {
-        return new Notice(title, content);
+    public static Notice of(String title, String content, Member member) {
+        return new Notice(title, content, member);
+    }
+
+    public void edit(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.webrtc.domain.game.entity;
 
+import com.ssafy.webrtc.domain.game.Game;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

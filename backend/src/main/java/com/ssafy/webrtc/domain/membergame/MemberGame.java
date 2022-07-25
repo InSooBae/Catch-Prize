@@ -1,6 +1,6 @@
-package com.ssafy.webrtc.domain.membergame.entity;
+package com.ssafy.webrtc.domain.membergame;
 
-import com.ssafy.webrtc.domain.game.entity.Game;
+import com.ssafy.webrtc.domain.game.Game;
 import com.ssafy.webrtc.domain.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
