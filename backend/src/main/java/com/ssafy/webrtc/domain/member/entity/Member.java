@@ -43,6 +43,8 @@ public class Member {
     @Column(name = "point", columnDefinition = "integer default 0")
     private int point;
 
+    private String refreshToken;
+
     private Member(String nickname, String token, JoinPathType joinPath, RoleType role) {
         this.nickname = nickname;
         this.token = token;
