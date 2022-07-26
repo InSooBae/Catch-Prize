@@ -1,22 +1,22 @@
 <template>
   <div class="left-container">
     <div class="large-face-cam-wrapper"><LargeScreen /></div>
-    <div class="mycard-list"><MyCards /></div>
+    <div class="mycard-list"><MyHandCards /></div>
     <div class="item-shop"><ItemShop /></div>
   </div>
 </template>
 
 <script>
 import ItemShop from "./ItemShopBar.vue";
+import MyHandCards from "./Mycards.vue";
 import LargeScreen from "./LargeScreen.vue";
-import MyCards from "./Mycards.vue";
 
 export default {
   name: "left-home",
   components: {
     ItemShop,
     LargeScreen,
-    MyCards,
+    MyHandCards,
   },
 };
 </script>

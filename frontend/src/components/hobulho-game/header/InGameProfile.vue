@@ -24,14 +24,14 @@ const props = defineProps({
 <style scoped>
 .ingame-profile{
   
-  height: 10vh;
+  height: 100%;
   width: 100%;
   display: flex;
   background-color: #1B2130;
   border-radius: 20px;
 }
 .left-container{
-  height: 10vh;
+  height: 100%;
   border: none;
   padding: 20px;
   display: flex;
@@ -45,7 +45,7 @@ const props = defineProps({
   margin-left: 10px;
 }
 .right-container{
-  height: 10vh;
+  height: 100%;
   display: flex;
   padding: 25px;
 }

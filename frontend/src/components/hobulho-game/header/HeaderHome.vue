@@ -47,6 +47,7 @@ const { profilesList } = toRefs(profiles);
 
 <style scoped>
 .ingame-profile-a {
+  height: 100%;
   width: 30%;
   min-width: 350px;
 }
