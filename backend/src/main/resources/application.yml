@@ -16,6 +16,12 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
+  
+  # swagger 매칭
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
   # TODO: 개발 마무리시 spring.jpa.open-in-view 세팅 고려(성능 이슈)
 
 logging:
