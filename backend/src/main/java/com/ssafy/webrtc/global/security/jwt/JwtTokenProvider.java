@@ -101,7 +101,7 @@ public class JwtTokenProvider {
 
         // FIXME: username 유뮤
         log.info("username = {}", claims.get("username"));
-        CustomUserDetails principal = new CustomUserDetails(UUID.fromString(claims.getSubject()), claims.get("username").toString(), authorities);
+        CustomUserDetails principal = new CustomUserDetails(UUID.fromString(claims.getSubject()), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }

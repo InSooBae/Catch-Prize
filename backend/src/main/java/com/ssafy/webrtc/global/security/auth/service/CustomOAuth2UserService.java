@@ -9,6 +9,7 @@ import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
 import com.ssafy.webrtc.global.security.auth.OAuth2UserInfo;
 import com.ssafy.webrtc.global.security.auth.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -22,6 +23,7 @@ import java.util.Optional;
  * 획득한 유저정보를 process()에서 Java Model과 맵핑하고 가입 되지 않은 경우와 이미 가입된 경우를 구분하여 프로세스를 진행한다.
  * 결과로 OAuth2User를 구현한 CustomUserDetails 객체를 생성한다.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -41,6 +43,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         JoinPathType joinPathType = JoinPathType.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase());
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(joinPathType.name(), oAuth2User.getAttributes());
 
+
+//        log.info("유저이름 = {}", oAuth2User.getAttributes());
         if (userInfo.getId().isEmpty()) {
             throw new OAuthProcessingException("ID not found from OAuth2 provider");
         }
