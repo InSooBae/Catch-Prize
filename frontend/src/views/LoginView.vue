@@ -1,10 +1,7 @@
 <template>
   <StarBackground />
   <el-row align="middle" class="login-layout">
-    <el-col :md="12" class="hidden-sm-and-down d-flex justify-content-center">
-      <img src="@/assets/logo.svg" class="login-logo" alt="logo" @click="drawer = true">
-    </el-col>
-    <el-col :sm="24" :md="12">
+    <el-col :span="24">
       <div class="catch_prize d-flex justify-content-center">
         <p class="text-white text-animation">C</p>
         <p class="text-white text-animation" style="letter-spacing:-6px;">A</p>
@@ -13,20 +10,20 @@
         <p class="text-white text-animation" style="letter-spacing:-5px;">H</p>
         <p class="text-white text-animation me-3">!</p>
         <p class="text-green text-animation">P</p>
-        <p class="text-yello text-animation" style="letter-spacing:-5px;">R</p>
+        <p class="text-yello text-animation blink" @click="drawer = true" style="letter-spacing:-5px; cursor: pointer;">R</p>
         <p class="text-green text-animation">I</p>
         <p class="text-green text-animation">Z</p>
         <p class="text-green text-animation">E</p>
       </div>
       <div class="d-flex flex-column">
         <button type="button" class="login_button">
-          <img class="login_button_image" src="@/assets/login/google.png" />
+          <img class="login_button_image" src="@/assets/login/google.png" alt="login with google" @click="loginGoogle"/>
         </button>
         <button type="button" class="login_button">
-          <img class="login_button_image" src="@/assets/login/kakao.png" />
+          <img class="login_button_image" src="@/assets/login/kakao.png" alt="login with kakao" @click="loginKakao"/>
         </button>
         <button type="button" class="login_button">
-          <img class="login_button_image" src="@/assets/login/naver.png" />
+          <img class="login_button_image" src="@/assets/login/naver.png" alt="login with naver" @click="loginNaver"/>
         </button>
       </div>
     </el-col>
@@ -45,8 +42,17 @@ import { ref } from 'vue'
 
 const drawer = ref(false)
 
+const loginKakao = () => {
+  console.log('kakao')
+}
 
+const loginGoogle = () => {
+  console.log('google')
+}
 
+const loginNaver = () => {
+  console.log('naver')
+}
 </script>
 
 <style>
@@ -54,16 +60,9 @@ const drawer = ref(false)
   height: 100vh;
 }
 
-.login-logo {
-  margin: 0 0 0 10px;
-  width: min(40vw, 800px);
-  opacity: 0.6;
-  cursor: pointer;
-}
-
 .catch_prize {
   font-family: "PressStart2P";
-  font-size: 30px;
+  font-size: 34.5px;
 }
 
 .login_button {
@@ -74,6 +73,12 @@ const drawer = ref(false)
 
 .login_button_image {
   cursor: pointer;
+  width: 400px;
+  opacity: 0.9;
+}
+
+.login_button_image:hover {
+  opacity: 1;
 }
 
 .login_button_image:active {
@@ -89,11 +94,31 @@ const drawer = ref(false)
 }
 
 .text-animation {
-  font-size: 43.5px;
   transition: all ease 0.3s 0s;
+  vertical-align: bottom;
+  padding-top: 15px;
 }
 
 .text-animation:hover {
-  transform: translate(0px, -30px);
+  padding: 0 1px;
+  padding-bottom: 15px;
+}
+
+@keyframes blink-effect {
+  10% {
+    opacity: 1.0;
+  }
+  25% {
+    opacity: 0.05;
+  }
+  40% {
+    opacity: 1.0;
+  }
+}
+
+.blink {
+  animation-name: blink-effect;
+  animation-duration: 2.5s;
+  animation-iteration-count: infinite;
 }
 </style>
