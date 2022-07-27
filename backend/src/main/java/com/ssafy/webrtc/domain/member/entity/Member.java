@@ -23,7 +23,8 @@ public class Member {
     @Column(name = "nickname", length = 20)
     private String nickname;
 
-    @Column(name = "token")
+    // 각 플랫폼에서 제공하는 식별값(고유하지 않을 수 있음)
+    @Column(name = "token", updatable = false)
     private String token;
 
     @Column(name = "join_date")
@@ -37,12 +38,15 @@ public class Member {
     @Column(name = "role")
     private RoleType role;
 
-    @Column(name = "active", columnDefinition = "boolean default true")
+    @Column(name = "active")
     private boolean active;
 
-    @Column(name = "point", columnDefinition = "integer default 0")
+    @Column(name = "point")
     private int point;
 
+    private String refreshToken;
+
+    @Builder
     private Member(String nickname, String token, JoinPathType joinPath, RoleType role) {
         this.nickname = nickname;
         this.token = token;
@@ -51,10 +55,6 @@ public class Member {
         this.role = role;
         this.active = true;
         this.point = 0;
-    }
-
-    static public Member of(String nickname, String token, JoinPathType joinPath, RoleType role) {
-        return new Member(nickname, token, joinPath, role);
     }
 
     @PrePersist
