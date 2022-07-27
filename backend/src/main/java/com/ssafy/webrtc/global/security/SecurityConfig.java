@@ -1,6 +1,12 @@
-package com.ssafy.webrtc.global.config.security;
+package com.ssafy.webrtc.global.security;
 
-import com.ssafy.webrtc.global.config.security.jwt.JwtAuthenticationEntryPoint;
+import com.ssafy.webrtc.global.security.auth.repository.CookieAuthorizationRequestRepository;
+import com.ssafy.webrtc.global.security.auth.service.CustomOAuth2UserService;
+import com.ssafy.webrtc.global.security.handler.OAuth2AuthenticationFailureHandler;
+import com.ssafy.webrtc.global.security.handler.OAuth2AuthenticationSuccessHandler;
+import com.ssafy.webrtc.global.security.jwt.JwtAccessDeniedHandler;
+import com.ssafy.webrtc.global.security.jwt.JwtAuthenticationEntryPoint;
+import com.ssafy.webrtc.global.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -25,16 +30,15 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().antMatchers("/assets/**");
-//    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers("/assets/**");
+    }
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-
                 .httpBasic()
                 .disable()
                 .formLogin()
@@ -48,6 +52,7 @@ public class SecurityConfig {
 
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
 
                 .authorizeRequests()
@@ -63,7 +68,7 @@ public class SecurityConfig {
                 .oauth2Login()
                 .authorizationEndpoint()
                 .baseUri("/oauth2/authorize")
-                .authorizationRequestRepository(customAuthorizationRequestRepository)
+                .authorizationRequestRepository(cookieAuthorizationRequestRepository)
                 .and()
                 .redirectionEndpoint()
                 .baseUri("/oauth2/callback/*")
@@ -71,28 +76,12 @@ public class SecurityConfig {
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService)
                 .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler);
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler);
 
-        http.addFilterBefore(customOncePerRequestFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.httpBasic().disable()
-                .formLogin().disable()
-                .cors()
-                .and()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/token/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(new JwtExceptionFilter(),
-                        OAuth2LoginAuthenticationFilter.class)
-                .oauth2Login().loginPage("/token/expired")
-                .successHandler(successHandler)
-                .userInfoEndpoint().userService(oAuth2UserService);
 
-        http.addFilterBefore(new JwtAuthFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

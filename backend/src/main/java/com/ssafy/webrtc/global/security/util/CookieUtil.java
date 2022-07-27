@@ -1,4 +1,4 @@
-package com.ssafy.webrtc.global.config.security.util;
+package com.ssafy.webrtc.global.security.util;
 
 import org.springframework.util.SerializationUtils;
 
