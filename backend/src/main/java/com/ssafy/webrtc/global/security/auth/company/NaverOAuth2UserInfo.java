@@ -1,7 +1,7 @@
-package com.ssafy.webrtc.global.config.security.auth.company;
+package com.ssafy.webrtc.global.security.auth.company;
 
 import com.ssafy.webrtc.domain.member.entity.JoinPathType;
-import com.ssafy.webrtc.global.config.security.auth.OAuth2UserInfo;
+import com.ssafy.webrtc.global.security.auth.OAuth2UserInfo;
 
 import java.util.Map;
 

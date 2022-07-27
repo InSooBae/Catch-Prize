@@ -1,10 +1,13 @@
-package com.ssafy.webrtc.global.config.security.auth;
+package com.ssafy.webrtc.global.security.auth;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Map;
 
+/**
+ * JoinPathType마다 다른 정보를 return해야 하기 때문에 다르게 매핑위한 추상화 클래스
+ */
 @Getter
 @Setter
 public abstract class OAuth2UserInfo {

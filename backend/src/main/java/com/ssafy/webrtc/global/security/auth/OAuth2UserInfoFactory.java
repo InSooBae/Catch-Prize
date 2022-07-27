@@ -1,9 +1,9 @@
-package com.ssafy.webrtc.global.config.security.auth;
+package com.ssafy.webrtc.global.security.auth;
 
 import com.ssafy.webrtc.domain.member.entity.JoinPathType;
-import com.ssafy.webrtc.global.config.security.auth.company.GoogleOAuth2UserInfo;
-import com.ssafy.webrtc.global.config.security.auth.company.KakaoOAuth2UserInfo;
-import com.ssafy.webrtc.global.config.security.auth.company.NaverOAuth2UserInfo;
+import com.ssafy.webrtc.global.security.auth.company.GoogleOAuth2UserInfo;
+import com.ssafy.webrtc.global.security.auth.company.KakaoOAuth2UserInfo;
+import com.ssafy.webrtc.global.security.auth.company.NaverOAuth2UserInfo;
 
 import java.util.Map;
 
