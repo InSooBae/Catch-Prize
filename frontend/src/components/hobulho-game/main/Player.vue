@@ -1,7 +1,7 @@
 <template>
   <div :class="[player.isDeath === true? 'player-container-death': 'player-container']">
     <div class="status-container">
-      <img src="../assets/image 15.png" alt="" />
+      <img src="../assets/image15.png" alt="" />
       <div class="player-text">
         <div class="nickname">{{player.name}}</div>
         <div class="remain-card">remain : {{player.remain}}</div>
