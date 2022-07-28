@@ -1,6 +1,6 @@
 <template>
   <div class="NoticeNew">
-    <h1>NOTICE</h1>
+    
     <el-main>
       <div class="notice_container">
         <notice-form :notice="notice" action="create"></notice-form>

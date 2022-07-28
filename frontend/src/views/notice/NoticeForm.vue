@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-link :to="{name: 'notices'}"><h1>NOTICE</h1></router-link>
     <form @submit.prevent="onSubmit">
       <div class="notice_button_container">
         <el-button 

@@ -24,25 +24,28 @@ const router = createRouter({
       component: () => import('../views/GameView.vue')
     },
     {
-      path: '/notices',
+      path: '/notice',
       name: 'notices',
-      component: () => import('../views/notice/NoticeListView.vue')
+      component: () => import('../views/notice/NoticeListView.vue'),
+      children:[
+        {
+          path: '/notice/new',
+          name: 'noticeNew',
+          component: () => import('../views/notice/NoticeNewView.vue')
+        },
+        {
+          path: '/notice/:noticePk/edit',
+          name: 'noticeEdit',
+          component: () => import('../views/notice/NoticeEditView.vue')
+        },
+        {
+          path: '/notice/:noticeId',
+          name: 'noticeDetail',
+          component: () => import('../views/notice/NoticeDetailView.vue')
+        }
+      ]
     },
-    {
-      path: '/notice/new',
-      name: 'noticeNew',
-      component: () => import('../views/notice/NoticeNewView.vue')
-    },
-    {
-      path: '/notice/:noticePk/edit',
-      name: 'noticeEdit',
-      component: () => import('../views/notice/NoticeEditView.vue')
-    },
-    {
-      path: '/notice/:noticePk',
-      name: 'notice',
-      component: () => import('../views/notice/NoticeDetailView.vue')
-    }
+ 
   ]
 })
 
