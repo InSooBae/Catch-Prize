@@ -1,19 +1,23 @@
 <template>
   <div class="game-guide">
-    <h1>Select one card Press True false button</h1>
+    <h1>{{guide.guideText}}</h1>
   </div>
 </template>
 
-<script>
-export default {
-  name: "game-guide",
-};
+<script setup>
+// export default {
+//   name: "game-guide",
+// };
+
+const props = defineProps({
+  guide: Object
+})
 </script>
 
 <style scoped>
 .game-guide {
   color: white;
-  font-family: "PressStart2P";
+  font-family: "Galmuri9";
   font-size: 10px;
   width: 100%;
 }
