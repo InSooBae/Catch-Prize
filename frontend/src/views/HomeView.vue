@@ -57,10 +57,25 @@ const loginPopup = (url) => {
   height: 100vh;
 }
 
+@keyframes size-effect {
+  0% {
+    transform: scale(0.0) rotate(-0.01turn);
+  }
+  50% {
+    transform: scale(1.5) rotate(0.001turn);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 .catch_prize {
   font-family: "PressStart2P";
   font-size: 48px;
   margin: 20px 0;
+  animation-name: size-effect;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
 }
 
 .login_button {
@@ -119,6 +134,7 @@ const loginPopup = (url) => {
 .blink {
   animation-name: blink-effect;
   animation-duration: 2.5s;
+  animation-delay: 1.5s;
   animation-iteration-count: infinite;
 }
 </style>
