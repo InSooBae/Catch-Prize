@@ -1,0 +1,50 @@
+services:
+  mysql:
+    container_name: mysql-container
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - mysql-volume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: todos
+    expose:
+      - "${MYSQL_PORT}"
+
+  nginx:
+    container_name: nginx-container
+    depends_on:
+      - hellonode
+    image: nginx:1.23.1
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/catch-prize-front:/var/nginx/catch-prize-front
+    networks:
+      - backend
+    expose:
+      - "80"
+
+  hellonode:
+    container_name: hello-node-container
+    image: hello-node:1.0.0
+    build:
+      context: ./hellonode
+      dockerfile: Dockerfile
+      args:
+        HELLO_PORT: ${HELLO_PORT}
+    environment:
+      HELLO_PORT: "${HELLO_PORT}"
+    expose:
+      - "${HELLO_PORT}"
+    networks:
+      - backend
+
+volumes:
+  mysql-volume:
+
+networks:
+  backend:
+    driver: bridge
