@@ -109,14 +109,14 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             //log.info("bearerToken = {} \n oAuth2Config.getAuth()={}", token, oAuth2Config.getAuth().getTokenSecret());
-            Jwts.parserBuilder().setSigningKey(SECRET_KEY.getBytes(StandardCharsets.UTF_8)).build().parseClaimsJws(token);
+            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException ex) {
-            log.error("잘못된 JWT 서명입니다.");
+            log.error("A잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException ex) {
-            log.error("만료된 JWT 토큰입니다.");
+            log.error("B만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException ex) {
-            log.error("지원되지 않는 JWT 토큰입니다.");
+            log.error("C지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException ex) {
             log.error("JWT 토큰이 잘못되었습니다.");
         }
@@ -126,7 +126,7 @@ public class JwtTokenProvider {
     // Access Token 만료시 갱신때 사용할 정보를 얻기 위해 Claim 리턴
     private Claims parseClaims(String accessToken) {	
         try {
-            return Jwts.parserBuilder().setSigningKey(SECRET_KEY.getBytes(StandardCharsets.UTF_8)).build().parseClaimsJws(accessToken).getBody();
+            return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }

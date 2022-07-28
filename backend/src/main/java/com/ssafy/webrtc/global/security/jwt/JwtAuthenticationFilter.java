@@ -13,6 +13,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -20,6 +24,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider tokenProvider;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -29,20 +34,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug(authentication.getName() + "의 인증정보 저장");
+            log.info(authentication.getName() + "의 인증정보 저장");
         } else {
-            log.debug("유효한 JWT 토큰이 없습니다.");
+
+            log.info("유효한 JWT 토큰이 없습니다.");
         }
 
         filterChain.doFilter(request, response);
     }
 
     private String parseBearerToken(HttpServletRequest request) {
+//        Enumeration<String> headerNames = request.getHeaderNames();
+//        while (headerNames.hasMoreElements()) {
+//            String headerName = headerNames.nextElement();
+//            log.info("header Name : {} -- {}",headerName,request.getHeader(headerName));
+//        }
         String bearerToken = request.getHeader("Authorization");
 
+//        log.info("parse Bearer = {}", bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
     }
+
 }

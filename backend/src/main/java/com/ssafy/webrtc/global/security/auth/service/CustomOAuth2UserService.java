@@ -44,7 +44,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(joinPathType.name(), oAuth2User.getAttributes());
 
 
-//        log.info("유저이름 = {}", oAuth2User.getAttributes());
+        log.info("유저이름 = {}", oAuth2User.getAttributes());
         if (userInfo.getId().isEmpty()) {
             throw new OAuthProcessingException("ID not found from OAuth2 provider");
         }

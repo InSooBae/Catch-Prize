@@ -1,5 +1,6 @@
 package com.ssafy.webrtc.domain.notice;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/notice")
 public class NoticeController {
@@ -20,6 +22,7 @@ public class NoticeController {
     // 공지사항 전체조회
     @GetMapping("")
     public ResponseEntity<List<NoticeDto>> findAllNotice() {
+        log.info("test123");
         // Exception 처리 추가
         return new ResponseEntity<List<NoticeDto>>(noticeService.findAll(), HttpStatus.OK);
     }
