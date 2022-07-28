@@ -17,6 +17,11 @@ const router = createRouter({
           name: 'loginNaver',
           component: () => import('../components/login/LoginNaver.vue'),
         },
+        {
+          path: 'kakao',
+          name: 'loginKakao',
+          component: () => import('../components/login/LoginKakao.vue'),
+        },
       ],
       component: () => import('../views/LoginView.vue')
     },
