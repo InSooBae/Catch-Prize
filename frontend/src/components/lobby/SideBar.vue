@@ -5,7 +5,7 @@
     <div v-if="isAddFriends" class="d-flex add-friend-container">
       <el-input v-model="addFriend" placeholder="이름을 입력하세요.">
         <template #suffix>
-          <el-button color="#00bd9d" type="info" class="add-button" @click="startVisible = true">
+          <el-button color="#262C3A" type="info" class="add-button" @click="startVisible = true">
             <img src="@/assets/icons/person_add.svg" alt="add_friends">
           </el-button>
         </template>
