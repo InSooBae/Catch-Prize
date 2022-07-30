@@ -202,7 +202,7 @@
   background-color: #262C3A;
 }
 
-.start-button {
+.lobby-layout .start-button {
   /* layout */
   height: 60px;
   /* BOX */
@@ -211,7 +211,7 @@
   /* font */
   font-family: "PressStart2P";
   font-size: medium;
-  color: whitesmoke;
+  --el-color-black: whitesmoke;
   /* border */
   border: none;
   border-radius: 10px;
@@ -223,7 +223,7 @@
 
 
 
-.add-button {
+.add-friend-container .add-button {
   /* layout */
   /* BOX */
   width: 2rem;
@@ -232,7 +232,11 @@
   font-family: "PressStart2P";
   color: whitesmoke;
   /* border */
-  border: none;
+  border: 0px solid #2c3e50;
+}
+
+.add-friend-container .add-button img{
+  margin: 0 5px 0 6px;
 }
 
 .lobby-layout .el-dialog {
@@ -336,7 +340,7 @@
   background-color: transparent;
   /* font */
   /* border */
-  box-shadow: 0 0 0 1px #00bd9d inset;
+  box-shadow: 0 0 0 1px #2c3e50 inset;
 }
 
 
