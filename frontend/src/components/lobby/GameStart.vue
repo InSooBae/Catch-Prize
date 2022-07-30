@@ -1,5 +1,5 @@
 <template>
-  <el-button color="#00bd9d" size="large" type="info" class="start-button" @click="startVisible = true">GAME START!
+  <el-button color="#00bd9d" type="info"  class="start-button" @click="startVisible = true">GAME START!
   </el-button>
   <el-dialog v-model="startVisible" :show-close="false" custom-class="start-modal">
     <template #header="{ titleId, titleClass }">

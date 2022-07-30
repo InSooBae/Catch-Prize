@@ -39,7 +39,7 @@ export default {
   width: 16%;
 }
 .itemshop-container img {
-  width: 100%;
-  height: 100%;
+  width: 60%;
+  height: 60%;
 }
 </style>

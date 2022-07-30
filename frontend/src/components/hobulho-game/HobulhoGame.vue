@@ -35,7 +35,6 @@ export default {
   position: relative;
   display: flex;
   flex-direction: column;
-  
 }
 .header-container{
   height: 100%;
@@ -43,17 +42,18 @@ export default {
   margin-bottom: 20px;
 }
 .main-container{
+  height:calc(100vh - 100px);
   display: flex;
   flex-direction: row;
 }
 .left-home{
   width: 30%;
-  min-width: 400px;
-  min-height: 800px;
+  min-width: 350px;
+  min-height: 600px;
 }
 .right-home{
   width: 70%;
   margin-left: 20px;
-  min-height: 800px;
+  min-height: 600px;
 }
 </style>

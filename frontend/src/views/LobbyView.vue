@@ -14,10 +14,10 @@
       </el-header>
       <el-container>
         <el-aside class="hidden-sm-and-down" width="310px">
-          <SideBar></SideBar>
+          <SideBar/>
         </el-aside>
         <el-main>
-          <LobbyMain></LobbyMain>
+          <RouterView/>
         </el-main>
       </el-container>
     </el-container>
@@ -25,12 +25,11 @@
 </template>
 
 <script setup>
-import LobbyMain from '@/components/lobby/LobbyMain.vue'
-import SideBar from '@/components/lobby/SideBar.vue'
+import SideBar from '@/components/lobby/SideBar.vue';
 
-import { ref } from 'vue'
+import { ref } from 'vue';
 
-const noticeVisible = ref(false)
+const noticeVisible = ref(false);
 </script>
 
 <style>

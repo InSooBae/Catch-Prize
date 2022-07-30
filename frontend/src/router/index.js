@@ -5,24 +5,41 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'home',
+      component: () => import('../views/HomeView.vue')
+    },
+    {
+      path: '/login/:name',
       name: 'login',
       component: () => import('../views/LoginView.vue')
     },
     {
-      path: '/signup',
-      name: 'signup',
-      component: () => import('../views/SignupView.vue')
-    },
-    {
       path: '/lobby',
       name: 'lobby',
-      component: () => import('../views/LobbyView.vue')
+      component: () => import('../views/LobbyView.vue'),
+      children: [
+        {
+          path: '',
+          name: 'main',
+          component: () => import('../components/lobby/RoomList.vue'),
+        },
+        {
+          path: ':gameid',
+          name: 'gameroom',
+          component: () => import('../components/lobby/WaitingRoom.vue'),
+        },
+      ],
     },
     {
       path: '/game',
       name: 'game',
       component: () => import('../views/GameView.vue')
     },
+    {
+      path: '/redirect',
+      name: 'redirect',
+      component: () => import('../views/RedirectView.vue'),
+    }
   ]
 })
 
