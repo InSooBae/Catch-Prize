@@ -44,7 +44,7 @@ import Game from '@/components/sample-game/SampleGame.vue'
 import { ref } from 'vue'
 
 const drawer = ref(false)
-const option = 'width=600, height=700, left=460, top=40 menubar=no, status=no, toolbar=no'
+const option = 'menubar=no, status=no, toolbar=no'
 
 const loginPopup = (url) => {
   window.open(`http://localhost:3000/login/${url}`, 'window', option);
@@ -61,9 +61,11 @@ const loginPopup = (url) => {
   0% {
     transform: scale(0.0) rotate(-0.01turn);
   }
+
   50% {
-    transform: scale(1.5) rotate(0.001turn);
+    transform: scale(1.3) rotate(0.001turn);
   }
+
   100% {
     transform: scale(1);
   }
@@ -136,5 +138,16 @@ const loginPopup = (url) => {
   animation-duration: 2.5s;
   animation-delay: 1.5s;
   animation-iteration-count: infinite;
+}
+
+@media (pointer:coarse) {
+  .catch_prize {
+    font-size: 28px;
+    margin: 10px 0;
+  }
+
+  .login_button_image {
+    width: 290px;
+  }
 }
 </style>

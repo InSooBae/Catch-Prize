@@ -9,20 +9,8 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
-      path: '/login',
+      path: '/login/:name',
       name: 'login',
-      children: [
-        {
-          path: 'naver',
-          name: 'loginNaver',
-          component: () => import('../components/login/LoginNaver.vue'),
-        },
-        {
-          path: 'kakao',
-          name: 'loginKakao',
-          component: () => import('../components/login/LoginKakao.vue'),
-        },
-      ],
       component: () => import('../views/LoginView.vue')
     },
     {
@@ -48,16 +36,9 @@ const router = createRouter({
       component: () => import('../views/GameView.vue')
     },
     {
-      path: '/callback',
-      name: 'callback',
-      component: () => import('../views/CallbackView.vue'),
-      children: [
-        {
-          path: 'naver',
-          name: 'callbackNaver',
-          component: () => import('../components/callback/CallbackNaver.vue'),
-        },
-      ],
+      path: '/redirect',
+      name: 'redirect',
+      component: () => import('../views/RedirectView.vue'),
     }
   ]
 })
