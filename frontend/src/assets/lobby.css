@@ -221,8 +221,6 @@
   padding: 3px 0px 5px 0;
 }
 
-
-
 .add-button {
   /* layout */
   /* BOX */
@@ -235,10 +233,30 @@
   border: none;
 }
 
+.notice-modal {
+  width: min(80%, 1536px);
+  height: 70%;
+}
+
+.notice-modal .el-dialog__body{
+  height: 88%;
+}
+
+.start-modal {
+  width: 500px;
+}
+
+.start-modal .el-dialog__body {
+  padding: 20px;
+}
+
+.start-modal .el-select {
+  width: 100%;
+}
+
 .lobby-layout .el-dialog {
   /* layout */
   /* BOX */
-  width: 500px;
   /* background */
   background-color: #262C3A;
   /* font */
@@ -393,16 +411,20 @@
 
 .lobby-room-item {
   /* layout */
-  padding: 10px;
-  margin: 30px 0 0 max(25px, 2.5vw);
+  padding: 20px 30px;
+  margin: 30px 0 0 min(max(25px, 2.5vw), 48px);
   /* BOX */
-  width: max(330px, calc(32vw - 151px));
+  width: min(max(330px, calc(32vw - 151px)), 452px);
   height: 150px;
   /* background */
   background-color: rgba(15, 30, 51, 0.7);
   /* font */
   /* border */
   border-radius: 15px;
+}
+
+.lobby-room-item .room-name {
+  font-size: 1.2rem;
 }
 
 .lobby-room-item:hover {
@@ -416,10 +438,31 @@
 }
 
 .start-form {
-  padding: 0 10px;
+  padding: 0;
 }
 
 .lobby-layout ul {
   list-style: none;
   padding: 0;
+}
+
+.records-item {
+  margin: 5px;
+}
+
+.records-item .records-type {
+  font-size: 0.8rem;
+  background-color: #00bd9d;
+  border-radius: 0.3rem;
+  padding: 0.3rem 0.3rem 0 0.3rem;
+}
+
+.records-item .records-source {
+  font-family: sans-serif;
+  font-size: 1rem;
+}
+
+.records-item .records-date {
+  font-family: sans-serif;
+  font-size: 0.5rem;
 }

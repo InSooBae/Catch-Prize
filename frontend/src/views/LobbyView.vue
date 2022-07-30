@@ -1,6 +1,6 @@
 <template>
   <div class="lobby-layout">
-    <el-dialog v-model="noticeVisible" title="Notice" center>
+    <el-dialog custom-class="notice-modal" v-model="noticeVisible" title="Notice" width="50%" center>
       <span>Notice의 내용입니다.</span>
       <template #footer>
         <span class="dialog-footer">
