@@ -4,6 +4,7 @@ import com.ssafy.webrtc.domain.member.MemberRepository;
 import com.ssafy.webrtc.domain.member.entity.Member;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 // void 반환값 수정 필요
 
@@ -25,26 +27,25 @@ import java.util.UUID;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
-
     private final MemberRepository memberRepository;
+    private final ModelMapper modelMapper;
 
     // 공지사항 전체조회
-    public List<NoticeDto> findAll() {
-        List<NoticeDto> noticeDtos = new ArrayList<NoticeDto>();
-        List<Notice> notices = noticeRepository.findAll();
-
-        for (Notice notice : notices) {
-            NoticeDto noticeDto = NoticeDto.ofNoticeDto(notice);
-            noticeDtos.add(noticeDto);
-        }
-
-        return noticeDtos;
-    }
+//    public List<NoticeDto> findAll() {
+//        List<Notice> notices = noticeRepository.findAll();
+//
+//        List<NoticeDto> noticeDtos = notices.stream().map(notice ->
+//                modelMapper.map(notice, NoticeDto.class)).collect(Collectors.toList());
+//
+//
+//        return noticeDtos;
+//    }
 
     // 공지사항 글 한개 상세조회
     public NoticeDto findById(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId).get();
-        NoticeDto noticeDto = NoticeDto.ofNoticeDto(notice);
+//      NoticeDto noticeDto = NoticeDto.ofNoticeDto(notice);
+        NoticeDto noticeDto = modelMapper.map(notice, NoticeDto.class);
         return noticeDto;
     }
 
@@ -52,6 +53,7 @@ public class NoticeService {
     public Page<NoticeDto> findByPgno(Pageable pageable) {
         // 페이지 넘버는 0페이지부터 시작
         Page<Notice> notices = noticeRepository.findAllByOrderByRegDateDesc(pageable);
+
         Page<NoticeDto> noticeDtos = notices.map(persistedNotice -> {
            NoticeDto noticeDto = NoticeDto.ofNoticeDto(persistedNotice);
 
@@ -77,7 +79,6 @@ public class NoticeService {
         Notice notice = Notice.of(title, content, member);
 
         return noticeRepository.save(notice).getId();
-
     }
 
     // 공지사항 수정
@@ -89,7 +90,6 @@ public class NoticeService {
         notice.edit(title, content);
 
         return noticeRepository.save(notice).getId();
-        
     }
 
     // 공지사항 삭제

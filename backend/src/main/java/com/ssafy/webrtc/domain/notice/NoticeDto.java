@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class NoticeDto {
 
     private Long id;

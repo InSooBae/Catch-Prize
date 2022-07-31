@@ -3,6 +3,7 @@ package com.ssafy.webrtc.domain.notice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,6 @@ public class NoticeController {
 
     @Autowired
     private NoticeService noticeService;
-
-    private static final String SUCCESS = "success";
-    private static final String FAIL = "fail";
 
     // 공지사항 전체조회
 //    @GetMapping("")
@@ -37,9 +35,9 @@ public class NoticeController {
 
     // 공지사항 페이징 조회
     @GetMapping("")
-    public ResponseEntity<Page<NoticeDto>> findNoticeByPgno(Pageable pageable) {
-
-        return new ResponseEntity<Page<NoticeDto>>(noticeService.findByPgno(pageable), HttpStatus.OK);
+    public ResponseEntity<List<NoticeDto>> findNoticeByPgno(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
+        PageRequest pageRequest = PageRequest.of(page -1, size); // page index가 내부적으로 0부터 시작
+        return new ResponseEntity<List<NoticeDto>>(noticeService.findByPgno(pageRequest).getContent(), HttpStatus.OK);
     }
 
     // 공지사항 글 작성
@@ -61,10 +59,10 @@ public class NoticeController {
 
     // 공지사항 글 삭제
     @DeleteMapping("/{noticeId}")
-    public ResponseEntity<String> deleteNotice(@PathVariable("noticeId") Long noticeId) {
-        // delete 성공 시 문자열 SUCCESS 반환
+    public ResponseEntity<Long> deleteNotice(@PathVariable("noticeId") Long noticeId) {
+        // delete 성공 시 삭제된 글의 id 반환
         noticeService.delete(noticeId);
-        return new ResponseEntity<String>(SUCCESS, HttpStatus.OK);
+        return new ResponseEntity<Long>(noticeId, HttpStatus.OK);
     }
 
 
