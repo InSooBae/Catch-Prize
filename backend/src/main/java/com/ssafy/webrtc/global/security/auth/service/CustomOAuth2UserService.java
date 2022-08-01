@@ -4,7 +4,8 @@ import com.ssafy.webrtc.domain.member.MemberRepository;
 import com.ssafy.webrtc.domain.member.entity.JoinPathType;
 import com.ssafy.webrtc.domain.member.entity.Member;
 import com.ssafy.webrtc.domain.member.entity.RoleType;
-import com.ssafy.webrtc.global.error.exception.OAuthProcessingException;
+import com.ssafy.webrtc.global.error.exception.ErrorCode;
+import com.ssafy.webrtc.global.security.exception.OAuthProcessingException;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
 import com.ssafy.webrtc.global.security.auth.OAuth2UserInfo;
 import com.ssafy.webrtc.global.security.auth.OAuth2UserInfoFactory;
@@ -46,7 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         log.info("유저이름 = {}", oAuth2User.getAttributes());
         if (userInfo.getId().isEmpty()) {
-            throw new OAuthProcessingException("ID not found from OAuth2 provider");
+            throw new OAuthProcessingException(ErrorCode.OAUTH_PROCESSING_ERROR);
         }
         Optional<Member> memberOptional = memberRepository.findMemberByTokenAndJoinPath(userInfo.getId(), joinPathType);
         Member member;

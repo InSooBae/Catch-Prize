@@ -1,7 +1,8 @@
 package com.ssafy.webrtc.global.security.handler;
 
-import com.ssafy.webrtc.global.error.exception.BadRequestException;
+import com.ssafy.webrtc.global.error.exception.ErrorCode;
 import com.ssafy.webrtc.global.security.auth.repository.CookieAuthorizationRequestRepository;
+import com.ssafy.webrtc.global.security.exception.OAuthRedirectException;
 import com.ssafy.webrtc.global.security.jwt.JwtTokenProvider;
 import com.ssafy.webrtc.global.security.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .map(Cookie::getValue);
 
         if (redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
-            throw new BadRequestException("redirect URIs are not matched");
+            throw new OAuthRedirectException(ErrorCode.OAUTH_REDIRECT_ERROR);
         }
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
