@@ -46,6 +46,7 @@ import Game from '@/components/sample-game/SampleGame.vue'
 import { ref, onMounted, computed, watchEffect } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { BASE_URL } from '../constants'
 
 const store = useStore()
 const router = useRouter()
@@ -61,7 +62,7 @@ const gameOpen = () => {
 }
 
 const loginPopup = (url) => {
-  window.open(`http://localhost:3000/login/${url}`, 'window', option);
+  window.open(`${BASE_URL}/login/${url}`, 'window', option);
 }
 
 const detectMobile = () => {
