@@ -66,11 +66,11 @@
 
 <hr/>
 
-> ### 시스템 아키텍처 (미완성)
+> ### 시스템 아키텍처
 
 <br/>
 
-![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/815202a4-569e-4022-aa4f-7c2ef817047a/Catch_prize_architecture-ver2.0.drawio.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220722%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220722T091619Z&X-Amz-Expires=86400&X-Amz-Signature=1934587648e45e2327c1bb7cf01ad85ecd0c5259274ed807cc77fd0cd432a5b0&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Catch_prize_architecture-ver2.0.drawio.png%22&x-id=GetObject)
+![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/09e70e44-a47e-48cb-977a-e36d124774b8/_%281%29.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220801%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220801T000452Z&X-Amz-Expires=86400&X-Amz-Signature=13c81188817c76586b533e2328e5093c200f261a1545eece3a2abc3f548ed292&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22%25E3%2585%2587%25E3%2585%2587%25E3%2585%2587%2520%281%29.jpg%22&x-id=GetObject)
 
 - Frontend
   - Vue - 3.x
