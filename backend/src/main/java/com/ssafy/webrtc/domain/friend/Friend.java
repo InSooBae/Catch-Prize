@@ -1,4 +1,4 @@
-package com.ssafy.webrtc.domain.friend.entity;
+package com.ssafy.webrtc.domain.friend;
 
 import com.ssafy.webrtc.domain.member.entity.Member;
 import lombok.AccessLevel;
