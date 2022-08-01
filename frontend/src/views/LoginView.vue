@@ -10,6 +10,6 @@ const route = useRoute();
 const name = route.params.name;
 
 onMounted(() => {
-  window.location = `https://bb79-211-106-9-114.ngrok.io/oauth2/authorize/${name}?redirect_uri=http://localhost:3000/redirect`
+  window.location = `https://e5e4-211-192-210-62.jp.ngrok.io/oauth2/authorize/${name}?redirect_uri=http://localhost:3000/redirect`
 })
 </script>
