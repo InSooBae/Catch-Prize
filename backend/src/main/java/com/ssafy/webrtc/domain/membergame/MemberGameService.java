@@ -24,15 +24,13 @@ public class MemberGameService {
 
     private final MemberGameRepository memberGameRepository;
 
-    private final ModelMapper modelMapper;
-
     // 특정 유저의 최근전적 size 개수만큼 받기
     public List<MemberGameResponseDto> findRecentMatchResult(Integer size) {
         // 어떤 유저인지 식별해야함
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUserDetails userDetails = (CustomUserDetails) principal;
 
-        UUID memberId = ((CustomUserDetails) principal).getId();
+        UUID memberId = userDetails.getId();
 
         return memberGameRepository.findByMemberIdOrOrderByCreateDateDesc(memberId, size);
     }
@@ -43,7 +41,7 @@ public class MemberGameService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUserDetails userDetails = (CustomUserDetails) principal;
 
-        UUID memberId = ((CustomUserDetails) principal).getId();
+        UUID memberId = userDetails.getId();
 
         Member member = getMember(memberId);
 

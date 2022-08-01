@@ -15,8 +15,6 @@ public class MemberGameRequestDto {
 
     private MatchResultType matchResult;
 
-    private LocalDateTime matchDate;
-
     private Long gameId;
 
     private UUID memberId;
