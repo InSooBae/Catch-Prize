@@ -41,4 +41,8 @@ public class MemberGame extends BaseTimeEntity {
         this.game = game;
     }
 
+    public static MemberGame of(MatchResultType matchResult, Member member, Game game) {
+        return new MemberGame(matchResult, member, game);
+    }
+
 }

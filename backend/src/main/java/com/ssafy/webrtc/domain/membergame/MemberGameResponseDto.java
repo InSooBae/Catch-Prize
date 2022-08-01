@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberGameDto {
+public class MemberGameResponseDto {
 
     private Long id;
 
@@ -21,17 +21,14 @@ public class MemberGameDto {
 
     private LocalDateTime matchDate;
 
-    private Member member;
+    private String gameTitle;
 
-    private Game game;
-
-    public static MemberGameDto ofMemberGameDto(MemberGame memberGame) {
-        return MemberGameDto.builder()
+    public static MemberGameResponseDto ofMemberGameDto(MemberGame memberGame) {
+        return MemberGameResponseDto.builder()
                 .id(memberGame.getId())
                 .matchResult(memberGame.getMatchResult())
                 .matchDate(memberGame.getCreateDate())
-                .member(memberGame.getMember())
-                .game(memberGame.getGame())
+                .gameTitle(memberGame.getGame().getTitle())
                 .build();
     }
 
