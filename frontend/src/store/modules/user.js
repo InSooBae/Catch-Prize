@@ -1,3 +1,6 @@
+import axios from "axios";
+import { API_BASE_URL } from "../../constants";
+
 const user = {
   state: {
     token: sessionStorage.getItem('token') || '' ,
@@ -19,7 +22,7 @@ const user = {
     authHeader: state => ({ Authorization: `Bearer ${state.token}`})
   },
   actions: {
-    saveToken({ commit }, token) {s
+    saveToken({ commit }, token) {
       commit('SET_TOKEN', token)
       localStorage.setItem('token', '')
       sessionStorage.setItem('token', token)
@@ -28,7 +31,22 @@ const user = {
       commit('SET_TOKEN', '')
       sessionStorage.setItem('token', '')
     },
-  }
+    fetchCurrentUser({ commit, getters, dispatch }) {
+      if (getters.isLoggedIn) {
+        axios.get(API_BASE_URL + '/user/me', {headers: getters.authHeader})
+          .then(res => {
+            commit('SET_CURRENT_USER', res.data)
+        })
+          .catch(err => {
+            if (err.response.status === 401) {
+              dispatch('removeToken')
+              router.push({ name: 'home' })
+            }
+          })
+      }
+    },
+  },
+
 };
 
 export default user;
