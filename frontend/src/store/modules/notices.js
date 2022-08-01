@@ -1,6 +1,3 @@
-import { createStore } from "vuex";
-import user from "./modules/user"
-
 
 import axios from 'axios'
 import router from '@/router'

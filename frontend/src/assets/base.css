@@ -72,3 +72,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.text-white {
+  color: #ffffff;
+}
+
+.text-green {
+  color: #00bd9d;
+}
+
+.text-yello {
+  color: #f2e63c;
+}
