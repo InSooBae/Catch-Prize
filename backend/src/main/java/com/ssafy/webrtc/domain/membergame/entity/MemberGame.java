@@ -1,7 +1,8 @@
-package com.ssafy.webrtc.domain.membergame;
+package com.ssafy.webrtc.domain.membergame.entity;
 
 import com.ssafy.webrtc.domain.game.Game;
 import com.ssafy.webrtc.domain.member.entity.Member;
+import com.ssafy.webrtc.domain.model.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,18 +16,16 @@ import javax.persistence.*;
 @Getter
 // FIXME: 우선 Setter 열어두고 개발 추후 생성자로 변경 예정
 @Setter
-public class MemberGame {
+public class MemberGame extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_game_id")
     private Long id;
 
-    @Column(name = "win_cnt")
-    private int winCnt;
-
-    @Column(name = "lose_cnt")
-    private int loseCnt;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "match_result")
+    private MatchResultType matchResult;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -35,4 +34,11 @@ public class MemberGame {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
     private Game game;
+
+    private MemberGame(MatchResultType matchResult, Member member, Game game) {
+        this.matchResult = matchResult;
+        this.member = member;
+        this.game = game;
+    }
+
 }
