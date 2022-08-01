@@ -11,7 +11,7 @@
 import NoticeForm from '@/components/NoticeForm.vue'
 import { mapGetters, mapActions } from 'vuex'
   export default {
-    name: 'NoticeEditView',
+    name: 'NoticeDetailView',
     components: { NoticeForm },
     computed: {
       ...mapGetters(['notice', 'isNotice',])

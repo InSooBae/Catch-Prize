@@ -6,11 +6,10 @@
         <el-button 
           color="#7608d3" 
           link 
-          :dark="isDark" 
           plain 
           size="small"
           >Create</el-button>
-        <el-button color="#7608d3" link :dark="isDark" plain size="small">Delete</el-button>
+        <el-button color="#7608d3" link plain size="small">Delete</el-button>
       </div>
       <input 
         id="notice_title"
@@ -27,7 +26,7 @@
         placeholder="Notice Content"
       />
       <div class="notice_back_button_container">
-        <el-button @click="ListView()" link color="#7608d3" :dark="isDark" plain size="small">Back</el-button>
+        <el-button @click="ListView()" link color="#7608d3" plain size="small">Back</el-button>
       </div>
     </form>
   </div>

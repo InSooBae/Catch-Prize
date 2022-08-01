@@ -1,13 +1,19 @@
+import { createStore } from "vuex";
+import user from "./modules/user"
+
+
 import axios from 'axios'
-// import drf from '@/api/drf'
 import router from '@/router'
 
-const drf = https://jsonplaceholder.typicode.com/posts/notice
+// const params = {page: 1, size: 10}
+// axios.get('https://e5e4-211-192-210-62.jp.ngrok.io/notice', {params})
+// const drf = "https://e5e4-211-192-210-62.jp.ngrok.io"
 import _ from 'lodash'
-// import accounts from './accounts'
 
-export default {
-  // namespaced: true,
+const noticURL = 'https://e5e4-211-192-210-62.jp.ngrok.io/notice/'
+
+const store =  {
+
   state: {
     notices: [],
     notice: {},
@@ -29,22 +35,25 @@ export default {
   },
 
   actions: {
+    // notice list 가져오기
     fetchNotices({ commit, getters }) {
-      // fetch('https://jsonplaceholder.typicode.com/posts')
-      // .then((response) => response.json())
-      // .then((json) => console.log(json));
+      fetch('notice', {params})
+      .then((response) => response.json())
+      .then((json) => console.log(json));
       axios({
-        url: drf,
+        url: noticURL,
+        params: {page: 1, size: 10},
         method: 'get',
-        // headers: getters.authHeader,
+        headers: getters.authHeader,
       })
         .then(res => commit('SET_NOTICES', res))
         .catch(err => console.error(err.response))
     },
 
-    fetchNotice({ commit, getters }, noticePk) {
+    // 특정 notice 가져오기
+    fetchNotice({ commit, getters }, noticId) {
       axios({
-        url: drf.notices.notice(noticePk),
+        url: noticURL + `${noticeId}/`,
         method: 'get',
         headers: getters.authHeader,
       })
@@ -57,9 +66,10 @@ export default {
         })
     },
 
+    // notice 생성
     createNotice({ commit, getters }, notice) {
       axios({
-        url: drf.notices.notices(),
+        url: noticURL,
         method: 'post',
         data: notice,
         headers: getters.authHeader,
@@ -68,31 +78,33 @@ export default {
           commit('SET_NOTICE', res.data)
           router.push({
             name: 'notice',
-            params: { noticePk: getters.notice.pk }
+            params: { noticeId: getters.notice.id }
           })
         })
     },
 
-    updateNotice({ commit, getters }, { pk, notice_title, notice_content}) {
+    // notice 수정 , 작성자 id들어가야함
+    updateNotice({ commit, getters }, { id, title, content}) {
       axios({
-        url: drf.notices.notice(pk),
+        url: noticURL + `${noticeId}/`,
         method: 'put',
-        data: { notice_title, notice_content },
+        data: { title, content },
         headers: getters.authHeader,
       })
-        .then(res => {
-          commit('SET_NOTICE', res.data)
-          router.push({
-            name: 'notice',
-            params: { noticePk: getters.notice.pk }
-          })
+      .then(res => {
+        commit('SET_NOTICE', res.data)
+        router.push({
+          name: 'notice',
+          params: { noticeId: getters.notice.id }
         })
+      })
     },
 
-    deleteNotice({ commit, getters }, noticePk) {
+    // notice 삭제 
+    deleteNotice({ commit, getters }, noticeId) {
       if (confirm('정말 삭제하시겠습니까?')) {
         axios({
-          url: drf.notices.notice(noticePk),
+          url: noticURL + `${noticeId}/`,
           method: 'delete',
           headers: getters.authHeader,
         })
@@ -106,3 +118,5 @@ export default {
 
   },
 }
+
+export default store;

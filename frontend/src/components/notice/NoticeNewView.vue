@@ -1,6 +1,5 @@
 <template>
   <div class="NoticeNew">
-    
     <el-main>
       <div class="notice_container">
         <notice-form :notice="notice" action="create"></notice-form>
@@ -11,13 +10,14 @@
 
 <script>
   import NoticeForm from './NoticeForm.vue'
+
   export default {
     name: 'NoticeNewView',
     components: { NoticeForm },
     data() {
       return {
         notice: {
-          pk: null,
+          id: null,
           title: '',
           content: '',
         }
