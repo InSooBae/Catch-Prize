@@ -52,7 +52,7 @@ public class NoticeService {
     // 공지사항 글 페이징 조회
     public Page<NoticeDto> findByPgno(Pageable pageable) {
         // 페이지 넘버는 0페이지부터 시작
-        Page<Notice> notices = noticeRepository.findAllByOrderByRegDateDesc(pageable);
+        Page<Notice> notices = noticeRepository.findAllByOrderByCreateDateDesc(pageable);
 
         Page<NoticeDto> noticeDtos = notices.map(persistedNotice -> {
            NoticeDto noticeDto = NoticeDto.ofNoticeDto(persistedNotice);
