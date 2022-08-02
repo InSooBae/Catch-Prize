@@ -70,7 +70,7 @@
 
 <br/>
 
-![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/09e70e44-a47e-48cb-977a-e36d124774b8/_%281%29.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220801%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220801T000452Z&X-Amz-Expires=86400&X-Amz-Signature=13c81188817c76586b533e2328e5093c200f261a1545eece3a2abc3f548ed292&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22%25E3%2585%2587%25E3%2585%2587%25E3%2585%2587%2520%281%29.jpg%22&x-id=GetObject)
+![image](https://lab.ssafy.com/s07-webmobile1-sub2/S07P12A203/uploads/ba27050cec32290077e9f56f47dc051d/architecture.jpg)
 
 - Frontend
   - Vue - 3.x
