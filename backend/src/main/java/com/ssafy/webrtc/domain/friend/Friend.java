@@ -23,12 +23,16 @@ public class Friend {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fr_from_member", referencedColumnName = "member_id", nullable = false, updatable = false)
-    private Member fromMemberId;
+    private Member fromMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fr_to_member", referencedColumnName = "member_id", nullable = false, updatable = false)
-    private Member toMemberId;
+    private Member toMember;
 
-    @Column(name = "accept", columnDefinition = "boolean default false")
-    private boolean isAccept;
+    @Column(name = "pending", columnDefinition = "boolean default false")
+    private boolean pending;
+
+    @Column(name = "is_friend", columnDefinition = "boolean default false")
+    private boolean isFriend;
+
 }

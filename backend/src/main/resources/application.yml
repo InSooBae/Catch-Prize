@@ -7,8 +7,8 @@ spring:
 
   jpa:
     hibernate:
-      # 개발 단계에서만 이용
-      ddl-auto: update
+      # 개발 단계에서만 이용(create-drop)
+      ddl-auto: create-drop
       # ddl-auto: validate
     properties:
       hibernate:
