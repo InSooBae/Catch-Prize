@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface MemberGameRepository extends JpaRepository<MemberGame, Long> {
-
-    @Query(value = "select mg from MemberGame mg where mg.member = :memberId order by mg.createDate LIMIT :size", nativeQuery = true)
-    List<MemberGameResponseDto> findByMemberIdOrOrderByCreateDateDesc(@Param("memberId") UUID memberId, @Param("size") Integer size);
-
+public interface MemberGameRepository extends JpaRepository<MemberGame, Long>, CustomMemberGameRepository {
+    
 }

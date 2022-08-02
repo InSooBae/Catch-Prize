@@ -7,16 +7,20 @@ import com.ssafy.webrtc.domain.member.entity.Member;
 import com.ssafy.webrtc.domain.membergame.entity.MemberGame;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberGameService {
     private final MemberRepository memberRepository;
 
@@ -31,8 +35,14 @@ public class MemberGameService {
         CustomUserDetails userDetails = (CustomUserDetails) principal;
 
         UUID memberId = userDetails.getId();
+        log.info("service memberId = {}",memberId);
+
+
+
+//        log.info("service byMemberIdOrOrderByCreateDateDesc = {}", byMemberIdOrOrderByCreateDateDesc);
 
         return memberGameRepository.findByMemberIdOrOrderByCreateDateDesc(memberId, size);
+
     }
 
     // 특정 유저의 전적 추가
