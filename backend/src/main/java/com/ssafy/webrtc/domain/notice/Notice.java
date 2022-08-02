@@ -1,6 +1,7 @@
 package com.ssafy.webrtc.domain.notice;
 
 import com.ssafy.webrtc.domain.member.entity.Member;
+import com.ssafy.webrtc.domain.model.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 // FIXME: 우선 Setter 열어두고 개발 추후 생성자로 변경 예정
 @Setter
-public class Notice {
+public class Notice extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +30,6 @@ public class Notice {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "reg_date")
-    private LocalDateTime regDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -39,8 +37,6 @@ public class Notice {
     private Notice(String title, String content, Member member) {
         this.title = title;
         this.content = content;
-        this.regDate = LocalDateTime.now();
-        // 작성자 찾아와서 초기화
         this.member = member;
     }
 

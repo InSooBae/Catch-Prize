@@ -26,7 +26,7 @@ public class NoticeDto {
                 .id(notice.getId())
                 .title(notice.getTitle())
                 .content(notice.getContent())
-                .regDate(notice.getRegDate())
+                .regDate(notice.getCreateDate())
                 .token(notice.getMember().getToken())
                 .build();
     }
