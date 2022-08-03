@@ -43,7 +43,7 @@ public class NoticeController {
 
     // 공지사항 글 작성
     @PostMapping("")
-    public ResponseEntity<Long> createNotice(@RequestBody NoticeDto noticeDto) {
+    public ResponseEntity<Long> createNotice(@RequestBody NoticeRequestDto noticeDto) {
         // create 성공 시 작성 글의 id 반환
         Long noticeId = noticeService.create(noticeDto);
 
