@@ -20,7 +20,7 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'main',
+          name: 'lobbyMain',
           component: () => import('../components/lobby/RoomList.vue'),
         },
         {
