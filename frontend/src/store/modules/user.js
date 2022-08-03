@@ -6,13 +6,12 @@ const user = {
     token: sessionStorage.getItem('token') || '' ,
     currentUser: {},
     friendsList: [],
-    friendsListPagenation: [],
     authError: null,
   },
   mutations: {
     SET_TOKEN: (state, token) => state.token = token,
     SET_CURRENT_USER: (state, user) => state.currentUser = user,
-    SET_FRIENDS: (state, friendsList) => state.friendsList += friendsList,
+    SET_FRIENDS: (state, friendsList) => state.friendsList = friendsList,
     SET_AUTH_ERROR: (state, error) => state.authError = error
   },
   getters: {
@@ -46,16 +45,18 @@ const user = {
           })
       }
     },
-    fetchFriendsList({ commit, state }) {
-      console.log(state.friendsList)
+    fetchFriendsList({ commit }) {
       commit('SET_FRIENDS', [
-        { profile: '100', name: '황태희' },
-        { profile: '200', name: '김태희' },
-        { profile: '300', name: '이태희' },
-        { profile: '123', name: '박태희' },
-        { profile: '124', name: '고태희' },
-        { profile: '125', name: '스탑태희' },
-        { profile: '126', name: '돈스탑태희' },
+        { id: 1, profile: '100', name: '황태희' },
+        { id: 2, profile: '100', name: '황태희' },
+        { id: 3, profile: '300', name: '이태희' },
+        { id: 4, profile: '123', name: '박태희' },
+        { id: 5, profile: '124', name: '고태희' },
+        { id: 6, profile: '125', name: '스탑태희' },
+        { id: 7, profile: '126', name: '돈스탑태희' },
+        { id: 8, profile: '100', name: '황태희' },
+        { id: 9, profile: '200', name: '김태희' },
+        { id: 10, profile: '300', name: '이태희' },
       ])
     }
   },
