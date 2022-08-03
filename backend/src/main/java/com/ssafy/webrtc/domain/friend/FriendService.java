@@ -1,15 +1,18 @@
 package com.ssafy.webrtc.domain.friend;
 
+import com.ssafy.webrtc.domain.friend.repository.EmitterRepository;
+import com.ssafy.webrtc.domain.friend.repository.FriendRepository;
 import com.ssafy.webrtc.domain.member.MemberRepository;
 import com.ssafy.webrtc.domain.member.entity.Member;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,10 +23,33 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class FriendService {
+    private static final Long DEFAULT_TIMEOUT = -1L;
 
     private final FriendRepository friendRepository;
 
     private final MemberRepository memberRepository;
+
+    private final EmitterRepository emitterRepository;
+
+
+    public SseEmitter subscribe(UUID userId) {
+        SseEmitter emitter = emitterRepository.save(userId, new SseEmitter(DEFAULT_TIMEOUT));
+        emitter.onCompletion(() -> emitterRepository.deleteById(userId));
+        emitter.onTimeout(() -> emitterRepository.deleteById(userId));
+        return emitter;
+    }
+
+    public void send(UUID userId, FriendResponseDto response) {
+        emitterRepository.findById(userId)
+                .ifPresent(emitter -> {
+                            try {
+                                emitter.send(SseEmitter.event().data(response));
+                            } catch (IOException exception) {
+                                emitterRepository.deleteById(userId);
+                            }
+                        }
+                );
+    }
 
     //    1. 친구 목록 전체 조회
 //    (select * from friend where tomemberid=나 and isFriend=true)

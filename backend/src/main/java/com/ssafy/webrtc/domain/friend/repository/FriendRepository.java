@@ -1,5 +1,6 @@
-package com.ssafy.webrtc.domain.friend;
+package com.ssafy.webrtc.domain.friend.repository;
 
+import com.ssafy.webrtc.domain.friend.Friend;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
