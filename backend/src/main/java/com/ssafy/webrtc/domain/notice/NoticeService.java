@@ -5,20 +5,12 @@ import com.ssafy.webrtc.domain.member.entity.Member;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 // void 반환값 수정 필요
 
@@ -42,20 +34,20 @@ public class NoticeService {
 //    }
 
     // 공지사항 글 한개 상세조회
-    public NoticeDto findById(Long noticeId) {
+    public NoticeResponseDto findById(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId).get();
 //      NoticeDto noticeDto = NoticeDto.ofNoticeDto(notice);
-        NoticeDto noticeDto = modelMapper.map(notice, NoticeDto.class);
+        NoticeResponseDto noticeDto = modelMapper.map(notice, NoticeResponseDto.class);
         return noticeDto;
     }
 
     // 공지사항 글 페이징 조회
-    public Page<NoticeDto> findByPgno(Pageable pageable) {
+    public Page<NoticeResponseDto> findByPgno(Pageable pageable) {
         // 페이지 넘버는 0페이지부터 시작
         Page<Notice> notices = noticeRepository.findAllByOrderByCreateDateDesc(pageable);
 
-        Page<NoticeDto> noticeDtos = notices.map(persistedNotice -> {
-           NoticeDto noticeDto = NoticeDto.ofNoticeDto(persistedNotice);
+        Page<NoticeResponseDto> noticeDtos = notices.map(persistedNotice -> {
+           NoticeResponseDto noticeDto = NoticeResponseDto.ofNoticeDto(persistedNotice);
 
            return noticeDto;
         });
@@ -82,8 +74,8 @@ public class NoticeService {
     }
 
     // 공지사항 수정
-    public Long update(NoticeDto noticeDto) {
-        Notice notice = noticeRepository.findById(noticeDto.getId()).get();
+    public Long update(NoticeRequestDto noticeDto, Long noticeId) {
+        Notice notice = noticeRepository.findById(noticeId).get();
         String title = noticeDto.getTitle();
         String content = noticeDto.getContent();
 

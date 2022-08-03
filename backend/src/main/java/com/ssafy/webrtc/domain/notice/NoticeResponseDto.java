@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoticeDto {
+public class NoticeResponseDto {
 
     private Long id;
 
@@ -21,8 +21,8 @@ public class NoticeDto {
 
     private String token;
 
-    public static NoticeDto ofNoticeDto(Notice notice) {
-        return NoticeDto.builder()
+    public static NoticeResponseDto ofNoticeDto(Notice notice) {
+        return NoticeResponseDto.builder()
                 .id(notice.getId())
                 .title(notice.getTitle())
                 .content(notice.getContent())
