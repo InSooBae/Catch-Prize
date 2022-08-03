@@ -313,11 +313,39 @@
   font-size: 0.85rem;
   /* border */
   border-bottom: solid 1px #2c3e50;
+  padding: 5px;
 }
 
 .friends-item .friends-name {
-  margin-top: 0.16rem;
+  margin-top: 0.26rem;
+  width: 140px;
 }
+
+.friends-item .friends-delete {
+  /* layout */
+  padding: 1px 10px 2.5px 10px;
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  color: rgba(245, 245, 245, 0.1);
+  font-size: 1rem;
+  filter: brightness(0.1);
+  /* border */
+  border: none;
+  border-radius: 50%;
+}
+
+.friends-item .friends-delete:hover {
+  cursor: pointer;
+  filter: brightness(1);
+}
+
+.friends-item .friends-delete:active {
+  cursor: pointer;
+  filter: brightness(0.5);
+}
+
 
 .lobby-layout .el-tab-pane {
   overflow: auto;
@@ -396,20 +424,11 @@
   /* font */
   font-family: "PressStart2P";
   font-size: medium;
-  color: whitesmoke;
+  --el-color-black: whitesmoke;
   /* border */
   border: none;
   border-radius: 8px;
 }
-
-.profile-update-button:hover {
-  color: gray;
-}
-
-.profile-update-button:active {
-  color: whitesmoke;
-}
-
 
 .el-input__inner {
   color: whitesmoke;
