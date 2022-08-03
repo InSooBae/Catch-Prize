@@ -51,6 +51,6 @@ const onSubmit = () => {
 
 </script>
 
-<style>
+<style scoped>
 @import '../../assets/notice.css';
 </style>

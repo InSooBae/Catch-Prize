@@ -77,7 +77,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import '../../assets/notice.css';
 </style>
 

@@ -14,6 +14,6 @@ const notice = {
   title: '',
 }
 </script>
-<style>
+<style scoped>
 @import '../../assets/notice.css';
 </style>
