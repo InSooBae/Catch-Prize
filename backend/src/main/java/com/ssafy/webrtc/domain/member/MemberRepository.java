@@ -21,4 +21,6 @@ public interface MemberRepository extends JpaRepository<Member, UUID> {
     void updateRefreshToken(@Param("id") UUID id, @Param("token") String token);
 
     Optional<Member> findMemberByTokenAndJoinPath(String token, JoinPathType joinPath);
+
+    Optional<Member> findByNickname(String nickname);
 }

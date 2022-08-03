@@ -1,10 +1,7 @@
 package com.ssafy.webrtc.domain.friend;
 
 import com.ssafy.webrtc.domain.member.entity.Member;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -23,12 +20,34 @@ public class Friend {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fr_from_member", referencedColumnName = "member_id", nullable = false, updatable = false)
-    private Member fromMemberId;
+    private Member fromMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fr_to_member", referencedColumnName = "member_id", nullable = false, updatable = false)
-    private Member toMemberId;
+    private Member toMember;
 
-    @Column(name = "accept", columnDefinition = "boolean default false")
-    private boolean isAccept;
+    @Column(name = "pending", columnDefinition = "boolean default false")
+    private boolean pending;
+
+    @Column(name = "is_friend", columnDefinition = "boolean default false")
+    private boolean isFriend;
+
+
+    public Friend(Member fromMember, Member toMember, boolean pending, boolean isFriend) {
+        this.fromMember = fromMember;
+        this.toMember = toMember;
+        this.pending = pending;
+        this.isFriend = isFriend;
+    }
+
+    public static Friend of(Member fromMember, Member toMember, boolean pending, boolean isFriend) {
+        return new Friend(fromMember,toMember,pending,isFriend);
+    }
+
+    public void allowFriend() {
+        this.pending = false;
+        this.isFriend = true;
+    }
+
+
 }

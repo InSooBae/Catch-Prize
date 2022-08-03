@@ -23,7 +23,7 @@ public class Member extends BaseTimeEntity implements Persistable<UUID> {
     @Column(name = "member_id", columnDefinition = "binary(16)", updatable = false)
     private UUID id;
 
-    @Column(name = "nickname", length = 20)
+    @Column(name = "nickname", length = 20, unique = true)
     private String nickname;
 
     // 각 플랫폼에서 제공하는 식별값(고유하지 않을 수 있음)

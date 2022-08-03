@@ -25,14 +25,14 @@ public class JwtTokenProvider {
 
     private final String SECRET_KEY;
     private final String COOKIE_REFRESH_TOKEN_KEY;
-    private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60;		// 1hour
-    private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 24 * 7;	// 1week
+    private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60;        // 1hour
+    private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 24 * 7;    // 1week
     private final String AUTHORITIES_KEY = "role";
 
 
     private final MemberRepository memberRepository;
 
-    public JwtTokenProvider(@Value("${app.auth.token.secret-key}") String secretKey, @Value("${app.auth.token.refresh-cookie-key}")String cookieKey, MemberRepository memberRepository) {
+    public JwtTokenProvider(@Value("${app.auth.token.secret-key}") String secretKey, @Value("${app.auth.token.refresh-cookie-key}") String cookieKey, MemberRepository memberRepository) {
         this.SECRET_KEY = Base64.getEncoder().encodeToString(secretKey.getBytes());
         this.COOKIE_REFRESH_TOKEN_KEY = cookieKey;
         this.memberRepository = memberRepository;
@@ -77,7 +77,7 @@ public class JwtTokenProvider {
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("Lax")
-                .maxAge(REFRESH_TOKEN_EXPIRE_LENGTH/1000)
+                .maxAge(REFRESH_TOKEN_EXPIRE_LENGTH / 1000)
                 .path("/")
                 .build();
 
@@ -97,7 +97,7 @@ public class JwtTokenProvider {
 
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
         // FIXME: username 유뮤
         log.info("username = {}", claims.get("username"));
@@ -124,8 +124,9 @@ public class JwtTokenProvider {
     }
 
     // Access Token 만료시 갱신때 사용할 정보를 얻기 위해 Claim 리턴
-    private Claims parseClaims(String accessToken) {	
+    private Claims parseClaims(String accessToken) {
         try {
+            log.info("jwtProvider token : {}", accessToken);
             return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
