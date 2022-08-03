@@ -39,6 +39,34 @@ const router = createRouter({
       path: '/redirect',
       name: 'redirect',
       component: () => import('../views/RedirectView.vue'),
+    },
+    {
+      path: '/notice',
+      name: 'notice',
+      component: () => import('../views/NoticeView.vue'),
+        children: [
+        {
+          path: '',
+          name: 'notices',
+          component: () => import('../components/notice/NoticeList.vue'),
+        },
+        {
+          path: 'new',
+          name: 'noticeNew',
+          component: () => import('../components/notice/NoticeNew.vue')
+        },
+        {
+          path: ':noticeId/edit',
+          name: 'noticeEdit',
+          component: () => import('../components/notice/NoticeEdit.vue')
+        },
+        {
+          path: ':noticeId',
+          name: 'noticeDetail',
+          component: () => import('../components/notice/NoticeDetail.vue'),
+          // props: true,
+        }
+      ]
     }
   ]
 })
