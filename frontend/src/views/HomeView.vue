@@ -41,15 +41,42 @@
 <script setup>
 import StarBackground from '@/components/StarBackground.vue'
 import Game from '@/components/sample-game/SampleGame.vue'
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import { BASE_URL } from '../constants'
 
+const store = useStore()
+const router = useRouter()
+
+const isLoggedIn = computed(() => store.getters.isLoggedIn)
 const drawer = ref(false)
 const option = 'menubar=no, status=no, toolbar=no'
 
-const loginPopup = (url) => {
-  window.open(`http://localhost:3000/login/${url}`, 'window', option);
+store.dispatch('saveToken', localStorage.getItem('token'));
+
+const gameOpen = () => {
+  if (!isMobile.value) drawer.value = true
 }
 
+const loginPopup = (url) => window.open(`${BASE_URL}/login/${url}`, '_blank', option);
+
+const detectMobile = () => {
+  try {
+    document.createEvent("TouchEvent");
+    document.getElementById('login_button_group').style.width = '280px';
+    document.getElementById('catch_prize').style.fontSize = '28px';
+    document.getElementById('catch_prize').style.margin = '10px 0';
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+onMounted(() => {
+  isMobile.value = detectMobile();
+  if (isLoggedIn.value) router.push({ name:'lobbyMain' })
+})
 </script>
 
 <style>
@@ -111,12 +138,12 @@ const loginPopup = (url) => {
 .text-animation {
   transition: all ease 0.3s 0s;
   vertical-align: bottom;
-  padding-top: 15px;
+  padding-top: 30px;
 }
 
 .text-animation:hover {
   padding: 0 1px;
-  padding-bottom: 15px;
+  padding-bottom: 30px;
 }
 
 @keyframes blink-effect {
