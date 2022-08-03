@@ -44,4 +44,10 @@ public class Friend {
         return new Friend(fromMember,toMember,pending,isFriend);
     }
 
+    public void allowFriend() {
+        this.pending = false;
+        this.isFriend = true;
+    }
+
+
 }

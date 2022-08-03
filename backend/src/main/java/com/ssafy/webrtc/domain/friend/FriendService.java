@@ -4,30 +4,35 @@ import com.ssafy.webrtc.domain.member.MemberRepository;
 import com.ssafy.webrtc.domain.member.entity.Member;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FriendService {
 
     private final FriendRepository friendRepository;
 
     private final MemberRepository memberRepository;
 
-//    1. 친구 목록 전체 조회
+    //    1. 친구 목록 전체 조회
 //    (select * from friend where tomemberid=나 and isFriend=true)
 //    3. 나한테 친구 요청한 리스트 가져오기
 //    (select * from friend where tomemberid=나 and pending=true)
+    @Transactional(readOnly = true)
     public List<FriendResponseDto> findAllFriends() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CustomUserDetails userDetails = (CustomUserDetails)principal;
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
 
         UUID myId = ((CustomUserDetails) principal).getId();
 
@@ -41,11 +46,11 @@ public class FriendService {
         return friendResponseDtos;
     }
 
-//    2. 친구 추가 요청하기 post("/{친구닉네임}")
+    //    2. 친구 추가 요청하기 post("/{친구닉네임}")
 //    (insert into friend values (id_auto, frommemberid="나", tomemberid="너", pending=true, isFriend=False)
     public Long addFriend(String friendNickname) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CustomUserDetails userDetails = (CustomUserDetails)principal;
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
 
         UUID myId = ((CustomUserDetails) principal).getId();
 
@@ -53,8 +58,15 @@ public class FriendService {
 
         Optional<Member> toMember = memberRepository.findByNickname(friendNickname);
 
-        // 이미 친구상태인데 친구 요청 보낼 경우?
-        if(friendRepository.findDuplicatePending(fromMember.get().getId(), toMember.get().getId()).isFriend()) {
+        log.info("addFriend {} -> {}", friendNickname, toMember.get().getId());
+
+        Optional<Friend> duplicatePending = friendRepository.findDuplicatePending(fromMember.get().getId(), toMember.get().getId());
+        //
+
+        // null + 존재할때 isFriend가 False ->
+        if (duplicatePending.isPresent()) {
+            // 이미 친구상태인데 친구 요청 보낼 경우?
+            // 존재
             return -1L; // 이미 친구상태인 경우 -1L 보내기
         }
 
@@ -64,11 +76,10 @@ public class FriendService {
     }
 
 
-
     // 친구 수락하여 친구 추가됨
     public Long acceptFriend(String friendNickname) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CustomUserDetails userDetails = (CustomUserDetails)principal;
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
 
         UUID myId = ((CustomUserDetails) principal).getId();
 
@@ -78,13 +89,24 @@ public class FriendService {
 
         // 이 부분 제대로 동작할지? 기존꺼 update 안하고 새로 insert 해버리는건 아닐지
 
-        // 1. 상대->나 요청 레코드를 친구로 update
-        Friend friend = Friend.of(toMember.get(), fromMember.get(),false,true);
-        friendRepository.save(friend);
+        Optional<Friend> fromMeOptional = friendRepository.findDuplicatePending(myId, toMember.get().getId());
+        Optional<Friend> toMeOptional = friendRepository.findDuplicatePending(toMember.get().getId(), myId);
 
-        // 2. 나->상대 요청 레코드를 친구로 update or insert
-        friend = Friend.of(fromMember.get(),toMember.get(),false,true);
-        return friendRepository.save(friend).getId(); // 마지막에 update된 record id 반환
+
+        Friend toMe = toMeOptional.get();
+        log.info("friendService tome : {}", toMe.getId());
+        toMe.allowFriend();
+
+        friendRepository.save(toMe);
+
+        Friend fromMe;
+        if (fromMeOptional.isPresent()) {
+            fromMe = fromMeOptional.get();
+            fromMe.allowFriend();
+        } else {
+            fromMe = Friend.of(fromMember.get(), toMember.get(), false, true);
+        }
+        return friendRepository.save(fromMe).getId(); // 마지막에 update된 record id 반환
 
     }
 
@@ -101,23 +123,19 @@ public class FriendService {
     public Long deleteFriend(String friendNickname) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        CustomUserDetails userDetails = (CustomUserDetails)principal;
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
 
         UUID myId = ((CustomUserDetails) principal).getId();
 
-        Optional<Member> fromMember = memberRepository.findById(myId);
-
         Optional<Member> toMember = memberRepository.findByNickname(friendNickname);
 
-        // 1. 상대->나 레코드를 delete
-        Friend friend = Friend.of(toMember.get(), fromMember.get(),false,true);
-        friendRepository.delete(friend);
+        Optional<Friend> fromMeOptional = friendRepository.findDuplicatePending(myId, toMember.get().getId());
+        Optional<Friend> toMeOptional = friendRepository.findDuplicatePending(toMember.get().getId(), myId);
 
-        // 2. 나->상대 요청 레코드를 delete
-        friend = Friend.of(fromMember.get(),toMember.get(),false,true);
-        friendRepository.delete(friend);
+        fromMeOptional.ifPresent(friendRepository::delete);
+        toMeOptional.ifPresent(friendRepository::delete);
 
-        return friend.getId(); // 마지막에 삭제된 레코드 id 반환
+        return 1L;
 
     }
 

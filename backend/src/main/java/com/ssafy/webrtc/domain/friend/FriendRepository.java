@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -13,7 +14,7 @@ public interface FriendRepository extends JpaRepository<Friend,Long> {
     @Query("select f from Friend f where f.toMember.id = :myId")
     List<Friend> findAllFriends(UUID myId);
 
-    @Query("select f from Friend f where f.fromMember=:myId and f.toMember=:friendId")
-    Friend findDuplicatePending(UUID myId, UUID friendId);
+    @Query("select f from Friend f where f.fromMember.id=:myId and f.toMember.id=:friendId")
+    Optional<Friend> findDuplicatePending(UUID myId, UUID friendId);
 
 }
