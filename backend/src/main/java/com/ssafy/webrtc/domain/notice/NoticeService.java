@@ -64,9 +64,9 @@ public class NoticeService {
     }
 
     // 공지사항 작성
-    public Long create(NoticeDto noticeDto) {
+    public Long create(NoticeRequestDto noticeDto) {
         String title = noticeDto.getTitle();
-        String content = noticeDto.getTitle();
+        String content = noticeDto.getContent();
 
         // 어떤 유저인지 식별해야함
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
