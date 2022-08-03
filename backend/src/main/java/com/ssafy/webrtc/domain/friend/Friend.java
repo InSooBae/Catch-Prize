@@ -1,10 +1,7 @@
 package com.ssafy.webrtc.domain.friend;
 
 import com.ssafy.webrtc.domain.member.entity.Member;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -34,5 +31,17 @@ public class Friend {
 
     @Column(name = "is_friend", columnDefinition = "boolean default false")
     private boolean isFriend;
+
+
+    public Friend(Member fromMember, Member toMember, boolean pending, boolean isFriend) {
+        this.fromMember = fromMember;
+        this.toMember = toMember;
+        this.pending = pending;
+        this.isFriend = isFriend;
+    }
+
+    public static Friend of(Member fromMember, Member toMember, boolean pending, boolean isFriend) {
+        return new Friend(fromMember,toMember,pending,isFriend);
+    }
 
 }

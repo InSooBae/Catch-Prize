@@ -11,6 +11,9 @@ import java.util.UUID;
 public interface FriendRepository extends JpaRepository<Friend,Long> {
 
     @Query("select f from Friend f where f.toMember.id = :myId")
-    List<FriendDto> findAllFriends(UUID myId);
+    List<Friend> findAllFriends(UUID myId);
+
+    @Query("select f from Friend f where f.fromMember=:myId and f.toMember=:friendId")
+    Friend findDuplicatePending(UUID myId, UUID friendId);
 
 }

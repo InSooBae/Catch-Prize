@@ -1,9 +1,7 @@
 package com.ssafy.webrtc.domain.friend;
 
-import com.ssafy.webrtc.domain.notice.Notice;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -11,22 +9,23 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendDto {
+public class FriendResponseDto {
 
     private Long id;
 
-    private UUID toMemberId;
+    private String friendNickname;
 
     private boolean pending;
 
     private boolean isFriend;
 
-    public static FriendDto ofFriendDto(Friend friend) {
-        return FriendDto.builder()
+    public static FriendResponseDto of(Friend friend) {
+        return FriendResponseDto.builder()
                 .id(friend.getId())
-                .toMemberId(friend.getToMember().getId())
+                .friendNickname(friend.getFromMember().getNickname())
                 .pending(friend.isPending())
                 .isFriend(friend.isFriend())
                 .build();
     }
+
 }
