@@ -13,8 +13,9 @@
           </tr>
           <tr v-for="p in paginatedData" :key="p.id">
             <td>{{ p.id }}</td>
-            <td><router-link :to="{ name: 'noticeDetail', params: { noticeId : p.id } }">{{ p.title }}</router-link></td>
-            <td>{{ p.regDate }}</td>
+            <td>
+            <router-link :to="{ name: 'noticeDetail', params: { noticeId: p.id }}">{{ p.title }}</router-link></td>
+            <td>{{ p.regDate.substr(0,10) }}</td>
           </tr>
         </table>
       </div>
@@ -37,13 +38,6 @@
 </template>
 
 <script>
-// import { mapActions, mapGetters } from 'vuex'
-// const data = {
-//   title: "제목",
-//   content: "내용",
-//   reg_date: "2022-10-22",
-//   user_id: "admmin1"
-// }
 export default {
   name: "NoticeListItems",
   data() {
@@ -53,13 +47,12 @@ export default {
   },
   props: {
     listArray: {
-      type: Array,
-      required: true,
+
     },
     pageSize: {
       type: Number,
       required: false,
-      default: 10,
+      default: 5,
     },
   },
   methods: {
@@ -88,66 +81,6 @@ export default {
 </script>
 
 <style>
-.notice-container{
-  display : flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.btn-table-container{
-  width:50rem;
-}
-.notice-create-btn{
-  display: flex;
-  justify-content: flex-end;
-
-}
-.create-btn{
-  width : 5rem;
-  height: 2rem;
-}
-table {
-  width:50rem;
-  border-collapse: collapse;
-}
-
-table th {
-  font-size: 1.2rem;
-}
-
-table tr {
-  height: 2rem;
-  text-align: center;
-  border-bottom: 1px solid #505050;
-}
-
-table tr:first-of-type {
-  border-top: 2px solid #404040;
-}
-
-table tr td {
-  padding: 1rem 0;
-  font-size: 1.1rem;
-}
-.table-no {
-  width: 10%
-}
-.table-time{
-  width: 10%
-}
-
-.btn-cover {
-  margin-top: 1.5rem;
-  text-align: center;
-}
-
-.btn-cover .page-btn {
-  width: 5rem;
-  height: 2rem;
-  letter-spacing: 0.5px;
-}
-
-.btn-cover .page-count {
-  padding: 0 1rem;
-}
+@import '../../assets/notice.css';
 </style>
 

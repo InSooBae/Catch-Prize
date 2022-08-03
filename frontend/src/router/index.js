@@ -36,35 +36,38 @@ const router = createRouter({
       component: () => import('../views/GameView.vue')
     },
     {
-<<<<<<< HEAD
-      path: '/notice',
-      name: 'notices',
-      component: () => import('../components/notice/NoticeListView.vue'),
-      children:[
-        {
-          path: '/notice/new',
-          name: 'noticeNew',
-          component: () => import('../components/notice/NoticeNewView.vue')
-        },
-        {
-          path: '/notice/:noticeId/edit',
-          name: 'noticeEdit',
-          component: () => import('../components/notice/NoticeEditView.vue')
-        },
-        {
-          path: '/notice/:noticeId',
-          name: 'noticeDetail',
-          component: () => import('../components/notice/NoticeDetailView.vue')
-        }
-      ]
-    },
- 
-=======
       path: '/redirect',
       name: 'redirect',
       component: () => import('../views/RedirectView.vue'),
+    },
+    {
+      path: '/notice',
+      name: 'notice',
+      component: () => import('../views/NoticeView.vue'),
+        children: [
+        {
+          path: '',
+          name: 'notices',
+          component: () => import('../components/notice/NoticeList.vue'),
+        },
+        {
+          path: 'new',
+          name: 'noticeNew',
+          component: () => import('../components/notice/NoticeNew.vue')
+        },
+        {
+          path: ':noticeId/edit',
+          name: 'noticeEdit',
+          component: () => import('../components/notice/NoticeEdit.vue')
+        },
+        {
+          path: ':noticeId',
+          name: 'noticeDetail',
+          component: () => import('../components/notice/NoticeDetail.vue'),
+          // props: true,
+        }
+      ]
     }
->>>>>>> 1cb2e7501bfcc2eb78116c55f37833c3cef639b5
   ]
 })
 
