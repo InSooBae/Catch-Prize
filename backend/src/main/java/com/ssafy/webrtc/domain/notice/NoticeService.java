@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
@@ -34,6 +36,7 @@ public class NoticeService {
 //    }
 
     // 공지사항 글 한개 상세조회
+    @Transactional(readOnly = true)
     public NoticeResponseDto findById(Long noticeId) {
         Notice notice = noticeRepository.findById(noticeId).get();
 //      NoticeDto noticeDto = NoticeDto.ofNoticeDto(notice);
@@ -42,6 +45,7 @@ public class NoticeService {
     }
 
     // 공지사항 글 페이징 조회
+    @Transactional(readOnly = true)
     public Page<NoticeResponseDto> findByPgno(Pageable pageable) {
         // 페이지 넘버는 0페이지부터 시작
         Page<Notice> notices = noticeRepository.findAllByOrderByCreateDateDesc(pageable);
