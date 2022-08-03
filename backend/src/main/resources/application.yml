@@ -7,7 +7,7 @@ spring:
 
   jpa:
     hibernate:
-      # 개발 단계에서만 이용
+      # 개발 단계에서만 이용(create-drop)
       ddl-auto: update
       # ddl-auto: validate
     properties:
@@ -16,6 +16,7 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
+    open-in-view: false # REST용 Framework이므로 OSIV 해제
   
   # swagger 매칭
   mvc:

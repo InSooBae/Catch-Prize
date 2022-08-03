@@ -11,12 +11,16 @@ import com.ssafy.webrtc.global.security.auth.OAuth2UserInfo;
 import com.ssafy.webrtc.global.security.auth.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.utility.RandomString;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -31,6 +35,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
 
+    private static final String USER = "USER_";
+
     // OAuth2UserRequest에 있는 Access Token으로 유저정보 get
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -43,6 +49,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private OAuth2User process(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         JoinPathType joinPathType = JoinPathType.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toUpperCase());
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(joinPathType.name(), oAuth2User.getAttributes());
+        StringBuilder sb = new StringBuilder();
 
 
         log.info("유저이름 = {}", oAuth2User.getAttributes());
@@ -54,8 +61,52 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 이미 가입된 경우 해당 멤버로 CustomUserDetails생성
         // 가입되지 않은 경우 회원가입후 CustomUserDetails생성
-        member = memberOptional.orElseGet(() -> createUser(userInfo, joinPathType));
+        if (memberOptional.isEmpty()) {
+            // 가입 안됐다 -> 닉네임 확인
+            randomNickname(userInfo, sb, joinPathType);
+            member = createUser(userInfo, joinPathType);
+        } else {
+            member = memberOptional.get();
+        }
+            // 가입 됐다 -> 걍 진행
         return CustomUserDetails.create(member, oAuth2User.getAttributes());
+    }
+
+    private void randomNickname(OAuth2UserInfo userInfo, StringBuilder sb, JoinPathType joinPathType) {
+        sb.append(USER);
+        while (true) {
+            log.info("customOAUthService 유저 인포 = {}", userInfo.getName());
+            Optional<Member> hasMember = memberRepository.findByNickname(userInfo.getName());
+            if (hasMember.isPresent()) {
+                // 랜덤 값 넣어줌
+                String random = RandomStringUtils.random(15, true, true);
+                if (sb.length() > 4) {
+                    sb.setLength(0);
+                    sb.append(USER);
+                }
+                sb.append(random);
+                // 랜덤숫자 넣어주고
+                switch (joinPathType) {
+                    case KAKAO:
+//                        log.info("cous attribute = {}", userInfo.getAttributes().get("properties"));
+                        Map<String, Object> properties = (Map<String, Object>) userInfo.getAttributes().get("properties");
+                        properties.put("nickname",sb.toString());
+//                        log.info("cous attribute = {}", userInfo.getAttributes().get("properties"));
+                        break;
+                    case NAVER:
+                        Map<String, Object> response = (Map<String, Object>) userInfo.getAttributes().get("response");
+                        response.put("name", sb.toString());
+                        break;
+                    case GOOGLE:
+                        Map<String, Object> attributes = userInfo.getAttributes();
+                        HashMap<String, Object> newAttribute = new HashMap<>(attributes);
+                        newAttribute.put("name", sb.toString());
+                        userInfo.setAttributes(newAttribute);
+//                        log.info("cous attribute Google = {}", userInfo.getAttributes().get("name"));
+                        break;
+                }
+            } else break;
+        }
     }
 
     private Member createUser(OAuth2UserInfo userInfo, JoinPathType joinPathType) {
