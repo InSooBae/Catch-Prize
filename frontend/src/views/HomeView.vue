@@ -43,7 +43,7 @@
 <script setup>
 import StarBackground from '@/components/StarBackground.vue'
 import Game from '@/components/sample-game/SampleGame.vue'
-import { ref, onMounted, computed, watchEffect } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { BASE_URL } from '../constants'
@@ -51,19 +51,18 @@ import { BASE_URL } from '../constants'
 const store = useStore()
 const router = useRouter()
 
-store.dispatch('saveToken', localStorage.getItem('token'));
 const isLoggedIn = computed(() => store.getters.isLoggedIn)
 const drawer = ref(false)
 const isMobile = ref(false)
 const option = 'menubar=no, status=no, toolbar=no'
 
+store.dispatch('saveToken', localStorage.getItem('token'));
+
 const gameOpen = () => {
   if (!isMobile.value) drawer.value = true
 }
 
-const loginPopup = (url) => {
-  window.open(`${BASE_URL}/login/${url}`, 'window', option);
-}
+const loginPopup = (url) => window.open(`${BASE_URL}/login/${url}`, '_blank', option);
 
 const detectMobile = () => {
   try {
@@ -72,18 +71,15 @@ const detectMobile = () => {
     document.getElementById('catch_prize').style.fontSize = '28px';
     document.getElementById('catch_prize').style.margin = '10px 0';
     return true;
-  } catch (e) {
+  } catch (err) {
     return false;
   }
 };
 
-const storageListener = () => {console.log('dd')}
-
 onMounted(() => {
   isMobile.value = detectMobile();
-  if (isLoggedIn.value) router.push({ name:'lobby' })
+  if (isLoggedIn.value) router.push({ name:'lobbyMain' })
 })
-
 </script>
 
 <style>
@@ -150,12 +146,12 @@ onMounted(() => {
 .text-animation {
   transition: all ease 0.3s 0s;
   vertical-align: bottom;
-  padding-top: 15px;
+  padding-top: 30px;
 }
 
 .text-animation:hover {
   padding: 0 1px;
-  padding-bottom: 15px;
+  padding-bottom: 30px;
 }
 
 @keyframes blink-effect {
