@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import user from '../store'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,7 +22,10 @@ const router = createRouter({
         {
           path: '',
           name: 'lobbyMain',
-          component: () => import('../components/lobby/RoomList.vue'),
+          components: {
+            default: () => import('../components/lobby/RoomList.vue'),
+            notice: () => import('../components/notice/NoticeList.vue'),
+          }
         },
         {
           path: ':gameid',
@@ -44,7 +48,12 @@ const router = createRouter({
       path: '/notice',
       name: 'notice',
       component: () => import('../views/NoticeView.vue'),
-        children: [
+      beforeEnter: () => {
+        if (!user.getters.isAdmin) {
+          return { name: 'home'}
+        }
+      },
+      children: [
         {
           path: '',
           name: 'notices',

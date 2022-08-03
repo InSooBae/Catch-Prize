@@ -1,15 +1,10 @@
 <template>
-  <div class="container">
-    <notice-form 
-      :notice="{
-        id: notice.id,
-        title: notice.title,
-        content: notice.content,
-      }"
-      action="수정">
-    </notice-form>
-  </div>
-
+  <notice-form :notice="{
+    id: notice.id,
+    title: notice.title,
+    content: notice.content,
+  }" action="수정">
+  </notice-form>
 </template>
 
 

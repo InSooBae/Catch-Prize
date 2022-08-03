@@ -12,9 +12,7 @@
       <div class="title-container">
       <ul>
         <li>제목 : {{ notice.title }} {{ notice.regDate }}</li>
-
         <li>내용 : {{ notice.content }}</li>
-
       </ul>
     </div>
     </div>
@@ -36,9 +34,7 @@ const notice = computed(()  => store.getters.notice)
 
 const fetchNotice = () => store.dispatch('fetchNotice', route.params.noticeId)
 const deleteNotice = () => store.dispatch('deleteNotice', route.params.noticeId)
-const editNotice = (noticeId) => {
-  router.push({ name: 'noticeEdit', params: { noticeId } })
-  }
+const editNotice = (noticeId) => router.push({ name: 'noticeEdit', params: { noticeId } })
 console.log(notice)
 onMounted(() => {
   fetchNotice()

@@ -1,7 +1,7 @@
 <template>
   <div class="lobby-layout">
     <el-dialog custom-class="notice-modal" v-model="noticeVisible" title="Notice" width="50%" center>
-      <span>Notice의 내용입니다.</span>
+    <RouterView name="notice" />
       <template #footer>
         <span class="dialog-footer">
           <el-button type="primary" @click="noticeVisible = false">Close</el-button>

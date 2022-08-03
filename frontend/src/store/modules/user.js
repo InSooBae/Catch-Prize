@@ -6,6 +6,7 @@ const user = {
     token: sessionStorage.getItem('token') || '' ,
     currentUser: {},
     friendsList: [],
+    isAdmin: false,
     authError: null,
   },
   mutations: {
@@ -19,7 +20,8 @@ const user = {
     currentUser: state => state.currentUser,
     friendsList: state => state.friendsList,
     authError: state => state.authError,
-    authHeader: state => ({ Authorization: `Bearer ${state.token}`})
+    authHeader: state => ({ Authorization: `Bearer ${state.token}`}),
+    isAdmin: state => state.isAdmin,
   },
   actions: {
     saveToken({ commit }, token) {
