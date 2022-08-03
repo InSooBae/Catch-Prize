@@ -1,50 +1,70 @@
 <template>
   <div class="declare-container">
     <div class="declare-card">
-      <button>
+      <button v-on:click="attackDeclare" ref="declareRef">
         <img src="../assets/cake.svg" alt="오이케이크" />
+        cake
       </button>
-      <button>
-        <img src="../assets/chicken.svg" alt="신호등치킨" />
-      </button>
-      <button>
+      <button v-on:click="attackDeclare" ref="declareRef">
         <img src="../assets/durian.svg" alt="두리안" />
+        durian
       </button>
-      <button>
+      <button v-on:click="attackDeclare" ref="declareRef">
         <img src="../assets/eggplant.svg" alt="가지" />
+        eggplant
       </button>
-      <button>
+      <button v-on:click="attackDeclare" ref="declareRef">
         <img src="../assets/insect.svg" alt="곤충튀김" />
+        insect
       </button>
-      <button>
+      <button v-on:click="attackDeclare" ref="declareRef">
         <img src="../assets/mint.svg" alt="민트초코" />
+        mint
+      </button>
+      <button v-on:click="attackDeclare" ref="declareRef">
+        <img src="../assets/pizza.svg" alt="피자">
+        pizza
       </button>
     </div>
   </div>
 </template>
-<script>
-export default {
-  
+<script setup>
+import { ref, onMounted, inject } from "vue";
+const declareRef = ref(null);
+const $hobulhoSocket = inject("$hobulhoSocket");
+const $hobulhostate = inject("$hobulhostate");
+
+function attackDeclare(){
+    console.log("declare-click");
+    const declareCard = declareRef.value.textContent;
+    console.log(declareCard);
+    $hobulhoSocket.emit("declare-click", declareCard);
+    $hobulhostate.declaredcard = declareCard;
+    $hobulhostate.gamestate = "judge"
 }
+
 </script>
-<style>
+<style scoped>
 .declare-container{
   display: flex;
   justify-content: center;
   align-items: center;
+  /* border: 1px solid white; */
 }
 .declare-card{
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  height: 20rem;
-  width: 24rem;
+  /* justify-content: flex-start; */
+  /* align-items: flex-start; */
+  height: 80vh;
+  width: 50vw;
   min-width: 20rem;
   flex-flow: row wrap;
+  /* border: 1px solid white; */
 }
 .declare-card button{
-  height: 11rem;
+  height: 15rem;
   width:33%;
+  height: 50%;
   padding: 0px ;
   margin: 0;
   background-color:transparent;

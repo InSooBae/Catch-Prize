@@ -12,20 +12,27 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { reactive, toRefs, inject } from "vue";
 import HeaderHome from "./header/HeaderHome.vue";
 import LeftHome from "./main/LeftHome.vue";
 import RightHome from "./main/PlayersHome.vue";
+import { useStore } from "vuex";
 
-export default {
-  name: "hobulho-game",
+// const store = useStore();
+const $hobulhostate = inject("$hobulhostate");
 
-  components: {
-    HeaderHome,
-    LeftHome,
-    RightHome,
-  },
+const nowstate = $hobulhostate.gamestate;
+
+
+//현재상태가 ready 일때 게임 시작
+const gameStart = () => {
+  if (nowstate === "ready") {
+    $hobulhostate.gamestate = "start";
+    //socket으로 데이터 받아오기 players...
+  }
 };
+gameStart();
 </script>
 
 <style>
@@ -36,22 +43,22 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.header-container{
+.header-container {
   height: 100%;
   width: 100%;
   margin-bottom: 20px;
 }
-.main-container{
-  height:calc(100vh - 100px);
+.main-container {
+  height: calc(100vh - 100px);
   display: flex;
   flex-direction: row;
 }
-.left-home{
+.left-home {
   width: 30%;
   min-width: 350px;
   min-height: 600px;
 }
-.right-home{
+.right-home {
   width: 70%;
   margin-left: 20px;
   min-height: 600px;

@@ -33,7 +33,14 @@ const router = createRouter({
     {
       path: '/game',
       name: 'game',
-      component: () => import('../views/GameView.vue')
+      component: () => import('../views/GameView.vue'),
+      children: [
+        {
+          path: ':gameid',
+          name: 'gameplayroom',
+          component: () => import('../components/hobulho-game/HobulhoGame.vue')
+        }
+      ]
     },
     {
       path: '/redirect',
