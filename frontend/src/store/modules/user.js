@@ -1,4 +1,5 @@
 import axios from "axios";
+import { EventSourcePolyfill } from 'event-source-polyfill';
 import { API_BASE_URL } from "../../constants";
 import jwt_decode from "jwt-decode";
 
@@ -53,21 +54,31 @@ const user = {
           })
       }
     },
-    fetchFriendsList({ commit }) {
-      commit('SET_FRIENDS', [
-        { id: 1, profile: '100', name: '황태희' },
-        { id: 2, profile: '100', name: '황태희' },
-        { id: 3, profile: '300', name: '이태희' },
-        { id: 4, profile: '123', name: '박태희' },
-        { id: 5, profile: '124', name: '고태희' },
-        { id: 6, profile: '125', name: '스탑태희' },
-        { id: 7, profile: '126', name: '돈스탑태희' },
-        { id: 8, profile: '100', name: '황태희' },
-        { id: 9, profile: '200', name: '김태희' },
-        { id: 10, profile: '300', name: '이태희' },
-      ])
-    }
-  },
+        fetchFriendsList({commit, getters}) {
+            // axios.get(API_BASE_URL + '/friend/subscribe')
+
+            console.log("친구 통신");
+            const eventSource = new EventSourcePolyfill(`${API_BASE_URL}/friend/subscribe`, {headers: getters.authHeader});
+            eventSource.addEventListener("sse", function (event) {
+                console.log(event.data);
+            })
+
+
+
+            commit('SET_FRIENDS', [
+                {id: 1, profile: '100', name: '황태희'},
+                {id: 2, profile: '100', name: '황태희'},
+                {id: 3, profile: '300', name: '이태희'},
+                {id: 4, profile: '123', name: '박태희'},
+                {id: 5, profile: '124', name: '고태희'},
+                {id: 6, profile: '125', name: '스탑태희'},
+                {id: 7, profile: '126', name: '돈스탑태희'},
+                {id: 8, profile: '100', name: '황태희'},
+                {id: 9, profile: '200', name: '김태희'},
+                {id: 10, profile: '300', name: '이태희'},
+            ])
+        }
+    },
 
 };
 
