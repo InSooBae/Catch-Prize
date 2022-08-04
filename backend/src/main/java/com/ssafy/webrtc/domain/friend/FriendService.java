@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class FriendService {
-    private static final Long DEFAULT_TIMEOUT = -1L;
+    private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
 
     private final FriendRepository friendRepository;
 
@@ -32,23 +33,53 @@ public class FriendService {
     private final EmitterRepository emitterRepository;
 
 
-    public SseEmitter subscribe(UUID userId) {
-        SseEmitter emitter = emitterRepository.save(userId, new SseEmitter(DEFAULT_TIMEOUT));
-        emitter.onCompletion(() -> emitterRepository.deleteById(userId));
-        emitter.onTimeout(() -> emitterRepository.deleteById(userId));
+    public SseEmitter subscribe(UUID userId, String lastEventId) {
+
+        String id = userId + "_" + System.currentTimeMillis();
+
+        SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
+        emitter.onCompletion(() -> emitterRepository.deleteById(id));
+        emitter.onTimeout(() -> emitterRepository.deleteById(id));
+
+        // 503 에러를 방지하기 위한 더미"" 이벤트 전송
+        sendToClient(emitter, id, "EventStream Created. [userId=" + userId + "]");
+
+        // 클라이언트가 미수신한 Event 목록이 존재할 경우 전송하여 Event 유실을 예방
+        if (!lastEventId.isEmpty()) {
+            Map<String, Object> events = emitterRepository.findAllEventCacheStartWithId(String.valueOf(userId));
+            events.entrySet().stream()
+                    .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
+                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue()));
+        }
+
         return emitter;
     }
 
-    public void send(UUID userId, FriendResponseDto response) {
-        emitterRepository.findById(userId)
-                .ifPresent(emitter -> {
-                            try {
-                                emitter.send(SseEmitter.event().data(response));
-                            } catch (IOException exception) {
-                                emitterRepository.deleteById(userId);
-                            }
-                        }
-                );
+    private void sendToClient(SseEmitter emitter, String id, Object data) {
+
+        try {
+            emitter.send(SseEmitter.event()
+                    .id(id)
+                    .name("sse")
+                    .data(data));
+        } catch (IOException exception) {
+            emitterRepository.deleteById(id);
+//            throw new RuntimeException("연결 오류!");
+        }
+    }
+
+    public void send(UUID userId, Friend friend) {
+        String id = String.valueOf(userId);
+
+        log.info("Friend Service send - id = {}", id);
+        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
+        sseEmitters.forEach(
+                (key, emitter) -> {
+//                    friendRepository.save(friend);
+                    emitterRepository.saveEventCache(key, friend);
+                    sendToClient(emitter, key, FriendResponseDto.of(friend));
+                }
+        );
     }
 
     //    1. 친구 목록 전체 조회
@@ -56,20 +87,21 @@ public class FriendService {
 //    3. 나한테 친구 요청한 리스트 가져오기
 //    (select * from friend where tomemberid=나 and pending=true)
     @Transactional(readOnly = true)
-    public List<FriendResponseDto> findAllFriends() {
+    public Long findAllFriends() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUserDetails userDetails = (CustomUserDetails) principal;
 
         UUID myId = ((CustomUserDetails) principal).getId();
 
+        log.info("findAllFriends - {}", myId);
         List<Friend> friends = friendRepository.findAllFriends(myId);
-        List<FriendResponseDto> friendResponseDtos = friends.stream().map(friend -> {
-            FriendResponseDto friendResponseDto = FriendResponseDto.of(friend);
-
-            return friendResponseDto;
-        }).collect(Collectors.toList());
-
-        return friendResponseDtos;
+        log.info("findAllFriends  friends- {}", friends.toString());
+        friends.forEach(friend -> {
+            log.info("friend - {}", friend.getId());
+            send(myId, friend);
+            send(friend.getFromMember().getId(), friend);
+        });
+        return 1L;
     }
 
     //    2. 친구 추가 요청하기 post("/{친구닉네임}")

@@ -19,12 +19,15 @@ public class FriendResponseDto {
 
     private boolean isFriend;
 
+    private boolean isOnline;
+
     public static FriendResponseDto of(Friend friend) {
         return FriendResponseDto.builder()
                 .id(friend.getId())
                 .friendNickname(friend.getFromMember().getNickname())
                 .pending(friend.isPending())
                 .isFriend(friend.isFriend())
+                .isOnline(friend.getFromMember().isOnline())
                 .build();
     }
 

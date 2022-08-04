@@ -21,8 +21,8 @@ public class FriendController {
     
     // 유저 아이디로 친구목록 & 친구신청 목록 조회
     @GetMapping("")
-    public ResponseEntity<List<FriendResponseDto>> findAllFriends() {
-        return new ResponseEntity<List<FriendResponseDto>>(friendService.findAllFriends(), HttpStatus.OK);
+    public ResponseEntity<?> findAllFriends() {
+        return new ResponseEntity<Long>(friendService.findAllFriends(), HttpStatus.OK);
     }
 
     // 친구 추가 요청 보내기
@@ -43,7 +43,8 @@ public class FriendController {
     }
 
     @GetMapping(value = "/subscribe", produces = "text/event-stream")
-    public SseEmitter subscribe(@AuthenticationPrincipal CustomUserDetails user) {
-        return friendService.subscribe(user.getId());
+    public SseEmitter subscribe(@AuthenticationPrincipal CustomUserDetails user, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
+        log.info("Friend Controller - username = {}",user.getName());
+        return friendService.subscribe(user.getId(), lastEventId);
     }
 }

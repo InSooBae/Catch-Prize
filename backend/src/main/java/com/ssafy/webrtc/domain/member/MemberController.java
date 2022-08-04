@@ -22,27 +22,19 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class MemberController {
 
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public MemberDto getCurrentUser(@AuthenticationPrincipal CustomUserDetails user) {
-        Member member = memberRepository.findById(user.getId()).orElseThrow(() -> new IllegalStateException("not found user"));
-
-        return MemberDto.builder()
-                .username(member.getNickname())
-                .build();
+        return memberService.findByLoginMember(user.getId());
     }
-    
+
     @GetMapping("/check")
     public ResponseEntity<?> checkDuplicateNickname(String nickname) {
-        Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
-        if (optionalMember.isPresent()) {
-            // 중복
-            return new ResponseEntity<>(1, HttpStatus.OK);
-        } else {
-            // 중복 아님
-            return new ResponseEntity<>(0, HttpStatus.OK);
-        }
+        Long isDuplicate = memberService.findByNickname(nickname);
+
+        return new ResponseEntity<>(isDuplicate, HttpStatus.OK);
+
     }
 }
