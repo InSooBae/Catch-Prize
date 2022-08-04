@@ -10,6 +10,7 @@
     "axios": "^0.27.2",
     "core-js": "^3.23.4",
     "element-plus": "^2.2.9",
+    "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "phaser": "^3.55.2",
     "vue": "^3.2.37",
@@ -19,9 +20,9 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
-    "vite": "^2.9.14",
     "sass": "^1.53.0",
-    "sass-loader": "^13.0.2"
+    "sass-loader": "^13.0.2",
+    "vite": "^2.9.14"
   },
   "license": "MIT",
   "repository": {

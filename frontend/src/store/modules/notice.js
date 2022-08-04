@@ -30,25 +30,29 @@ const notice =  {
         method: 'get',
         headers: getters.authHeader,
       })
-      .then(res => commit('SET_NOTICES', res.data))
-      .then(res => console.log(res.data))
-      .then(console.log('notices 불러오기 성공'))
+      .then(res => {
+        res.data.forEach(data => {
+          data.regDate = data.regDate.substr(0, 10)
+        })
+        commit('SET_NOTICES', res.data)
+        console.log(res.data)
+      })
       .catch(err => console.error(err.response))
     },
 
     // 특정 notice 가져오기
     fetchNotice({ commit, getters }, noticeId) {
-      console.log(noticeId)
       axios({
         url: noticeURL + `/${noticeId}/`,
         method: 'get',
         headers: getters.authHeader,
       })
-      .then(res => commit('SET_NOTICE', res.data))
-      .then(res => console.log(res.data))
-      .then(console.log('notice 불러오기 성공'))
+      .then(res => {
+        commit('SET_NOTICE', res.data)
+        console.log(res.data)
+      })
       .catch(err => {
-        console.error(err.response)
+        console.error(err)
         // if (err.response.status === 404) {
         //   router.push({ name: 'NotFound404' })
         // }
@@ -81,7 +85,6 @@ const notice =  {
         data: notice,
         headers: getters.authHeader,
       })
-      .then(console.log('update성공'))
       .then(res => {
         commit('SET_NOTICE', res.data)
         router.push({

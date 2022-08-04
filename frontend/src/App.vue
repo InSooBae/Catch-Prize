@@ -19,4 +19,11 @@ import { RouterView, RouterLink } from 'vue-router'
   src: url('assets/fonts/PressStart2P-Regular.ttf') format('truetype');
   font-weight: 400;
 }
+
+@font-face {
+  font-family:'Galmuri9';
+  src: url('assets/fonts/Galmuri9.ttf') format('truetype');
+  font-weight: 400;
+}
+
 </style>
