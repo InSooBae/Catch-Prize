@@ -33,6 +33,19 @@ public class FriendService {
     private final EmitterRepository emitterRepository;
 
 
+    // 우선 로그인한 친구의 리스트
+    // Front -> HashMap(친구의 리스트)<ID, Object>들고있어
+    // 그 온 정보의 ID put()
+
+    // 액터 (본인 -> 로그인)
+    // 1. 본인 친구의 리스트를 가져옴(초기화)
+    // 2. 다른 친구가 로그인 -> 로그인한 본인의 친구들에게 자기 자신의 상태를 날린다!
+    // 2-1. 다른 친구 A가 (오프라인 -> 온라인) 이 상태를 A의 친구들에게 날려야함. -> 실시간으로 A의 상태를 업데이트 가능
+    // 3. 다른 친구 A가 본인(X)에게 친추걸면, 본인(X)에게 이 상태를 알려줘야함.
+    // 4. 로그아웃하면 로그아웃한 멤버의 친구들에게 알려줘야함.
+
+    // 실시간 정보가 업데이트
+    // 소켓, [SSE] 채택
     public SseEmitter subscribe(UUID userId, String lastEventId) {
 
         String id = userId + "_" + System.currentTimeMillis();
@@ -87,21 +100,16 @@ public class FriendService {
 //    3. 나한테 친구 요청한 리스트 가져오기
 //    (select * from friend where tomemberid=나 and pending=true)
     @Transactional(readOnly = true)
-    public Long findAllFriends() {
+    public List<FriendResponseDto> findAllFriends() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUserDetails userDetails = (CustomUserDetails) principal;
 
-        UUID myId = ((CustomUserDetails) principal).getId();
+        UUID myId = userDetails.getId();
 
         log.info("findAllFriends - {}", myId);
-        List<Friend> friends = friendRepository.findAllFriends(myId);
-        log.info("findAllFriends  friends- {}", friends.toString());
-        friends.forEach(friend -> {
-            log.info("friend - {}", friend.getId());
-            send(myId, friend);
-            send(friend.getFromMember().getId(), friend);
-        });
-        return 1L;
+        List<Friend> friends = friendRepository.findAllFriendsToMe(myId);
+
+        return friends.stream().map(FriendResponseDto::of).collect(Collectors.toList());
     }
 
     //    2. 친구 추가 요청하기 post("/{친구닉네임}")
@@ -110,7 +118,7 @@ public class FriendService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUserDetails userDetails = (CustomUserDetails) principal;
 
-        UUID myId = ((CustomUserDetails) principal).getId();
+        UUID myId = userDetails.getId();
 
         Optional<Member> fromMember = memberRepository.findById(myId);
 
@@ -121,16 +129,20 @@ public class FriendService {
         Optional<Friend> duplicatePending = friendRepository.findDuplicatePending(fromMember.get().getId(), toMember.get().getId());
         //
 
-        // null + 존재할때 isFriend가 False ->
+        // 이미 친구 요청 보냈거나 친구이면
         if (duplicatePending.isPresent()) {
-            // 이미 친구상태인데 친구 요청 보낼 경우?
-            // 존재
-            return -1L; // 이미 친구상태인 경우 -1L 보내기
+            return -1L; // 리턴
         }
 
+        // 친구 요청
         Friend friend = Friend.of(fromMember.get(), toMember.get(), true, false);
-        // 친구상태가 아니거나, 요청이 이미 가있는 경우는 상관 없음
-        return friendRepository.save(friend).getId();
+
+
+        Long id = friendRepository.save(friend).getId();
+        // 친구 요청 받는 사람에게 데이터 전달
+        send(toMember.get().getId(), friend);
+
+        return id;
     }
 
 
@@ -139,33 +151,52 @@ public class FriendService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUserDetails userDetails = (CustomUserDetails) principal;
 
-        UUID myId = ((CustomUserDetails) principal).getId();
+        UUID myId = userDetails.getId();
 
         Optional<Member> fromMember = memberRepository.findById(myId);
 
+        // 상대방 멤버
         Optional<Member> toMember = memberRepository.findByNickname(friendNickname);
 
-        // 이 부분 제대로 동작할지? 기존꺼 update 안하고 새로 insert 해버리는건 아닐지
+        Member requester = (Member) assertExistMember(fromMember);
+        Member receiver = (Member) assertExistMember(toMember);
 
-        Optional<Friend> fromMeOptional = friendRepository.findDuplicatePending(myId, toMember.get().getId());
-        Optional<Friend> toMeOptional = friendRepository.findDuplicatePending(toMember.get().getId(), myId);
+        // 요청자가 보낸 친구 요청 확인
+        Optional<Friend> fromMeOptional = friendRepository.findDuplicatePending(requester.getId(), receiver.getId());
+        // 요청자가 받은 친구 요청 가져오기
+        Optional<Friend> toMeOptional = friendRepository.findDuplicatePending(receiver.getId(), requester.getId());
+        
+        if (toMeOptional.isPresent()) {
+            Friend toMe = toMeOptional.get();
+            log.info("friendService tome : {}", toMe.getId());
+            toMe.allowFriend();
 
-
-        Friend toMe = toMeOptional.get();
-        log.info("friendService tome : {}", toMe.getId());
-        toMe.allowFriend();
-
-        friendRepository.save(toMe);
-
+            friendRepository.save(toMe);
+            // 친구 상태 보내주기
+            send(requester.getId(), toMe);
+        }
+        
         Friend fromMe;
         if (fromMeOptional.isPresent()) {
             fromMe = fromMeOptional.get();
             fromMe.allowFriend();
         } else {
-            fromMe = Friend.of(fromMember.get(), toMember.get(), false, true);
+            fromMe = Friend.of(requester, receiver, false, true);
         }
-        return friendRepository.save(fromMe).getId(); // 마지막에 update된 record id 반환
 
+        Long id = friendRepository.save(fromMe).getId();
+        // 친구 상태 보내주기
+        send(receiver.getId(), fromMe);
+
+        return id; // 처리되면 쓰레기값 던지기
+    }
+
+    private Object assertExistMember(Optional<?> member) {
+        if (member.isPresent()) {
+            return member.get();
+        } else {
+            throw new IllegalStateException("친구 요청 보낸 멤버가 존재하지 않습니다!");
+        }
     }
 
 

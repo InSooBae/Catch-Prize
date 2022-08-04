@@ -90,4 +90,13 @@ public class Member extends BaseTimeEntity implements Persistable<UUID> {
     public boolean isNew() {
         return getCreateDate() == null;
     }
+
+    public void login() {
+        this.online = true;
+    }
+
+    public void logout() {
+        this.online = false;
+    }
+
 }

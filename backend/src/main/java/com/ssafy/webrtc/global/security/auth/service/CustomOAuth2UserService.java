@@ -1,5 +1,9 @@
 package com.ssafy.webrtc.global.security.auth.service;
 
+import com.ssafy.webrtc.domain.friend.Friend;
+import com.ssafy.webrtc.domain.friend.FriendResponseDto;
+import com.ssafy.webrtc.domain.friend.FriendService;
+import com.ssafy.webrtc.domain.friend.repository.FriendRepository;
 import com.ssafy.webrtc.domain.member.MemberRepository;
 import com.ssafy.webrtc.domain.member.entity.JoinPathType;
 import com.ssafy.webrtc.domain.member.entity.Member;
@@ -18,8 +22,10 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,10 +40,13 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
+    private final FriendService friendService;
+    private final FriendRepository friendRepository;
 
     private static final String USER = "USER_";
 
     // OAuth2UserRequest에 있는 Access Token으로 유저정보 get
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
@@ -66,7 +75,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             randomNickname(userInfo, sb, joinPathType);
             member = createUser(userInfo, joinPathType);
         } else {
+            // 가입 돼있다. -> 로그인 상태
             member = memberOptional.get();
+            member.login();
+            memberRepository.save(member);
+
+            List<Friend> allFriendsFromMe = friendRepository.findAllFriendsFromMe(member.getId());
+
+            allFriendsFromMe.forEach(friend -> {
+                friendService.send(friend.getToMember().getId(), friend);
+            });
         }
             // 가입 됐다 -> 걍 진행
         return CustomUserDetails.create(member, oAuth2User.getAttributes());
@@ -116,6 +134,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .role(RoleType.USER)
                 .joinPath(joinPathType)
                 .build();
+
+        user.login();
+
         return memberRepository.save(user);
     }
 }

@@ -22,7 +22,7 @@ public class FriendController {
     // 유저 아이디로 친구목록 & 친구신청 목록 조회
     @GetMapping("")
     public ResponseEntity<?> findAllFriends() {
-        return new ResponseEntity<Long>(friendService.findAllFriends(), HttpStatus.OK);
+        return new ResponseEntity<List<FriendResponseDto>>(friendService.findAllFriends(), HttpStatus.OK);
     }
 
     // 친구 추가 요청 보내기

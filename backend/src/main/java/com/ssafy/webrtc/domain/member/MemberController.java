@@ -25,9 +25,12 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public MemberDto getCurrentUser(@AuthenticationPrincipal CustomUserDetails user) {
-        return memberService.findByLoginMember(user.getId());
+        MemberDto byLoginMember = memberService.findByLoginMember(user.getId());
+
+
+        return byLoginMember;
     }
 
     @GetMapping("/check")
