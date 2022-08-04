@@ -1,0 +1,493 @@
+.lobby-layout .el-container {
+  /* layout */
+  /* BOX */
+  height: 100vh;
+  /* background */
+  /* font */
+  font-family: "PressStart2P";
+  /* border */
+
+}
+
+.lobby-layout .el-aside {
+  /* layout */
+  padding: 0 40px 40px 40px;
+  /* BOX */
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+}
+
+.lobby-layout .el-header {
+  /* layout */
+  padding: 0px 10px 0px 10px;
+  /* BOX */
+  height: 80px;
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+  cursor: pointer;
+}
+
+.lobby-layout .el-header:hover .notice-marquee{
+  color: #00bd9d;
+}
+
+.lobby-layout .el-header:active {
+  filter: brightness(0.7);
+}
+
+.lobby-layout .el-header .notice-marquee {
+  /* layout */
+  padding: 26px 0;
+  /* BOX */
+  /* background */
+  /* font */
+  font-size: 1.15rem;
+  color: whitesmoke;
+  /* border */
+}
+
+.lobby-layout .el-main {
+  background-image: url(background-img.png);
+  background-size: cover;
+  background-position: center;
+}
+
+.lobby-layout .el-main::-webkit-scrollbar {
+  width: 10px;
+}
+
+.lobby-layout .el-main::-webkit-scrollbar-thumb {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+  border-radius: 10px;
+}
+
+.lobby-layout .el-main::-webkit-scrollbar-track {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  /* border */
+  border-radius: 10px;
+}
+
+#sidebar {
+  /* layout */
+  margin-bottom: 10px;
+  /* BOX */
+  /* background */
+  background-color: #262C3A;
+  /* font */
+  /* border */
+  border-radius: 10px;
+}
+
+.sidebar-profile {
+  /* layout */
+  padding: 5px 0 5px 5px;
+  margin-bottom: 5px;
+  /* BOX */
+  /* background */
+  /* font */
+  font-family: sans-serif;
+  color: whitesmoke;
+  /* border */
+  border-bottom: solid 1px;
+  border-color: #2c3e50;
+}
+
+.profile-box {
+  width: 60%
+}
+
+.sidebar-profile .profile-nickname {
+  padding-top: 0.1rem;
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.80rem;
+  color: whitesmoke;
+  line-height: 130%;
+}
+
+.sidebar-profile .profile-point {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: whitesmoke;
+  line-height: 120%;
+}
+
+.sidebar-profile .profile-email {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.3em;
+  color: gray;
+}
+
+.sidebar-profile .profile-logout {
+  cursor: pointer;
+  padding: 3px;
+  margin: auto auto;
+  border-radius: 50%;
+}
+
+.sidebar-profile .profile-logout:hover {
+  box-shadow: 0 0 5px rgba(232, 235, 239, 0.3);
+}
+
+.sidebar-profile .profile-logout:active {
+  filter: brightness(0.7);
+}
+
+.sidebar-element {
+  height: calc(100vh - 440px);
+}
+
+.sidebar-friends-element {
+  height: calc(100vh - 488px);
+}
+
+#sidebar .el-tabs__content {
+  /* layout */
+  padding: 15px;
+  /* BOX */
+  /* background */
+  background-color: #262C3A;
+  /* font */
+  /* border */
+  border-radius: 15px;
+}
+
+.lobby-layout .el-tabs__active-bar {
+  background-color: white;
+}
+
+.lobby-layout .el-tabs__nav {
+  /* layout */
+  padding: 0px 25px;
+  /* BOX */
+  /* background */
+  /* font */
+  /* border */
+  border-bottom: solid #0F1E33;
+}
+
+.lobby-layout .el-tabs__item {
+  /* layout */
+  padding: 0px 5px;
+  margin: 0px 5px;
+  /* BOX */
+  /* background */
+  /* font */
+  /* border */
+  background-color: #262C3A;
+}
+
+.lobby-layout .start-button {
+  /* layout */
+  height: 60px;
+  /* BOX */
+  width: 100%;
+  /* background */
+  /* font */
+  font-family: "PressStart2P";
+  font-size: medium;
+  --el-color-black: whitesmoke;
+  /* border */
+  border: none;
+  border-radius: 10px;
+}
+
+.add-friend-container {
+  padding: 3px 0px 5px 0;
+}
+
+
+
+.add-friend-container .add-button {
+  /* layout */
+  /* BOX */
+  width: 2rem;
+  /* background */
+  /* font */
+  font-family: "PressStart2P";
+  color: whitesmoke;
+  /* border */
+  border: 0px solid #2c3e50;
+}
+
+.add-friend-container .add-button img{
+  margin: 0 5px 0 6px;
+}
+
+.notice-modal {
+  width: min(80%, 1536px);
+  height: 70%;
+}
+
+.notice-modal .el-dialog__body{
+  height: 88%;
+}
+
+.start-modal {
+  width: 500px;
+}
+
+.start-modal .el-dialog__body {
+  padding: 20px;
+}
+
+.start-modal .el-select {
+  width: 100%;
+}
+
+.lobby-layout .el-dialog {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: #262C3A;
+  /* font */
+  /* border */
+  border-radius: 10px;
+  border: solid #f2e53bCC;
+}
+
+.lobby-layout .el-dialog__title {
+  color: whitesmoke;
+}
+
+.lobby-layout .el-dialog__body {
+  color: whitesmoke;
+}
+
+.lobby-layout .el-form::-webkit-scrollbar {
+  width: 5px;
+}
+
+.lobby-layout .el-form::-webkit-scrollbar-thumb {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+  border-radius: 5px;
+}
+
+.lobby-layout .el-form::-webkit-scrollbar-track {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  /* border */
+  border-radius: 5px;
+}
+
+.friends-item {
+  /* layout */
+  /* BOX */
+  /* background */
+  /* font */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: whitesmoke;
+  font-size: 0.85rem;
+  /* border */
+  border-bottom: solid 1px #2c3e50;
+  padding: 5px;
+}
+
+.friends-item .friends-name {
+  margin-top: 0.26rem;
+  width: 140px;
+}
+
+.friends-item .friends-delete {
+  /* layout */
+  padding: 1px 10px 2.5px 10px;
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  color: rgba(245, 245, 245, 0.1);
+  font-size: 1rem;
+  filter: brightness(0.1);
+  /* border */
+  border: none;
+  border-radius: 50%;
+}
+
+.friends-item .friends-delete:hover {
+  cursor: pointer;
+  filter: brightness(1);
+}
+
+.friends-item .friends-delete:active {
+  cursor: pointer;
+  filter: brightness(0.5);
+}
+
+
+.lobby-layout .el-tab-pane {
+  overflow: auto;
+}
+
+.lobby-layout .el-tab-pane::-webkit-scrollbar {
+  width: 5px;
+}
+
+.lobby-layout .el-tab-pane::-webkit-scrollbar-thumb {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: #0F1E33;
+  /* font */
+  /* border */
+  border-radius: 5px;
+}
+
+.lobby-layout .el-tab-pane::-webkit-scrollbar-track {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  /* border */
+  border-radius: 5px;
+}
+
+.update-form {
+  height: 100%;
+  overflow: auto;
+}
+
+.add-friend-container .el-input__wrapper {
+  /* layout */
+  padding: 4px 5px 4px 10px;
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  /* border */
+  box-shadow: 0 0 0 1px #2c3e50 inset;
+}
+
+
+.update-form .el-input__wrapper {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  /* border */
+  box-shadow: 0 0 0 1px #00bd9d inset;
+  border: solid 1px #00bd9d;
+}
+
+.start-form .el-input__wrapper {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: transparent;
+  /* font */
+  /* border */
+  box-shadow: 0 0 0 1px #00bd9d inset;
+  border: solid 1px #00bd9d;
+}
+
+.profile-update-button {
+  /* lay out */
+  margin-top: 5px;
+  /* BOX */
+  width: 100%;
+  height: 38px;
+  /* background */
+  /* font */
+  font-family: "PressStart2P";
+  font-size: medium;
+  --el-color-black: whitesmoke;
+  /* border */
+  border: none;
+  border-radius: 8px;
+}
+
+.el-input__inner {
+  color: whitesmoke;
+}
+
+.lobby-room-item {
+  /* layout */
+  padding: 20px 30px;
+  margin: 30px 0 0 min(max(25px, 2.5vw), 48px);
+  /* BOX */
+  width: min(max(330px, calc(32vw - 151px)), 452px);
+  height: 150px;
+  /* background */
+  background-color: rgba(15, 30, 51, 0.7);
+  /* font */
+  /* border */
+  border-radius: 15px;
+}
+
+.lobby-room-item .room-name {
+  font-size: 1.2rem;
+}
+
+.lobby-room-item:hover {
+  box-shadow: 0 0 7px rgba(232, 235, 239, 0.3);
+  cursor: pointer;
+}
+
+.lobby-room-item:active {
+  box-shadow: none;
+  filter: brightness(0.7)
+}
+
+.start-form {
+  padding: 0;
+}
+
+.lobby-layout ul {
+  list-style: none;
+  padding: 0;
+}
+
+.records-item {
+  margin: 5px;
+}
+
+.records-item .records-type {
+  font-size: 0.8rem;
+  background-color: #00bd9d;
+  border-radius: 0.3rem;
+  padding: 0.3rem 0.3rem 0 0.3rem;
+}
+
+.records-item .records-source {
+  font-family: sans-serif;
+  font-size: 1rem;
+}
+
+.records-item .records-date {
+  font-family: sans-serif;
+  font-size: 0.5rem;
+}
