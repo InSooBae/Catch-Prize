@@ -1,25 +1,31 @@
 import axios from "axios";
 import { API_BASE_URL } from "../../constants";
+import jwt_decode from "jwt-decode";
+
 
 const user = {
   state: {
-    token: sessionStorage.getItem('token') || '' ,
+    token: sessionStorage.getItem('token') || '',
     currentUser: {},
     friendsList: [],
+    isAdmin: false,
     authError: null,
   },
   mutations: {
     SET_TOKEN: (state, token) => state.token = token,
     SET_CURRENT_USER: (state, user) => state.currentUser = user,
     SET_FRIENDS: (state, friendsList) => state.friendsList = friendsList,
-    SET_AUTH_ERROR: (state, error) => state.authError = error
+    SET_AUTH_ERROR: (state, error) => state.authError = error,
+    SET_IS_ADMIN: (state, role) => state.isAdmin = (role === 'ADMIN'),
   },
   getters: {
+    token: state => state.token,
     isLoggedIn: state => !!state.token,
     currentUser: state => state.currentUser,
     friendsList: state => state.friendsList,
     authError: state => state.authError,
-    authHeader: state => ({ Authorization: `Bearer ${state.token}`})
+    authHeader: state => ({ Authorization: `Bearer ${state.token}` }),
+    isAdmin: state => state.isAdmin,
   },
   actions: {
     saveToken({ commit }, token) {
@@ -33,10 +39,12 @@ const user = {
     },
     fetchCurrentUser({ commit, getters, dispatch }) {
       if (getters.isLoggedIn) {
-        axios.get(API_BASE_URL + '/user/me', {headers: getters.authHeader})
+        axios.get(API_BASE_URL + '/user/me', { headers: getters.authHeader })
           .then(res => {
             commit('SET_CURRENT_USER', res.data)
-        })
+            const role = jwt_decode(getters.token).role
+            commit('SET_IS_ADMIN', role)
+          })
           .catch(err => {
             if (err.response.status === 401) {
               dispatch('removeToken')

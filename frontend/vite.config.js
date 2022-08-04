@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'url'
-
+import { API_BASE_URL } from './src/constants'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
@@ -7,7 +7,7 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   server: {
     proxy: {
-      '/api': 'https://e5e4-211-192-210-62.jp.ngrok.io',
+      '/api': API_BASE_URL,
     }
   },
   plugins: [

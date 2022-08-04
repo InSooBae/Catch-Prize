@@ -31,7 +31,7 @@
   cursor: pointer;
 }
 
-.lobby-layout .el-header:hover .notice-marquee{
+.lobby-layout .el-header:hover .notice-marquee {
   color: #00bd9d;
 }
 
@@ -45,6 +45,7 @@
   /* BOX */
   /* background */
   /* font */
+  font-family: "PressStart2P", "Galmuri9";
   font-size: 1.15rem;
   color: whitesmoke;
   /* border */
@@ -221,8 +222,6 @@
   padding: 3px 0px 5px 0;
 }
 
-
-
 .add-friend-container .add-button {
   /* layout */
   /* BOX */
@@ -235,17 +234,108 @@
   border: 0px solid #2c3e50;
 }
 
-.add-friend-container .add-button img{
+.add-friend-container .add-button img {
   margin: 0 5px 0 6px;
 }
 
 .notice-modal {
-  width: min(80%, 1536px);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: min(80%, 1000px);
   height: 70%;
 }
 
-.notice-modal .el-dialog__body{
-  height: 88%;
+.notice-modal th.el-table__cell>.cell {
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.notice-modal td.el-table__cell>.cell {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.notice-modal td.el-table_1_column_2>.cell {
+  text-align: left;
+}
+
+.notice-modal .el-dialog__header {
+  margin-top: 10px;
+}
+
+.notice-modal .el-table__header-wrapper {
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+}
+
+.notice-modal .el-dialog__title {
+  font-family: "PressStart2P";
+  font-size: 1.8rem;
+  line-height: 2;
+  color: #f2e53b;
+}
+
+.notice-modal .el-dialog__body {
+  padding-left: 80px;
+  padding-right: 80px;
+  height: calc(100% -100px);
+}
+
+.notice-modal .el-table {
+  --el-table-border-color: transparent;
+  --el-table-border: 1px solid var(--el-table-border-color);
+  --el-table-text-color: whitesmoke;
+  --el-table-header-text-color: whitesmoke;
+  --el-table-row-hover-bg-color: transparent;
+  --el-table-current-row-bg-color: transparent;
+  --el-table-header-bg-color: rgb(44, 62, 80, 0.4);
+  --el-table-fixed-box-shadow: transparent;
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-table-expanded-cell-bg-color: transparent;
+}
+
+.notice-modal .el-table__row:hover {
+  background-color: rgba(15, 30, 51, 0.2);
+  color: #f2e53b;
+  cursor: pointer;
+}
+
+.notice-modal .el-table__row:active {
+  background-color: rgba(15, 30, 51, 0.7);
+  cursor: pointer;
+}
+
+.detail-modal {
+  /* layout */
+  /* BOX */
+  width: min(80%, 1000px);
+  height: 70%;
+  padding-top: 10px;
+  /* background */
+  background-color: rgb(38, 44, 58, 0.93);
+  border-radius: 10px;
+  border: solid 0.5px #f2e53b;
+  /* font */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --el-text-color-regular: whitesmoke;
+  --el-dialog-content-font-size: 1.2rem;
+  font-size: 1.2rem;
+  /* border */
+}
+
+.detail-modal .detail-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.detail-modal .el-dialog__body {
+  padding: 90px 100px;
+}
+
+.detail-modal .detail-content {
+  margin-top: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .start-modal {
@@ -264,19 +354,11 @@
   /* layout */
   /* BOX */
   /* background */
-  background-color: #262C3A;
+  background-color: rgb(38, 44, 58, 0.93);
   /* font */
   /* border */
   border-radius: 10px;
-  border: solid #f2e53bCC;
-}
-
-.lobby-layout .el-dialog__title {
-  color: whitesmoke;
-}
-
-.lobby-layout .el-dialog__body {
-  color: whitesmoke;
+  border: solid 0.5px #f2e53b;
 }
 
 .lobby-layout .el-form::-webkit-scrollbar {

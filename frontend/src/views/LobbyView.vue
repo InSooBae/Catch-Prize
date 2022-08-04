@@ -1,23 +1,20 @@
 <template>
   <div class="lobby-layout">
-    <el-dialog custom-class="notice-modal" v-model="noticeVisible" title="Notice" width="50%" center>
-      <span>Notice의 내용입니다.</span>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button type="primary" @click="noticeVisible = false">Close</el-button>
-        </span>
-      </template>
+    <el-dialog custom-class="notice-modal" v-model="noticeVisible" title="Notice" center>
+      <RouterView name="notice" />
     </el-dialog>
     <el-container>
       <el-header class="hidden-xs-only" @click="noticeVisible = true">
-        <marquee class="notice-marquee" scrollamount="12" onmouseover="this.stop();" onmouseout="this.start();">Notice: [New] Game released on 2022</marquee>
+        <marquee class="notice-marquee" scrollamount="12" onmouseover="this.stop();" onmouseout="this.start();">
+          {{ notice.title }}
+        </marquee>
       </el-header>
       <el-container>
         <el-aside class="hidden-sm-and-down" width="310px">
-          <SideBar/>
+          <SideBar />
         </el-aside>
         <el-main>
-          <RouterView/>
+          <RouterView />
         </el-main>
       </el-container>
     </el-container>
@@ -26,8 +23,17 @@
 
 <script setup>
 import SideBar from '@/components/lobby/SideBar.vue';
+import { onMounted, computed, ref } from 'vue'
+import { useStore } from 'vuex'
 
-import { ref } from 'vue';
+const store = useStore()
+const notice = computed(() => store.getters.notice)
+
+const fetchNotice = (id) => store.dispatch('fetchNotice', id)
+
+onMounted(() => {
+  fetchNotice(0)
+})
 
 const noticeVisible = ref(false);
 </script>
