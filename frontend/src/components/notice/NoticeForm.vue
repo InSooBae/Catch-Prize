@@ -37,6 +37,7 @@ const newNotice = {
 }
 
 const onSubmit = () => {
+  console.log(props.action)
   if (props.action === 'create') {
     const createNotice = () => store.dispatch('createNotice', newNotice)
     createNotice()

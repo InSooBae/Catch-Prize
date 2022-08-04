@@ -1,7 +1,7 @@
 <template>
   <div class="NoticeNew">
     <el-main>
-      <notice-form :notice="notice" action="글쓰기"></notice-form>
+      <notice-form :notice="notice" action="create"></notice-form>
     </el-main>
   </div>
 </template>

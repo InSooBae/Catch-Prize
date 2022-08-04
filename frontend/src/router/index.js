@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import user from '../store'
+import store from '../store'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,7 +24,7 @@ const router = createRouter({
           name: 'lobbyMain',
           components: {
             default: () => import('../components/lobby/RoomList.vue'),
-            notice: () => import('../components/notice/NoticeList.vue'),
+            notice: () => import('../components/lobby/LobbyNotice.vue'),
           }
         },
         {
@@ -49,8 +49,9 @@ const router = createRouter({
       name: 'notice',
       component: () => import('../views/NoticeView.vue'),
       beforeEnter: () => {
-        if (!user.getters.isAdmin) {
-          return { name: 'home'}
+        if (!store.getters.isAdmin) {
+          console.log('ban')
+          // return { name: 'home'}
         }
       },
       children: [

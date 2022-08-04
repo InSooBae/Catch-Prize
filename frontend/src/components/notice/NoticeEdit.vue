@@ -3,7 +3,7 @@
     id: notice.id,
     title: notice.title,
     content: notice.content,
-  }" action="수정">
+  }" action="update">
   </notice-form>
 </template>
 
