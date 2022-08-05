@@ -20,13 +20,10 @@ public class EmitterRepository {
         return sseEmitter;
     }
 
-    //    public Optional<SseEmitter> findById(String id) {
-//        return Optional.ofNullable(emitters.get(id));
-//    }
-
     public void saveEventCache(String id, Object event) {
         eventCache.put(id, event);
     }
+
     public Map<String, SseEmitter> findAllStartWithById(String id) {
         return emitters.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(id))
@@ -63,7 +60,4 @@ public class EmitterRepository {
         );
     }
 
-//    public void deleteById(String userId) {
-//        emitters.remove(userId);
-//    }
 }

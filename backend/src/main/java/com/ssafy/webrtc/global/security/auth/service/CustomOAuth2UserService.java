@@ -74,6 +74,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             // 가입 안됐다 -> 닉네임 확인
             randomNickname(userInfo, sb, joinPathType);
             member = createUser(userInfo, joinPathType);
+
         } else {
             // 가입 돼있다. -> 로그인 상태
             member = memberOptional.get();
