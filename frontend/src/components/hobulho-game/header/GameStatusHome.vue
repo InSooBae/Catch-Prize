@@ -2,7 +2,7 @@
   <div class="game-status-home">
     <div
       v-for="(guide, i) in statuseList.filter(
-        (c) => c.name === $hobulhostate.gamestate
+        (c) => c.name === $state.gamestate
       )"
       :key="i"
       class="guide"
@@ -18,24 +18,17 @@
 <script setup>
 import Guide from "./GameGuide.vue";
 import Timer from "./Timer.vue";
-import VTypical from 'vue-typical';
+import VTypical from "vue-typical";
 
 import { reactive, toRefs, inject } from "vue";
-// import { useStore } from "vuex";
-// export default {
-//   name: "game-staus-Home",
-//   components: {
-//     Guide,
-//     Timer,
-//   },
-// };
 
-// const store = useStore();
-
-const $hobulhostate = inject("$hobulhostate");
+const $clientstate = inject("$clientstate");
+const $hobulhoSocket = inject("$hobulhoSocket");
+const $state = inject("$state");
 
 const guides = reactive({
   statuseList: [
+    { name: "loading", guideText: "딜러가 카드를 섞는 중..." },
     {
       name: "start",
       guideText: "게임이 시작 되었습니다! 첫번째 사람부터 시작합니다.",
@@ -51,7 +44,6 @@ const guides = reactive({
     { name: "turn", guideText: "{{player}}님 차례입니다." },
   ],
 });
-
 const { statuseList } = toRefs(guides);
 </script>
 

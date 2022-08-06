@@ -1,6 +1,9 @@
 <template>
   <div class="mycards-container">
-    <div class="text">{{ $hobulhostate.attacker }} 님의 카드입니다.</div>
+    <div class="text">
+      <div class="current-player-text">{{ $clientstate.myid }}&nbsp;</div>
+      <div>님의 카드입니다.</div>
+    </div>
     <div class="mycards-wrapper">
       <div
         v-for="(myHand, i) in myHandcardsList"
@@ -39,30 +42,16 @@ import eggplantsrc from "../assets/eggplant.svg";
 import insectsrc from "../assets/insect.svg";
 import mintsrc from "../assets/mint.svg";
 import pizzasrc from "../assets/pizza.svg";
-// import io from "socket.io-client";
-// const socket = io("http://localhost:8081",{ transports : ['websocket'] });
 import { ref, onMounted, inject, computed, reactive, toRefs } from "vue";
 
 const asd = ref(null);
 const $hobulhoSocket = inject("$hobulhoSocket");
-const $hobulhostate = inject("$hobulhostate");
-// const myHandcards = {
-//   cake: 2,
-//   durian: 2,
-//   eggplant: 1,
-//   insect: 1,
-//   mint: 1,
-//   pizza: 1,
-//   remain: 8,
-// };
-// const remain = 8;
+const $clientstate = inject("$clientstate");
+const $state = inject("$state");
 const myHandcards = reactive([
   {
     name: "cake",
     num: 2,
-    // imgsrc: computed(() => {
-    //   return cakesrc;
-    // }),
   },
   {
     name: "durian",
@@ -85,18 +74,29 @@ const myHandcards = reactive([
     num: 1,
   },
 ]);
-// var myHandcardsList = [];
 let Hand = reactive({
   myHandcardsList: [],
 });
 const myHandupdate = () => {
   let list = [];
-  for (var t = 0; t < 6; t++) {
-    for (var i = 0; i < myHandcards[t].num; i++) {
+  //내아이디와 같은 핸드를 푸쉬
+  for (let t = 0; t < 6; t++) {
+    if ($state.players[t].playerId === $clientstate.myid) {
+      myHandcards[0].num = $state.players[t].cards.hand.cake;
+      myHandcards[1].num = $state.players[t].cards.hand.durian;
+      myHandcards[2].num = $state.players[t].cards.hand.eggplant;
+      myHandcards[3].num = $state.players[t].cards.hand.insect;
+      myHandcards[4].num = $state.players[t].cards.hand.mint;
+      myHandcards[5].num = $state.players[t].cards.hand.pizza;
+    }
+  }
+  for (let t = 0; t < 6; t++) {
+    for (let i = 0; i < myHandcards[t].num; i++) {
       list.push(myHandcards[t].name);
     }
   }
   Hand.myHandcardsList = list;
+  console.log(list);
 };
 const cakeimgsrc = computed(() => {
   return cakesrc;
@@ -116,30 +116,22 @@ const mintimgsrc = computed(() => {
 const pizzaimgsrc = computed(() => {
   return pizzasrc;
 });
-// const btn = document.querySelector("#btn1");
+$hobulhoSocket.on("hobulho-start-card", function (data) {
+  myHandupdate();
+});
+
 function onClick(myHand) {
-  if ($hobulhostate.gamestate === "select") {
-    console.log("click");
+  if ($state.gamestate === "select") {
     const cardname = myHand;
-    $hobulhoSocket.emit("card-click", cardname);
-    $hobulhostate.selectedcard = cardname;
-    $hobulhostate.gamestate = "attack";
-    for (var t = 0; t < 6; t++) {
-      if (myHandcards[t].name === myHand) {
-        myHandcards[t].num--;
-        $hobulhostate.selectedcardnum = t;
-      }
-    }
-    myHandupdate();
-    console.log(myHandcards);
-    console.log(myHandcardsList);
+    //카드를 선택하면 카드이름과 내 아이디를 보냄
+    $hobulhoSocket.emit("card-click", cardname, $clientstate.myid);
+    $hobulhoSocket.on("players-refresh", function () {
+      //gamestate attack으로 변경
+      myHandupdate();
+    });
   }
 }
 
-$hobulhoSocket.on("rec-test", (temp) => {
-  console.log(`You ${temp} has created the room!`);
-});
-myHandupdate();
 const { myHandcardsList } = toRefs(Hand);
 </script>
 
@@ -154,6 +146,7 @@ const { myHandcardsList } = toRefs(Hand);
 }
 .mycards-wrapper {
   display: flex;
+  margin-left: 0.5vw;
   align-items: center;
   margin-bottom: 10px;
   height: 30vh;
@@ -169,7 +162,7 @@ const { myHandcardsList } = toRefs(Hand);
 }
 .mycards-wrapper img:hover {
   transition: all ease 0.7s 0s;
-  transform: scale(1.4) translateX(1.7vw) translateY(-2vw);
+  transform: scale(1.4) translateX(1.4vw) translateY(-2vw);
   z-index: 1;
 }
 .text {
@@ -180,5 +173,8 @@ const { myHandcardsList } = toRefs(Hand);
   height: 10%;
   color: white;
   font-family: "PressStart2P";
+}
+.current-player-text {
+  color: #00bd9d;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      player.isDeath === true ? 'player-container-death' : 'player-container',
+      player.isAlive === true ? 'player-container' : 'player-container-death',
     ]"
   >
     <div class="status-container">
@@ -11,7 +11,7 @@
           v-on:click="attackTo"
           ref="nicknameRef"
           class="nickname-else"
-          :class="{ nickname: $hobulhostate.gamestate === 'attack' }"
+          :class="{ nickname: $state.gamestate === 'attack' }"
         >
           {{ player.name }}
         </div>
@@ -66,18 +66,17 @@ const props = defineProps({
   player: Object,
 });
 const nicknameRef = ref(null);
-const $hobulhostate = inject("$hobulhostate");
+const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
+const $state = inject("$state");
 
 //공격할사람 클릭하면 함수 실행
 function attackTo() {
-  if ($hobulhostate.gamestate === "attack") {
+  if ($state.gamestate === "attack") {
     console.log("player-click");
     const defender = nicknameRef.value.textContent;
     console.log(defender);
     $hobulhoSocket.emit("player-click", defender);
-    $hobulhostate.defender = defender;
-    $hobulhostate.gamestate = "declare";
   }
 }
 </script>

@@ -1,8 +1,8 @@
 <template>
-  <div v-if="$hobulhostate.gamestate === 'declare'">
+  <div v-if="$state.gamestate === 'declare'">
     <AttackCardDeclare />
   </div>
-  <div v-else-if="$hobulhostate.gamestate === 'judge'">
+  <div v-else-if="$state.gamestate === 'judge'">
     <DefendJudge />
   </div>
   <div v-else class="players-container">
@@ -28,141 +28,90 @@ import DefendJudge from "../select/DefendJudge.vue";
 
 import { reactive, toRefs, inject, ref } from "vue";
 
-const $hobulhostate = inject("$hobulhostate");
+const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
-const nowstate = $hobulhostate.gamestate;
+const $state = inject("$state");
+const nowstate = $state.gamestate;
 
 // 받아올 데이터
 const players = reactive({
   playersList: [
     {
       name: "player1",
-      isDeath: false,
+      isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
-      remain: 8,
+      remain: 0,
     },
     {
       name: "player2",
-      isDeath: false,
+      isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
-      remain: 8,
+      remain: 0,
     },
     {
       name: "player3",
-      isDeath: false,
+      isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
-      remain: 8,
+      remain: 0,
     },
     {
       name: "player4",
-      isDeath: false,
+      isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
-      remain: 8,
+      remain: 0,
     },
     {
       name: "player5",
-      isDeath: false,
+      isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
-      remain: 8,
+      remain: 0,
     },
     {
       name: "player6",
-      isDeath: false,
+      isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
-      remain: 8,
+      remain: 0,
     },
   ],
 });
-
+//위의 players를 세팅하는 함수
+function playersSetting() {
+  for (let t = 0; t < 6; t++) {
+    players.playersList[t].name = $state.players[t].playerId;
+    players.playersList[t].isAlive = $state.players[t].isAlive;
+    players.playersList[t].remain = $state.players[t].cards.remain;
+    players.playersList[t].fieldlist[0] = $state.players[t].cards.board.cake;
+    players.playersList[t].fieldlist[1] = $state.players[t].cards.board.durian;
+    players.playersList[t].fieldlist[2] =
+      $state.players[t].cards.board.eggplant;
+    players.playersList[t].fieldlist[3] = $state.players[t].cards.board.insect;
+    players.playersList[t].fieldlist[4] = $state.players[t].cards.board.mint;
+    players.playersList[t].fieldlist[5] = $state.players[t].cards.board.pizza;
+  }
+}
 const { playersList } = toRefs(players);
 
 //처음 게임이 시작하고 첫 공격자 함수
-const firstattacker = () => {
-  if (nowstate === "start") {
-    $hobulhostate.attacker = players.playersList[0].name;
+function firstattacker() {
+  if ($state.gamestate === "start") {
     setTimeout(() => {
-      $hobulhostate.gamestate = "select";
+      //카드 선택 준비
+      $hobulhoSocket.emit("select-ready-req");
     }, 3000);
   }
-};
-firstattacker();
-function checkDeath(player) {
-  for (let t = 0; t < 6; t++) {
-    if (player === players.playersList[t].name) {
-      for (let i = 0; i < 6; i++) {
-        if (players.playersList[t].fieldlist[i] >= 1) {
-          players.playersList[t].isDeath = true;
-          $hobulhostate.deathplayer = player;
-          $hobulhostate.gamestate = "death";
-          if (player === $hobulhostate.attacker) {
-            $hobulhostate.attacker = $hobulhostate.defender;
-          } else if (player === $hobulhostate.defender) {
-            $hobulhostate.attacker = $hobulhostate.attacker;
-          }
-          return 1;
-        }
-      }
-    }
-  }
-  return 0;
-}
-function checkwin() {
-  let cnt = 0;
-  for (let t = 0; t < 6; t++) {
-    if (players.playersList[t].isDeath === true) {
-      cnt++;
-    }
-  }
-  if (cnt === 5) {
-    for (let t = 0; t < 6; t++) {
-      if (players.playersList[t].isDeath === false) {
-        $hobulhostate.winner = players.playersList[t].name;
-        $hobulhostate.gamestate = "win";
-      }
-    }
-    return 1;
-  }
-  return 0;
 }
 
-$hobulhoSocket.on("attack-success", (data) => {
-  console.log("success" + data);
-  for (var t = 0; t < 6; t++) {
-    if (players.playersList[t].name === $hobulhostate.defender) {
-      players.playersList[t].fieldlist[$hobulhostate.selectedcardnum]++;
-    }
-  }
-  if (!checkDeath($hobulhostate.defender)) {
-    $hobulhostate.attacker = $hobulhostate.defender;
-  }
-  if (!checkwin()) {
-    setTimeout(() => {
-      $hobulhostate.gamestate = "turn";
-    }, 3000);
-    setTimeout(() => {
-      $hobulhostate.gamestate = "select";
-      console.log($hobulhostate.gamestate);
-    }, 6000);
-  }
+//첫공격
+$hobulhoSocket.on("first-attack", function () {
+  playersSetting();
+  firstattacker();
 });
-$hobulhoSocket.on("attack-fail", (data) => {
-  console.log("fail" + data);
-  for (var t = 0; t < 6; t++) {
-    if (players.playersList[t].name === $hobulhostate.attacker) {
-      players.playersList[t].fieldlist[$hobulhostate.selectedcardnum]++;
-    }
-  }
-  checkDeath($hobulhostate.attacker);
-  if (!checkwin()) {
-    setTimeout(() => {
-      $hobulhostate.gamestate = "turn";
-    }, 3000);
-    setTimeout(() => {
-      $hobulhostate.gamestate = "select";
-      console.log($hobulhostate.gamestate);
-    }, 6000);
-  }
+//새로고침
+$hobulhoSocket.on("players-refresh", function () {
+  playersSetting();
+  console.log(players);
 });
+
 </script>
 
 <style>

@@ -2,7 +2,7 @@
   <div class="header-home">
     <div
       v-for="(IngameMyProfile, i) in profilesList.filter(
-        (c) => c.name === 'player3'
+        (c) => c.name === $clientstate.myid
       )"
       :key="i"
       class="ingame-profile-a"
@@ -19,15 +19,8 @@
 import StatusHome from "./GameStatusHome.vue";
 import InGameProfile from "./InGameProfile.vue";
 
-import { reactive, toRefs } from "vue";
-// export default {
-//   name: "header-Home",
-//   components: {
-//     StatusHome,
-//     InGameProfile,
-//   },
-// };
-
+import { reactive, toRefs, inject } from "vue";
+const $clientstate = inject("$clientstate");
 // 받아올 데이터
 const profiles = reactive({
   profilesList: [

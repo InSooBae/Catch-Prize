@@ -1,72 +1,79 @@
 <template>
   <div class="game-guide">
     <v-typical
-      v-if="$hobulhostate.gamestate === 'turn'"
+      v-if="$state.gamestate === 'turn'"
       class="blink"
-      :steps="[$hobulhostate.attacker + '님의 차례입니다.', 1000]"
+      :steps="[$attackstate.attackerId + ' 님의 차례입니다.', 1000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
-      v-else-if="$hobulhostate.gamestate === 'select'"
+      v-else-if="$state.gamestate === 'select'"
       class="blink"
       :steps="[guide.guideText, 1000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
-      v-else-if="$hobulhostate.gamestate === 'start'"
+      v-else-if="$state.gamestate === 'start'"
       class="blink"
       :steps="[guide.guideText, 1000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
-      v-else-if="$hobulhostate.gamestate === 'success'"
+      v-else-if="$state.gamestate === 'success'"
       class="blink"
       :steps="[guide.guideText, 1000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
-      v-else-if="$hobulhostate.gamestate === 'fail'"
+      v-else-if="$state.gamestate === 'fail'"
       class="blink"
       :steps="[guide.guideText, 1000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
-      v-else-if="$hobulhostate.gamestate === 'declare'"
+      v-else-if="$state.gamestate === 'declare'"
       class="blink"
       :steps="[guide.guideText, 1000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
-      v-else-if="$hobulhostate.gamestate === 'judge'"
+      v-else-if="$state.gamestate === 'judge'"
       class="blink"
       :steps="[guide.guideText, 1000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
-      v-else-if="$hobulhostate.gamestate === 'attack'"
+      v-else-if="$state.gamestate === 'attack'"
       class="blink"
       :steps="[guide.guideText, 1000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
-      v-else-if="$hobulhostate.gamestate === 'death'"
+      v-else-if="$state.gamestate === 'death'"
       class="blink"
-      :steps="[$hobulhostate.deathplayer + '님이 죽었습니다...', 1000]"
+      :steps="[$state.deathplayer + ' 님이 죽었습니다...', 1000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
-      v-else-if="$hobulhostate.gamestate === 'win'"
+      v-else-if="$state.gamestate === 'win'"
       class="blink"
-      :steps="[$hobulhostate.winner + '님의 승리입니다!', 1000]"
+      :steps="[$state.winner + ' 님의 승리입니다!', 1000]"
+      :loop="1"
+      :wrapper="'h1'"
+    ></v-typical>
+    <v-typical
+      v-else-if="$state.gamestate === 'loading'"
+      class="blink"
+      :steps="[guide.guideText, 1000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
@@ -75,14 +82,14 @@
 
 <script setup>
 import VTypical from "vue-typical";
-// export default {
-//   name: "game-guide",
-// };
 import { reactive, toRefs, inject } from "vue";
-const $hobulhostate = inject("$hobulhostate");
+const $clientstate = inject("$clientstate");
+const $state = inject("$state");
+const $attackstate = inject("$attackstate");
 const props = defineProps({
   guide: Object,
 });
+console.log($state);
 </script>
 
 <style scoped>

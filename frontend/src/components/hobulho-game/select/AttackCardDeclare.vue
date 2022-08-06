@@ -1,57 +1,48 @@
 <template>
   <div class="declare-container">
     <div class="declare-card">
-      <button v-on:click="attackDeclare" ref="declareRef">
+      <button v-on:click="attackDeclare('cake')">
         <img src="../assets/cake.svg" alt="오이케이크" />
-        cake
       </button>
-      <button v-on:click="attackDeclare" ref="declareRef">
+      <button v-on:click="attackDeclare('durian')">
         <img src="../assets/durian.svg" alt="두리안" />
-        durian
       </button>
-      <button v-on:click="attackDeclare" ref="declareRef">
+      <button v-on:click="attackDeclare('eggplant')">
         <img src="../assets/eggplant.svg" alt="가지" />
-        eggplant
       </button>
-      <button v-on:click="attackDeclare" ref="declareRef">
+      <button v-on:click="attackDeclare('insect')">
         <img src="../assets/insect.svg" alt="곤충튀김" />
-        insect
       </button>
-      <button v-on:click="attackDeclare" ref="declareRef">
+      <button v-on:click="attackDeclare('mint')">
         <img src="../assets/mint.svg" alt="민트초코" />
-        mint
       </button>
-      <button v-on:click="attackDeclare" ref="declareRef">
-        <img src="../assets/pizza.svg" alt="피자">
-        pizza
+      <button v-on:click="attackDeclare('pizza')">
+        <img src="../assets/pizza.svg" alt="피자" />
       </button>
     </div>
   </div>
 </template>
 <script setup>
 import { ref, onMounted, inject } from "vue";
-const declareRef = ref(null);
+// const declareRef = ref(null);
 const $hobulhoSocket = inject("$hobulhoSocket");
-const $hobulhostate = inject("$hobulhostate");
+const $clientstate = inject("$clientstate");
+const $state = inject("$state");
 
-function attackDeclare(){
-    console.log("declare-click");
-    const declareCard = declareRef.value.textContent;
-    console.log(declareCard);
-    $hobulhoSocket.emit("declare-click", declareCard);
-    $hobulhostate.declaredcard = declareCard;
-    $hobulhostate.gamestate = "judge"
+function attackDeclare(data) {
+  let declareCard = data;
+  console.log(declareCard);
+  $hobulhoSocket.emit("declare-click", declareCard);
 }
-
 </script>
 <style scoped>
-.declare-container{
+.declare-container {
   display: flex;
   justify-content: center;
   align-items: center;
   /* border: 1px solid white; */
 }
-.declare-card{
+.declare-card {
   display: flex;
   /* justify-content: flex-start; */
   /* align-items: flex-start; */
@@ -61,17 +52,16 @@ function attackDeclare(){
   flex-flow: row wrap;
   /* border: 1px solid white; */
 }
-.declare-card button{
+.declare-card button {
   height: 15rem;
-  width:33%;
+  width: 33%;
   height: 50%;
-  padding: 0px ;
+  padding: 0px;
   margin: 0;
-  background-color:transparent;
-  border:none;
-  
+  background-color: transparent;
+  border: none;
 }
-.declare-card button:hover{
+.declare-card button:hover {
   border: 12px;
   opacity: 20%;
   cursor: pointer;

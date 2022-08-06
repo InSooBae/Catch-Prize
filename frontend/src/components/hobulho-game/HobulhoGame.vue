@@ -20,19 +20,22 @@ import RightHome from "./main/PlayersHome.vue";
 import { useStore } from "vuex";
 
 // const store = useStore();
-const $hobulhostate = inject("$hobulhostate");
+const $clientstate = inject("$clientstate");
+const $hobulhoSocket = inject("$hobulhoSocket");
+const $state = inject("$state");
 
-const nowstate = $hobulhostate.gamestate;
+const nowstate = $state.gamestate;
 
-
-//현재상태가 ready 일때 게임 시작
+//현재상태가 loading 일때 게임 시작 요청
 const gameStart = () => {
-  if (nowstate === "ready") {
-    $hobulhostate.gamestate = "start";
-    //socket으로 데이터 받아오기 players...
+  if (nowstate === "loading") {
+    setTimeout(() => {
+      $hobulhoSocket.emit("hobulho-start-req", $clientstate.myid);
+    }, 3000);
   }
 };
 gameStart();
+console.log($state);
 </script>
 
 <style>

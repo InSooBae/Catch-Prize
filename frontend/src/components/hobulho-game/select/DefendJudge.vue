@@ -9,40 +9,12 @@
 <script setup>
 import { ref, onMounted, inject, reactive } from "vue";
 const $hobulhoSocket = inject("$hobulhoSocket");
-const $hobulhostate = inject("$hobulhostate");
-
-const defendjudge = reactive({
-  defenderId: "1234",
-  attackerId: "123",
-  judge: { declaration: false },
-  truth: "",
-});
-if ($hobulhostate.selectedcard == $hobulhostate.declaredcard) {
-  defendJudge.truth = true;
-} else {
-  defendJudge.truth = false;
-}
+const $clientstate = inject("$clientstate");
+const $attackstate = inject("$attackstate");
 
 // 답에 따라서 TF 리턴하는 함수
 function defendJudge(answer) {
-  console.log("truth:" + defendJudge.truth);
-  console.log("answer:" + answer);
-  if (defendJudge.truth === answer) {
-    //판단성공
-    $hobulhostate.gamestate = "success";
-    setTimeout(() => {
-      $hobulhoSocket.emit("judge-success", $hobulhostate.selectedcard);
-      console.log($hobulhostate.gamestate);
-    }, 3000);
-  } else {
-    //판단실패
-    $hobulhostate.gamestate = "fail";
-    setTimeout(() => {
-      $hobulhoSocket.emit("judge-fail", $hobulhostate.selectedcard);
-      console.log($hobulhostate.gamestate);
-    }, 3000);
-  }
-  console.log($hobulhostate.gamestate);
+  $hobulhoSocket.emit("judge-selected", answer);
 }
 </script>
 <style>
