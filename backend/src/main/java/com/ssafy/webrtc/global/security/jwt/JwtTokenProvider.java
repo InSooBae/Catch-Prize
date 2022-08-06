@@ -127,7 +127,8 @@ public class JwtTokenProvider {
     private Claims parseClaims(String accessToken) {
         try {
             log.info("jwtProvider token : {}", accessToken);
-            return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(accessToken).getBody();
+            return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody();
+//            return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
