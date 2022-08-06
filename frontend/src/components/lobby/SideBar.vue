@@ -3,14 +3,13 @@
   <el-tabs id="sidebar" tabPosition="bottom" :stretch=true @tab-click="changeTab">
     <SideProfile />
     <div v-if="isAddFriends" class="d-flex add-friend-container">
-      <el-input v-model="addFriend" placeholder="이름을 입력하세요.">
+      <el-input v-model="friendNickname" placeholder="이름을 입력하세요.">
         <template #suffix>
-          <el-button color="#262C3A" type="info" class="add-button" @click="startVisible = true">
+          <el-button color="#262C3A" type="info" class="add-button" @click="addFriend(friendNickname)">
             <img src="@/assets/icons/person_add.svg" alt="add_friends">
           </el-button>
         </template>
       </el-input>
-
     </div>
     <el-tab-pane label="friends" class="sidebar-friends-element">
       <template #label>
@@ -47,10 +46,14 @@ import SideBarMyRecord from '@/components/lobby/SideBarMyRecord.vue'
 import SideBarSetProfile from '@/components/lobby/SideBarSetProfile.vue'
 import GameStart from '@/components/lobby/GameStart.vue';
 import { ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore()
 
 const isAddFriends = ref(true)
-const addFriend = ref('')
+const friendNickname = ref('')
 
+const addFriend = (friend) => store.dispatch('addFriend', friend)
 const changeTab = (data) => {
   if (data.props.label == "friends")
     isAddFriends.value = true

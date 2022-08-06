@@ -340,6 +340,7 @@
 
 .start-modal {
   width: 500px;
+  --el-text-color-primary: whitesmoke;
 }
 
 .start-modal .el-dialog__body {
@@ -399,8 +400,11 @@
 }
 
 .friends-item .friends-name {
-  margin-top: 0.26rem;
-  width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 3px 0 0 5px;
+  width: 127px;
 }
 
 .friends-item .friends-delete {

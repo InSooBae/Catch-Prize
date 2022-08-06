@@ -78,7 +78,9 @@ const detectMobile = () => {
 
 onMounted(() => {
   isMobile.value = detectMobile();
-  if (isLoggedIn.value) router.push({ name:'lobbyMain' })
+  if (isLoggedIn.value) {
+    router.push({ name:'lobbyMain' })
+    }
 })
 </script>
 

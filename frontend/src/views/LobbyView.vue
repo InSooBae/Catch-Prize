@@ -32,7 +32,7 @@ const notice = computed(() => store.getters.notice)
 const fetchNotice = (id) => store.dispatch('fetchNotice', id)
 
 onMounted(() => {
-  fetchNotice(0)
+  // fetchNotice(21)
 })
 
 const noticeVisible = ref(false);

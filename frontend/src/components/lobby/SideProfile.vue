@@ -15,10 +15,10 @@ import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 
 const store = useStore()
-store.dispatch('fetchCurrentUser');
 const currentUser = computed(() => store.getters.currentUser)
+store.dispatch('fetchCurrentUser');
 
 const logout = () => {
-  console.log('logout')
+  store.dispatch('logout');
 }
 </script>

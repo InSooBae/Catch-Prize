@@ -1,5 +1,10 @@
+import { NONE } from 'phaser'
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '../store'
+
+const checkAuth = (auth) => {
+  // if (!auth) return { name: 'home'}
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +12,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/HomeView.vue')
+      component: () => import('../views/HomeView.vue'),
     },
     {
       path: '/login/:name',
@@ -15,11 +20,17 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue')
     },
     {
+      path: '/redirect',
+      name: 'redirect',
+      component: () => import('../views/RedirectView.vue'),
+    },
+    {
       path: '/lobby',
       name: 'lobby',
       component: () => import('../views/LobbyView.vue'),
+      beforeEnter : () => checkAuth(store.getters.isLoggedIn),
       children: [
-        {
+        { 
           path: '',
           name: 'lobbyMain',
           components: {
@@ -37,23 +48,14 @@ const router = createRouter({
     {
       path: '/game',
       name: 'game',
-      component: () => import('../views/GameView.vue')
-    },
-    {
-      path: '/redirect',
-      name: 'redirect',
-      component: () => import('../views/RedirectView.vue'),
+      component: () => import('../views/GameView.vue'),
+      beforeEnter : () => checkAuth(store.getters.isLoggedIn)
     },
     {
       path: '/notice',
       name: 'notice',
       component: () => import('../views/NoticeView.vue'),
-      beforeEnter: () => {
-        if (!store.getters.isAdmin) {
-          console.log('ban')
-          // return { name: 'home'}
-        }
-      },
+      beforeEnter : () => checkAuth(store.getters.isAdmin),
       children: [
         {
           path: '',
