@@ -46,6 +46,8 @@ public class Member extends BaseTimeEntity implements Persistable<UUID> {
 
     private String refreshToken;
 
+    private boolean online;
+
     @Builder
     private Member(String nickname, String token, JoinPathType joinPath, RoleType role) {
         this.nickname = nickname;
@@ -88,4 +90,13 @@ public class Member extends BaseTimeEntity implements Persistable<UUID> {
     public boolean isNew() {
         return getCreateDate() == null;
     }
+
+    public void login() {
+        this.online = true;
+    }
+
+    public void logout() {
+        this.online = false;
+    }
+
 }
