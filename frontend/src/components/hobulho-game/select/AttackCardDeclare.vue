@@ -31,7 +31,6 @@ const $state = inject("$state");
 
 function attackDeclare(data) {
   let declareCard = data;
-  console.log(declareCard);
   $hobulhoSocket.emit("declare-click", declareCard);
 }
 </script>

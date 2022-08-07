@@ -11,7 +11,8 @@ const state = {
       message: "More players are required",
     },
   },
-  gamestate: "loading",
+  isShuffled: false,
+  gamestate: "",
   deathplayer: "",
   winner: "",
   players: [
@@ -164,37 +165,35 @@ const attackstate = {
   declaration: true,
 };
 //6종류 10장씩의 카드를 랜덤으로 8장씩 분배
-function cardsuffle() {
-  const cardlist = ["cake", "durian", "eggplant", "insect", "mint", "pizza"];
-  const list = [];
-  for (let t = 0; t < 6; t++) {
-    for (let i = 0; i < 10; i++) {
-      list.push(cardlist[t]);
+function cardshuffle() {
+  if (state.isShuffled === false) {
+    const cardlist = ["cake", "durian", "eggplant", "insect", "mint", "pizza"];
+    const list = [];
+    for (let t = 0; t < 6; t++) {
+      for (let i = 0; i < 10; i++) {
+        list.push(cardlist[t]);
+      }
     }
-  }
-  list.sort(() => Math.random() - 0.5);
-  // console.log(list);
-  let cnt = 0;
-  for (let t = 0; t < 6; t++) {
-    for (let i = 0; i < 8; i++) {
-      if (list[cnt] === "cake") state.players[t].cards.hand.cake++;
-      if (list[cnt] === "durian") state.players[t].cards.hand.durian++;
-      if (list[cnt] === "eggplant") state.players[t].cards.hand.eggplant++;
-      if (list[cnt] === "insect") state.players[t].cards.hand.insect++;
-      if (list[cnt] === "mint") state.players[t].cards.hand.mint++;
-      if (list[cnt] === "pizza") state.players[t].cards.hand.pizza++;
-      cnt++;
+    list.sort(() => Math.random() - 0.5);
+    let cnt = 0;
+    for (let t = 0; t < 6; t++) {
+      for (let i = 0; i < 8; i++) {
+        if (list[cnt] === "cake") state.players[t].cards.hand.cake++;
+        if (list[cnt] === "durian") state.players[t].cards.hand.durian++;
+        if (list[cnt] === "eggplant") state.players[t].cards.hand.eggplant++;
+        if (list[cnt] === "insect") state.players[t].cards.hand.insect++;
+        if (list[cnt] === "mint") state.players[t].cards.hand.mint++;
+        if (list[cnt] === "pizza") state.players[t].cards.hand.pizza++;
+        cnt++;
+      }
     }
+    state.isShuffled = true;
   }
-  // console.log(state.players[0].cards);
 }
 
 function checkdeclaration() {
-  console.log(attackstate.selectedcard);
-  console.log(attackstate.declaredcard);
   if (attackstate.selectedcard == attackstate.declaredcard) {
     attackstate.declaration = true;
-    console.log(attackstate.declaration);
   } else if (attackstate.selectedcard != attackstate.declaredcard) {
     attackstate.declaration = false;
   }
@@ -218,9 +217,6 @@ function defendSuccess() {
         state.players[t].cards.board.pizza++;
     }
   }
-  if (!checkDeath(attackstate.attackerId)) {
-    attackstate.attackerId = attackstate.attackerId;
-  }
 }
 //방어 실패
 function defendFail() {
@@ -239,9 +235,6 @@ function defendFail() {
       if (attackstate.selectedcard === "pizza")
         state.players[t].cards.board.pizza++;
     }
-  }
-  if (!checkDeath(attackstate.defenderId)) {
-    attackstate.attackerId = attackstate.defenderId;
   }
 }
 function checkDeath(player) {
@@ -300,17 +293,19 @@ app.get("/", function (req, res) {
 });
 
 var hobulhoSocket = io.of("/hobulhoSocket");
-// var roomSocket = io.of("/roomSocket");
 
 //connection event handler
 hobulhoSocket.on("connection", function (socket) {
-  console.log("hobulho connected: " + socket);
+  //서버연결되면 loading 보냄
+  cardshuffle();
+  state.gamestate = "loading";
+  socket.emit("data-refresh", state);
+  //게임 시작
+  socket.emit("game-start-ready");
 
   //게임 시작 요청이 들어오면
   socket.on("hobulho-start-req", function (data) {
-    cardsuffle();
     if (state.gamestate === "loading") state.gamestate = "start";
-    //state를 보냄
 
     //state 보내기
     socket.emit("data-refresh", state);
@@ -321,21 +316,20 @@ hobulhoSocket.on("connection", function (socket) {
     socket.emit("first-attack");
   });
 
-  socket.on("select-ready-req", function () {
+  socket.on("select-ready-req", function (data) {
     //attacker 저장
     attackstate.attackerId = state.players[0].playerId;
-    //gamestate 변경
-    state.gamestate = "select";
     //state 보내기
 
-    socket.emit("attackdata-refresh", state);
-    socket.emit("data-refresh", state);
+    hobulhoSocket.emit("attackdata-refresh", attackstate);
+    hobulhoSocket.emit("data-refresh", state);
+    //내차례가 아니면 gamestate = turn
+    hobulhoSocket.emit("whose-turn");
   });
 
   socket.on("card-click", function (cardname, playerid) {
     //선택된 카드를 저장
     attackstate.selectedcard = cardname;
-    console.log(cardname + playerid);
     for (let t = 0; t < 6; t++) {
       if (state.players[t].playerId === playerid) {
         state.players[t].cards.remain--;
@@ -347,14 +341,11 @@ hobulhoSocket.on("connection", function (socket) {
         if (cardname === "pizza") state.players[t].cards.hand.pizza--;
       }
     }
-    //카드가 선택되고 gamestate는 attack으로 변경
-    state.gamestate = "attack";
-
-    //state 보내기
-    socket.emit("data-refresh", state);
+    hobulhoSocket.emit("data-refresh", state);
     //Mycards.vue PlayersHome.vue
-    socket.emit("players-refresh");
+    hobulhoSocket.emit("players-refresh");
     // 클라이언트에게 메시지를 전송한다
+    hobulhoSocket.emit("whose-attack");
   });
 
   //공격할 플레이어를 클릭했을때
@@ -363,19 +354,22 @@ hobulhoSocket.on("connection", function (socket) {
     state.gamestate = "declare";
 
     //데이터 뿌리기
-    socket.emit("data-refresh", state);
+    hobulhoSocket.emit("attackdata-refresh", attackstate);
+    hobulhoSocket.emit("data-refresh", state);
   });
 
   //뭐라고 할지 클릭했을때
   socket.on("declare-click", function (data) {
     attackstate.declaredcard = data;
-    state.gamestate = "judge";
+    // state.gamestate = "judge";
     //카드와 주장이 일치하는지 판단
     checkdeclaration();
 
     //데이터 뿌리기
-    socket.emit("data-refresh", state);
+    hobulhoSocket.emit("data-refresh", state);
     //attack 데이터 뿌리기
+    hobulhoSocket.emit("attackdata-refresh", attackstate);
+    hobulhoSocket.emit("whose-judge");
   });
 
   //방어자가 judge 선택
@@ -383,90 +377,63 @@ hobulhoSocket.on("connection", function (socket) {
     //방어성공
     if (data === attackstate.declaration) {
       state.gamestate = "success";
-      socket.emit("data-refresh", state);
+      hobulhoSocket.emit("data-refresh", state);
       defendSuccess();
       //카드를 먹은 사람이 죽었을 경우
       if (checkDeath(attackstate.attackerId)) {
         setTimeout(() => {
-          socket.emit("data-refresh", state);
-          socket.emit("players-refresh");
+          hobulhoSocket.emit("data-refresh", state);
+          hobulhoSocket.emit("players-refresh");
         }, 3000);
         if (checkwin()) {
           setTimeout(() => {
             state.gamestate = "win";
-            socket.emit("data-refresh", state);
+            hobulhoSocket.emit("data-refresh", state);
           }, 6000);
         } else {
           setTimeout(() => {
-            state.gamestate = "turn";
-            socket.emit("data-refresh", state);
+            hobulhoSocket.emit("whose-turn");
           }, 6000);
-          setTimeout(() => {
-            state.gamestate = "select";
-            socket.emit("data-refresh", state);
-          }, 9000);
         }
+        //죽지 않았을 경우
       } else {
+        attackstate.attackerId = attackstate.attackerId;
         setTimeout(() => {
-          state.gamestate = "turn";
-          socket.emit("data-refresh", state);
+          hobulhoSocket.emit("whose-turn");
         }, 3000);
-        setTimeout(() => {
-          state.gamestate = "select";
-          socket.emit("data-refresh", state);
-        }, 6000);
       }
       //방어 실패
     } else {
       state.gamestate = "fail";
-      socket.emit("data-refresh", state);
+      hobulhoSocket.emit("data-refresh", state);
       defendFail();
       //카드를 먹은 사람이 죽었을 경우
       if (checkDeath(attackstate.defenderId)) {
         setTimeout(() => {
-          socket.emit("data-refresh", state);
-          socket.emit("players-refresh");
+          hobulhoSocket.emit("data-refresh", state);
+          hobulhoSocket.emit("players-refresh");
         }, 3000);
         if (checkwin()) {
           setTimeout(() => {
             state.gamestate = "win";
-            socket.emit("data-refresh", state);
+            hobulhoSocket.emit("data-refresh", state);
           }, 6000);
         } else {
           setTimeout(() => {
-            state.gamestate = "turn";
-            socket.emit("data-refresh", state);
+            hobulhoSocket.emit("whose-turn");
           }, 6000);
-          setTimeout(() => {
-            state.gamestate = "select";
-            socket.emit("data-refresh", state);
-          }, 9000);
         }
+        //죽지 않았을 경우
       } else {
+        attackstate.attackerId = attackstate.defenderId;
         setTimeout(() => {
-          state.gamestate = "turn";
-          socket.emit("data-refresh", state);
+          hobulhoSocket.emit("whose-turn");
         }, 3000);
-        setTimeout(() => {
-          state.gamestate = "select";
-          socket.emit("data-refresh", state);
-        }, 6000);
       }
     }
     //플레이어창 새로고침
     //다음턴
-    socket.emit("attackdata-refresh", attackstate);
-  });
-
-  //판단성공 공격실패
-  socket.on("judge-success", function (data) {
-    console.log(data + "attaker++");
-    socket.emit("attack-fail", data);
-  });
-  //판단실패 공격성공
-  socket.on("judge-fail", function (data) {
-    console.log(data + "defender++");
-    socket.emit("attack-success", data);
+    hobulhoSocket.emit("attackdata-refresh", attackstate);
   });
 });
 

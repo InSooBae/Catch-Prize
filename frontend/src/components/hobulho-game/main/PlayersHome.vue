@@ -2,7 +2,12 @@
   <div v-if="$state.gamestate === 'declare'">
     <AttackCardDeclare />
   </div>
-  <div v-else-if="$state.gamestate === 'judge'">
+  <div
+    v-else-if="
+      $state.gamestate === 'judge' &&
+      $attackstate.defenderId === $clientstate.myid
+    "
+  >
     <DefendJudge />
   </div>
   <div v-else class="players-container">
@@ -31,6 +36,7 @@ import { reactive, toRefs, inject, ref } from "vue";
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
 const $state = inject("$state");
+const $attackstate = inject("$attackstate");
 const nowstate = $state.gamestate;
 
 // 받아올 데이터
@@ -96,7 +102,7 @@ function firstattacker() {
   if ($state.gamestate === "start") {
     setTimeout(() => {
       //카드 선택 준비
-      $hobulhoSocket.emit("select-ready-req");
+      $hobulhoSocket.emit("select-ready-req", $clientstate.myid);
     }, 3000);
   }
 }
@@ -109,9 +115,7 @@ $hobulhoSocket.on("first-attack", function () {
 //새로고침
 $hobulhoSocket.on("players-refresh", function () {
   playersSetting();
-  console.log(players);
 });
-
 </script>
 
 <style>

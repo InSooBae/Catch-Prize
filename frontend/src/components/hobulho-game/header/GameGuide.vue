@@ -8,6 +8,13 @@
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
+      v-if="$state.gamestate === 'judge-turn'"
+      class="blink"
+      :steps="[$attackstate.defenderId + ' 님이 진실을 파헤치는중..', 1000]"
+      :loop="1"
+      :wrapper="'h1'"
+    ></v-typical>
+    <v-typical
       v-else-if="$state.gamestate === 'select'"
       class="blink"
       :steps="[guide.guideText, 1000]"
@@ -50,7 +57,10 @@
       :wrapper="'h1'"
     ></v-typical>
     <v-typical
-      v-else-if="$state.gamestate === 'attack'"
+      v-else-if="
+        $state.gamestate === 'attack' &&
+        $attackstate.attackerId === $clientstate.myid
+      "
       class="blink"
       :steps="[guide.guideText, 1000]"
       :loop="1"
@@ -89,7 +99,6 @@ const $attackstate = inject("$attackstate");
 const props = defineProps({
   guide: Object,
 });
-console.log($state);
 </script>
 
 <style scoped>

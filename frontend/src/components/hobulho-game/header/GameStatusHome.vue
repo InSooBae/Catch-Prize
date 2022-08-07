@@ -24,6 +24,7 @@ import { reactive, toRefs, inject } from "vue";
 
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
+const $attackstate = inject("$attackstate");
 const $state = inject("$state");
 
 const guides = reactive({
@@ -39,9 +40,13 @@ const guides = reactive({
     { name: "judge", guideText: "진실을 파헤치세요!" },
     { name: "success", guideText: "정답입니다!" },
     { name: "fail", guideText: "틀렸습니다!" },
-    { name: "death", guideText: "님이 죽었습니다..." },
-    { name: "win", guideText: "님의 승리입니다!" },
-    { name: "turn", guideText: "{{player}}님 차례입니다." },
+    { name: "death", guideText: `${$state.deathplayer} 님이 죽었습니다...` },
+    { name: "win", guideText: `${$state.winner} 님의 승리입니다!` },
+    { name: "turn", guideText: `${$attackstate.attackerId} 님의 차례입니다.` },
+    {
+      name: "judge-turn",
+      guideText: `${$attackstate.defenderId} 님이 진실을 파헤치는중..`,
+    },
   ],
 });
 const { statuseList } = toRefs(guides);

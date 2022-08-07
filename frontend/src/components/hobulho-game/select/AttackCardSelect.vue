@@ -46,7 +46,6 @@ const players = reactive({
 const { playerList } = toRefs(players)
 
 onMounted(() => {
-  console.log(playerList.value[0].cards)
 })
 </script>
 <style>

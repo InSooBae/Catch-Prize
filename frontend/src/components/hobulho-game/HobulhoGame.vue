@@ -14,6 +14,7 @@
 
 <script setup>
 import { reactive, toRefs, inject } from "vue";
+import { useRoute } from "vue-router";
 import HeaderHome from "./header/HeaderHome.vue";
 import LeftHome from "./main/LeftHome.vue";
 import RightHome from "./main/PlayersHome.vue";
@@ -23,19 +24,45 @@ import { useStore } from "vuex";
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
 const $state = inject("$state");
+const $attackstate = inject("$attackstate");
 
-const nowstate = $state.gamestate;
+const route = useRoute();
+const myid = route.params.myid;
+$clientstate.myid = myid;
 
 //현재상태가 loading 일때 게임 시작 요청
 const gameStart = () => {
-  if (nowstate === "loading") {
+  if ($state.gamestate === "loading") {
     setTimeout(() => {
       $hobulhoSocket.emit("hobulho-start-req", $clientstate.myid);
     }, 3000);
   }
 };
-gameStart();
-console.log($state);
+$hobulhoSocket.on("game-start-ready", function () {
+  gameStart();
+});
+
+$hobulhoSocket.on("whose-turn", function () {
+  if ($attackstate.attackerId === $clientstate.myid) {
+    $state.gamestate = "select";
+  } else {
+    $state.gamestate = "turn";
+  }
+});
+$hobulhoSocket.on("whose-attack", function () {
+  if ($attackstate.attackerId === $clientstate.myid) {
+    $state.gamestate = "attack";
+  } else {
+    $state.gamestate = "turn";
+  }
+});
+$hobulhoSocket.on("whose-judge", function () {
+  if ($attackstate.defenderId === $clientstate.myid) {
+    $state.gamestate = "judge";
+  } else {
+    $state.gamestate = "judge-turn";
+  }
+});
 </script>
 
 <style>

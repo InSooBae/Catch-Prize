@@ -31,12 +31,12 @@ const router = createRouter({
       ],
     },
     {
-      path: '/game',
+      path: '/game/:gameid',
       name: 'game',
       component: () => import('../views/GameView.vue'),
       children: [
         {
-          path: ':gameid',
+          path: ':myid',
           name: 'gameplayroom',
           component: () => import('../components/hobulho-game/HobulhoGame.vue')
         }

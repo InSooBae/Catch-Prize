@@ -1,4 +1,5 @@
 import { createApp, reactive } from "vue";
+// import { useRoute } from "vue-router";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
@@ -13,12 +14,10 @@ import io from "socket.io-client";
 const hobulhoSocket = io("http://localhost:8081/hobulhoSocket", {
   transports: ["websocket"],
 });
-
 const app = createApp(App);
 const clientstate = reactive({
-  myid: "player1",
+  myid: "",
 });
-// 공격하고 판단후 보내는 데이터
 const attackstate = reactive({
   attackerId: "",
   defenderId: "",
@@ -34,7 +33,7 @@ const state = reactive({
       message: "More players are required",
     },
   },
-  gamestate: "loading",
+  gamestate: "",
   deathplayer: "",
   winner: "",
   players: [

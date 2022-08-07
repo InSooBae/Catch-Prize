@@ -73,9 +73,7 @@ const $state = inject("$state");
 //공격할사람 클릭하면 함수 실행
 function attackTo() {
   if ($state.gamestate === "attack") {
-    console.log("player-click");
     const defender = nicknameRef.value.textContent;
-    console.log(defender);
     $hobulhoSocket.emit("player-click", defender);
   }
 }

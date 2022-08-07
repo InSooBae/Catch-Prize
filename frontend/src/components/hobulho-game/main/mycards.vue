@@ -48,6 +48,7 @@ const asd = ref(null);
 const $hobulhoSocket = inject("$hobulhoSocket");
 const $clientstate = inject("$clientstate");
 const $state = inject("$state");
+const $attackstate = inject("$attackstate");
 const myHandcards = reactive([
   {
     name: "cake",
@@ -96,7 +97,6 @@ const myHandupdate = () => {
     }
   }
   Hand.myHandcardsList = list;
-  console.log(list);
 };
 const cakeimgsrc = computed(() => {
   return cakesrc;
@@ -119,6 +119,8 @@ const pizzaimgsrc = computed(() => {
 $hobulhoSocket.on("hobulho-start-card", function (data) {
   myHandupdate();
 });
+
+
 
 function onClick(myHand) {
   if ($state.gamestate === "select") {
