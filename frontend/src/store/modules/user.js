@@ -2,13 +2,13 @@ import axios from "axios";
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import { API_BASE_URL } from "../../constants";
 import jwt_decode from "jwt-decode";
-
+import router from "../../router";
 
 const user = {
   state: {
     token: sessionStorage.getItem('token') || '',
     currentUser: {},
-    friendsList: [],
+    friendsList: { 'pending': {}, 'online': {}, 'offline': {} },
     isAdmin: false,
     authError: null,
   },
@@ -34,13 +34,31 @@ const user = {
       localStorage.setItem('token', '')
       sessionStorage.setItem('token', token)
     },
-    removeToken({ commit }) {
-      commit('SET_TOKEN', '')
-      sessionStorage.setItem('token', '')
+    logout({ commit, getters }) {
+      router.push({ name: 'home' })
+      if (getters.isLoggedIn) {
+        axios({
+          url: API_BASE_URL + '/auth/logout',
+          method: 'post',
+          data: {},
+          headers: getters.authHeader,
+        })
+          .then(res => {
+            commit('SET_TOKEN', '')
+            sessionStorage.setItem('token', '')
+          })
+          .catch(err => {
+            console.log(err.response.data)
+          })
+      }
     },
     fetchCurrentUser({ commit, getters, dispatch }) {
       if (getters.isLoggedIn) {
-        axios.get(API_BASE_URL + '/user/me', { headers: getters.authHeader })
+        axios({
+          url: API_BASE_URL + '/user/me',
+          method: 'get',
+          headers: getters.authHeader,
+        })
           .then(res => {
             commit('SET_CURRENT_USER', res.data)
             const role = jwt_decode(getters.token).role
@@ -48,38 +66,108 @@ const user = {
           })
           .catch(err => {
             if (err.response.status === 401) {
-              dispatch('removeToken')
-              router.push({ name: 'home' })
+              dispatch('logout')
             }
           })
       }
     },
-        fetchFriendsList({commit, getters}) {
-            // axios.get(API_BASE_URL + '/friend/subscribe')
-
-            console.log("친구 통신");
-            const eventSource = new EventSourcePolyfill(`${API_BASE_URL}/friend/subscribe`, {headers: getters.authHeader});
-            eventSource.addEventListener("sse", function (event) {
-                console.log(event.data);
-            })
-
-
-
-            commit('SET_FRIENDS', [
-                {id: 1, profile: '100', name: '황태희'},
-                {id: 2, profile: '100', name: '황태희'},
-                {id: 3, profile: '300', name: '이태희'},
-                {id: 4, profile: '123', name: '박태희'},
-                {id: 5, profile: '124', name: '고태희'},
-                {id: 6, profile: '125', name: '스탑태희'},
-                {id: 7, profile: '126', name: '돈스탑태희'},
-                {id: 8, profile: '100', name: '황태희'},
-                {id: 9, profile: '200', name: '김태희'},
-                {id: 10, profile: '300', name: '이태희'},
-            ])
-        }
+    fetchFriendsList({ commit, getters }) {
+      if (getters.isLoggedIn) {
+        axios({
+          url: API_BASE_URL + '/friend',
+          method: 'get',
+          headers: getters.authHeader,
+        })
+          .then(res => {
+            const friendsList = { 'pending': {}, 'online': {}, 'offline': {} }
+            res.data.forEach(friend => {
+              updateFriend(friend, friendsList)
+            });
+            commit('SET_FRIENDS', friendsList)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     },
-
+    subscribeFriends({ commit, getters }, method) {
+      console.log("변동 알림 보내기");
+      const eventSource = new EventSourcePolyfill(`${API_BASE_URL}/friend/subscribe`, { headers: getters.authHeader });
+      eventSource.addEventListener("sse", function (event) {
+        console.log(event.data)
+        if (event.data[0] === '{') {
+          const friendsList = getters.friendsList;
+          const friend = JSON.parse(event.data);
+          delete friendsList.offline[friend.id]
+          delete friendsList.online[friend.id]
+          delete friendsList.pending[friend.id]
+          updateFriend(friend, friendsList)
+          commit('SET_FRIENDS', friendsList)
+        }
+      })
+    },
+    acceptFriend({ dispatch, getters }, friendNickname) {
+      console.log(`acceptFriend ${friendNickname}`)
+      axios({
+        url: API_BASE_URL + `/friend/${friendNickname}`,
+        method: 'put',
+        headers: getters.authHeader,
+      })
+        .then(res => {
+          dispatch('fetchFriendsList');
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    addFriend({ dispatch, getters }, friendNickname) {
+      console.log(`addFriend ${friendNickname}`)
+      axios({
+        url: API_BASE_URL + `/friend/${friendNickname}`,
+        method: 'post',
+        headers: getters.authHeader,
+      })
+        .then(res => {
+          dispatch('fetchFriendsList');
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    },
+    deleteFriend({ dispatch, getters }, friendNickname) {
+      axios({
+        url: API_BASE_URL + `/friend/${friendNickname}`,
+        method: 'delete',
+        headers: getters.authHeader,
+      })
+        .then(res => {
+          dispatch('fetchFriendsList');
+        })
+        .catch(err => {
+          console.log(err.response.data)
+        })
+    }
+  },
 };
+
+const updateFriend = (friend, friendsList) => {
+  if (friend.friend) {
+    if (friend.online) {
+      friendsList.online[friend.id] = {
+        'friendNickname': friend.friendNickname
+      }
+    }
+    else {
+      friendsList.offline[friend.id] = {
+        'friendNickname': friend.friendNickname
+      }
+    }
+  }
+  else if (friend.pending) {
+    friendsList.pending[friend.id] = {
+      'friendNickname': friend.friendNickname
+    }
+  }
+}
 
 export default user;

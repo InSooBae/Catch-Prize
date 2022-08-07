@@ -4,7 +4,7 @@
   height: 100vh;
   /* background */
   /* font */
-  font-family: "PressStart2P";
+  font-family: "PressStart2P", "Galmuri9";
   /* border */
 
 }
@@ -146,13 +146,15 @@
 
 .sidebar-profile .profile-logout {
   cursor: pointer;
-  padding: 3px;
+  padding: 5px;
   margin: auto auto;
-  border-radius: 50%;
+  border-radius: 5px;
+  opacity: 0.45;
 }
 
 .sidebar-profile .profile-logout:hover {
-  box-shadow: 0 0 5px rgba(232, 235, 239, 0.3);
+  background-color: rgb(103, 107, 117);
+  opacity: 1;
 }
 
 .sidebar-profile .profile-logout:active {
@@ -210,7 +212,7 @@
   width: 100%;
   /* background */
   /* font */
-  font-family: "PressStart2P";
+  font-family: "PressStart2P", "Galmuri9";
   font-size: medium;
   --el-color-black: whitesmoke;
   /* border */
@@ -228,7 +230,7 @@
   width: 2rem;
   /* background */
   /* font */
-  font-family: "PressStart2P";
+  font-family: "PressStart2P", "Galmuri9";
   color: whitesmoke;
   /* border */
   border: 0px solid #2c3e50;
@@ -236,6 +238,11 @@
 
 .add-friend-container .add-button img {
   margin: 0 5px 0 6px;
+  opacity: 0.22;
+}
+
+.add-friend-container .add-button:hover img {
+  opacity: 0.7;
 }
 
 .notice-modal {
@@ -269,7 +276,7 @@
 }
 
 .notice-modal .el-dialog__title {
-  font-family: "PressStart2P";
+  font-family: "PressStart2P", "Galmuri9";
   font-size: 1.8rem;
   line-height: 2;
   color: #f2e53b;
@@ -340,6 +347,7 @@
 
 .start-modal {
   width: 500px;
+  --el-text-color-primary: whitesmoke;
 }
 
 .start-modal .el-dialog__body {
@@ -385,6 +393,23 @@
   border-radius: 5px;
 }
 
+.friends-list {
+  --el-collapse-border-color: transparent;
+  --el-collapse-header-height: 2.3rem;
+  --el-collapse-header-bg-color: transparent;
+  --el-collapse-header-text-color: whitesmoke;
+  --el-collapse-header-font-size: 1.0rem;
+  --el-collapse-content-bg-color: transparent;
+  --el-collapse-content-font-size: 13px;
+  --el-collapse-content-text-color: whitesmoke;
+  border-top: 1px solid var(--el-collapse-border-color);
+  border-bottom: 1px solid var(--el-collapse-border-color);
+}
+
+.friends-list .el-collapse-item__content {
+  padding-bottom: 10px;
+}
+
 .friends-item {
   /* layout */
   /* BOX */
@@ -399,35 +424,37 @@
 }
 
 .friends-item .friends-name {
-  margin-top: 0.26rem;
-  width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 3px 0 0 5px;
+  width: 127px;
 }
 
-.friends-item .friends-delete {
-  /* layout */
-  padding: 1px 10px 2.5px 10px;
-  /* BOX */
-  /* background */
-  background-color: transparent;
-  /* font */
-  color: rgba(245, 245, 245, 0.1);
-  font-size: 1rem;
-  filter: brightness(0.1);
-  /* border */
-  border: none;
-  border-radius: 50%;
+.friends-item .accept-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0.3;
 }
 
-.friends-item .friends-delete:hover {
-  cursor: pointer;
-  filter: brightness(1);
+.friends-item .delete-icon {
+  width: 11px;
+  height: 11px;
+  opacity: 0.3;
 }
 
-.friends-item .friends-delete:active {
-  cursor: pointer;
-  filter: brightness(0.5);
+.friends-offline .el-avatar, .friends-offline .friends-name {
+  filter: brightness(0.4);
 }
 
+.friends-button {
+  width: 32px;
+  height: 32px;
+}
+
+.friends-button:hover .accept-icon, .friends-button:hover .delete-icon {
+  opacity: 0.8;
+}
 
 .lobby-layout .el-tab-pane {
   overflow: auto;
@@ -504,7 +531,7 @@
   height: 38px;
   /* background */
   /* font */
-  font-family: "PressStart2P";
+  font-family: "PressStart2P", "Galmuri9";
   font-size: medium;
   --el-color-black: whitesmoke;
   /* border */

@@ -9,17 +9,13 @@
 <script setup>
 import RoomItem from '@/components/lobby/RoomItem.vue'
 import { useStore } from 'vuex'
-import { reactive, toRefs, computed } from 'vue';
+import { computed } from 'vue';
 
 const store = useStore()
 
-const rooms = reactive({
-  roomsList: []
-})
+const roomsList = computed(() => store.getters.roomsList)
+store.dispatch('fetchRooms')
 
-const { roomsList } = toRefs(rooms)
-
-roomsList.value = computed(() => store.getters.roomsList)
 </script>
 
 <style> 
