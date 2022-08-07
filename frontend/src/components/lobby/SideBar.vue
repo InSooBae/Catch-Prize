@@ -28,7 +28,8 @@
       <SetProfile />
     </el-tab-pane>
   </el-tabs>
-  <GameStart />
+  <ExitGame v-if="isWait" />
+  <StartGame v-if="!isWait" />
 </template>
 
 <script setup>
@@ -36,12 +37,17 @@ import Profile from './SideBar/Profile.vue'
 import Friends from './SideBar/Friends.vue'
 import MyRecord from './SideBar/MyRecord.vue'
 import SetProfile from './SideBar/SetProfile.vue'
-import GameStart from './SideBar/GameStart.vue';
+import StartGame from './SideBar/StartGame.vue';
+import ExitGame from './SideBar/ExitGame.vue'
 import AddFriend from './SideBar/AddFriend.vue';
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore()
 
 const isFriends = ref(true)
+const isWait = ref(computed(() => store.getters.isWait))
 
 const changeTab = (data) => {
   if (data.props.label == "friends")

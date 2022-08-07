@@ -14,7 +14,9 @@
           <SideBar />
         </el-aside>
         <el-main>
-          <RouterView />
+          <Transition name="slide-fade">
+            <RouterView />
+          </Transition>
         </el-main>
       </el-container>
     </el-container>
@@ -27,7 +29,8 @@ import { onMounted, computed, ref } from 'vue'
 import { useStore } from 'vuex'
 
 const store = useStore()
-const notice = computed(() => store.getters.notice)
+// const notice = computed(() => store.getters.notice)
+const notice = {title: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'}
 
 const fetchNotice = (id) => store.dispatch('fetchNotice', id)
 

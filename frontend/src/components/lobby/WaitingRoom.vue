@@ -34,15 +34,18 @@
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
 import { onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 
 const route = useRoute();
+const store = useStore()
 const gameid = route.params.gameid;
 
 onMounted(() => {
   const startReady = document.getElementById('start-ready-button');
   startReady.innerText = 'Ready!';
+  store.commit('SET_ISWAIT', true)
 })
 </script>
 

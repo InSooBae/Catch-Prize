@@ -3,13 +3,16 @@ import { API_BASE_URL } from "../../constants";
 
 const room = {
   state: {
-    roomsList: []
+    roomsList: [],
+    isWait: false,
   },
   mutations: {
     SET_ROOMS: (state, roomsList) => state.roomsList = roomsList,
+    SET_ISWAIT: (state, isWait) => state.isWait = isWait
   },  
   getters: {
     roomsList: state => state.roomsList,
+    isWait: state => state.isWait
   },
   actions: {
     fetchRooms({commit}) {
