@@ -1,5 +1,7 @@
-package com.ssafy.webrtc.domain.game;
+package com.ssafy.webrtc.domain.game.controller;
 
+import com.ssafy.webrtc.domain.game.dto.GameDto;
+import com.ssafy.webrtc.domain.game.service.GameService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
