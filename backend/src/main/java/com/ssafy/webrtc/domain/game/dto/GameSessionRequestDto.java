@@ -12,4 +12,6 @@ public class GameSessionRequestDto {
     RoomType roomType;
 
     AccessType accessType;
+
+    String roomName;
 }

@@ -1,5 +1,11 @@
 server:
-  port: 8081
+  port: 8080
+  # EMBEDDED SERVER CONFIGURATION
+  ssl:
+    key-store: classpath:keystore.jks
+    key-store-password: kurento
+    key-store-type: JKS
+    key-alias: kurento-selfsigned
 
 spring:
   datasource:
@@ -76,6 +82,8 @@ spring:
 openvidu:
   url: https://localhost:4443/
   secret: MY_SECRET
+
+
 
 # app
 app:
