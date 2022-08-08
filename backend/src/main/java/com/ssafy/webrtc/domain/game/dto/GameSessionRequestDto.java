@@ -9,9 +9,11 @@ import lombok.Getter;
 @Builder
 public class GameSessionRequestDto {
 
-    RoomType roomType;
+    private RoomType roomType;
 
-    AccessType accessType;
+    private AccessType accessType;
 
-    String roomName;
+    private int maxParticipants;
+
+    private String roomName;
 }

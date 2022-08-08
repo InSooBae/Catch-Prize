@@ -5,6 +5,7 @@ import com.ssafy.webrtc.domain.game.dto.GameSessionJoinResponseDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionRequestDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionResponseDto;
 import com.ssafy.webrtc.domain.game.entity.GameSession;
+import com.ssafy.webrtc.domain.game.entity.Player;
 import com.ssafy.webrtc.domain.game.enums.GameState;
 import com.ssafy.webrtc.domain.game.repository.GameSessionRedisRepository;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
@@ -55,8 +56,8 @@ public class GameSessionServiceImpl implements GameSessionService{
                 .roomType(gameSessionRequestDto.getRoomType())
                 .accessType(gameSessionRequestDto.getAccessType())
                 .createTime(createdTime)
+                .maxParticipants(gameSessionRequestDto.getMaxParticipants())
                 .build();
-
 
         return GameSessionResponseDto.of(GameSession.of(gameSessionRedisRepository.save(GameSessionDao.of(gameSession))));
     }
@@ -68,6 +69,11 @@ public class GameSessionServiceImpl implements GameSessionService{
 
     @Override
     public GameSessionJoinResponseDto addUser(String roomId, String nickname) {
+
+        GameSession gameSession = findById(roomId);
+
+        validateCanJoin(gameSession);
+
         OpenViduRole role = OpenViduRole.PUBLISHER;
 
         String serverData = "{\"serverData\": \"" + nickname + "\"}";
@@ -76,7 +82,6 @@ public class GameSessionServiceImpl implements GameSessionService{
         ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
                 .type(ConnectionType.WEBRTC).data(serverData).role(role).build();
 
-        GameSession gameSession = findById(roomId);
         try {
             // ex> wss://localhost:4443?sessionId=ses_Ogize1yQIj&token=tok_A1c0pNsLJFwVJTeb
             String token = gameSession.getSession().createConnection(connectionProperties).getToken();
@@ -86,9 +91,12 @@ public class GameSessionServiceImpl implements GameSessionService{
                     .orElseThrow(() -> new EmptyResultDataAccessException(1))
                     .substring(4);
 
-            gameSession.getMapSessionNamesTokens().put(token, role);
 
-            if (gameSession.getMapSessionNamesTokens().size() == 1) {
+            Player player = Player.of(userId, nickname, token, role);
+
+            gameSession.getPlayerMap().put(userId, player);
+
+            if (gameSession.getPlayerMap().size() == 1) {
                 gameSession.setHostId(userId);
             }
             update(gameSession);
@@ -106,8 +114,7 @@ public class GameSessionServiceImpl implements GameSessionService{
             if (404 == e2.getStatus()) {
                 removeSession(gameSession);
             }
-            return GameSessionJoinResponseDto
-                    .builder().build();
+            throw new RuntimeException(e2.getMessage());
         }
     }
 
@@ -115,31 +122,31 @@ public class GameSessionServiceImpl implements GameSessionService{
     public GameSession removeUser(String roomId, String userId) {
         GameSession gameSession = findById(roomId);
         Session session = gameSession.getSession();
-        Map<String, OpenViduRole> mapSessionNamesTokens = gameSession.getMapSessionNamesTokens();
+        Map<String, Player> playerMap = gameSession.getPlayerMap();
 
         // If the session exists ("TUTORIAL" in this case)
-        if (session == null || mapSessionNamesTokens == null) {
+        if (session == null || playerMap == null) {
             // The SESSION does not exist
             log.info("Problems in the app server: the SESSION does not exist");
             throw new NullPointerException("세션이 존재하지 않음");
         }
-        if (mapSessionNamesTokens.remove(userId) == null) {
+        if (playerMap.remove(userId) == null) {
             // The TOKEN wasn't valid
             log.info("Problems in the app server: the TOKEN - {} wasn't valid", userId);
         }
         // User left the session
-        if (mapSessionNamesTokens.isEmpty()) {
+        if (playerMap.isEmpty()) {
             removeSession(gameSession);
         } else {
             // 방장 나가면 남은 사람 중 한명 호스트로 바꾸기
-            makeHostForLeftUser(userId, gameSession, mapSessionNamesTokens);
+            makeHostForLeftUser(userId, gameSession, playerMap);
         }
         return gameSession;
     }
 
-    private void makeHostForLeftUser(String userId, GameSession gameSession, Map<String, OpenViduRole> mapSessionNamesTokens) {
+    private void makeHostForLeftUser(String userId, GameSession gameSession, Map<String, Player> playerMap) {
         if (userId.equals(gameSession.getHostId())) {
-            gameSession.setHostId(mapSessionNamesTokens.keySet().iterator().next());
+            gameSession.setHostId(playerMap.keySet().iterator().next());
         }
     }
 
@@ -194,7 +201,7 @@ public class GameSessionServiceImpl implements GameSessionService{
             throw new RuntimeException("이미 게임이 시작됐습니다!");
         }
 
-        if (gameSession.getMapSessionNamesTokens().size() > MAX_PLAYER_COUNT) {
+        if (gameSession.getPlayerMap().size() > gameSession.getMaxParticipants()) {
             throw new RuntimeException("정원 초과했습니다.");
         }
     }
