@@ -9,6 +9,7 @@ const store = createStore({
     user,
     notice,
     room,
+    webrtc,
   },
 });
 
