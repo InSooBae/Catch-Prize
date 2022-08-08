@@ -23,7 +23,7 @@ public interface GameSessionService {
 
     public GameSessionJoinResponseDto addUser(String roomId, String nickname);
 
-    public boolean removeUser(String roomId, String userId);
+    public GameSession removeUser(String roomId, String userId);
 
     GameSession findById(String id);
 

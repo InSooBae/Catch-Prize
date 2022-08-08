@@ -12,6 +12,7 @@ import com.ssafy.webrtc.global.util.RoomIdUtils;
 import com.ssafy.webrtc.global.util.UrlUtils;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GameSessionServiceImpl implements GameSessionService{
 
     public static final int MAX_PLAYER_COUNT = 6;
@@ -110,7 +112,7 @@ public class GameSessionServiceImpl implements GameSessionService{
     }
 
     @Override
-    public boolean removeUser(String roomId, String userId) {
+    public GameSession removeUser(String roomId, String userId) {
         GameSession gameSession = findById(roomId);
         Session session = gameSession.getSession();
         Map<String, OpenViduRole> mapSessionNamesTokens = gameSession.getMapSessionNamesTokens();
@@ -118,13 +120,12 @@ public class GameSessionServiceImpl implements GameSessionService{
         // If the session exists ("TUTORIAL" in this case)
         if (session == null || mapSessionNamesTokens == null) {
             // The SESSION does not exist
-            System.out.println("Problems in the app server: the SESSION does not exist");
-            return false;
+            log.info("Problems in the app server: the SESSION does not exist");
+            throw new NullPointerException("세션이 존재하지 않음");
         }
         if (mapSessionNamesTokens.remove(userId) == null) {
             // The TOKEN wasn't valid
-            System.out.println("Problems in the app server: the TOKEN wasn't valid");
-            return false;
+            log.info("Problems in the app server: the TOKEN - {} wasn't valid", userId);
         }
         // User left the session
         if (mapSessionNamesTokens.isEmpty()) {
@@ -133,7 +134,7 @@ public class GameSessionServiceImpl implements GameSessionService{
             // 방장 나가면 남은 사람 중 한명 호스트로 바꾸기
             makeHostForLeftUser(userId, gameSession, mapSessionNamesTokens);
         }
-        return true;
+        return gameSession;
     }
 
     private void makeHostForLeftUser(String userId, GameSession gameSession, Map<String, OpenViduRole> mapSessionNamesTokens) {
