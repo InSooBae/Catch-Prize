@@ -4,34 +4,44 @@
       <div class="current-player-text">{{ $clientstate.myid }}&nbsp;</div>
       <div>님의 카드입니다.</div>
     </div>
-    <div class="mycards-wrapper">
-      <div
-        v-for="(myHand, i) in myHandcardsList"
-        :key="i"
-        v-on:click="onClick(myHand)"
-        ref="asd"
-        class="asd"
-      >
-        <img v-if="myHand === 'cake'" :src="cakeimgsrc" :alt="`${myHand}`" />
-        <img
-          v-if="myHand === 'durian'"
-          :src="durianimgsrc"
-          :alt="`${myHand}`"
-        />
-        <img
-          v-if="myHand === 'eggplant'"
-          :src="eggplantimgsrc"
-          :alt="`${myHand}`"
-        />
-        <img
-          v-if="myHand === 'insect'"
-          :src="insectimgsrc"
-          :alt="`${myHand}`"
-        />
-        <img v-if="myHand === 'mint'" :src="mintimgsrc" :alt="`${myHand}`" />
-        <img v-if="myHand === 'pizza'" :src="pizzaimgsrc" :alt="`${myHand}`" />
+    <transition name="card-fade">
+      <div class="mycards-wrapper" v-if="myHandcardsList!=''">
+        <div
+          v-for="(myHand, i) in myHandcardsList"
+          :key="i"
+          v-on:click="onClick(myHand)"
+          ref="asd"
+          class="asd"
+        >
+          <img v-if="myHand === 'cake'" :src="cakeimgsrc" :alt="`${myHand}`" />
+          <img
+            v-else-if="myHand === 'durian'"
+            :src="durianimgsrc"
+            :alt="`${myHand}`"
+          />
+          <img
+            v-else-if="myHand === 'eggplant'"
+            :src="eggplantimgsrc"
+            :alt="`${myHand}`"
+          />
+          <img
+            v-else-if="myHand === 'insect'"
+            :src="insectimgsrc"
+            :alt="`${myHand}`"
+          />
+          <img
+            v-else-if="myHand === 'mint'"
+            :src="mintimgsrc"
+            :alt="`${myHand}`"
+          />
+          <img
+            v-else-if="myHand === 'pizza'"
+            :src="pizzaimgsrc"
+            :alt="`${myHand}`"
+          />
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -120,8 +130,6 @@ $hobulhoSocket.on("hobulho-start-card", function (data) {
   myHandupdate();
 });
 
-
-
 function onClick(myHand) {
   if ($state.gamestate === "select") {
     const cardname = myHand;
@@ -178,5 +186,14 @@ const { myHandcardsList } = toRefs(Hand);
 }
 .current-player-text {
   color: #00bd9d;
+}
+
+.card-fade-enter-active {
+  transition: all 0.8s ease;
+}
+
+.card-fade-enter-from {
+  transform: translateX(-30px);
+  opacity: 0;
 }
 </style>

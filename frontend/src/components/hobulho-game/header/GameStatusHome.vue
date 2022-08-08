@@ -68,9 +68,9 @@ const { statuseList } = toRefs(guides);
 }
 
 .timer {
-  width: 20%;
+  width: 5%;
   position: absolute;
-  right: 10%;
+  right: 5%;
 }
 .guide {
   width: 60%;

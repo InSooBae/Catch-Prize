@@ -18,6 +18,15 @@ function defendJudge(answer) {
 }
 </script>
 <style>
+.defend-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(6, 13, 25, 0.8);
+  z-index: 1000;
+}
 .tf-btn {
   /* layout */
   display: flex;

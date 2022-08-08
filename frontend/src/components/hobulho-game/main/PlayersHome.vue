@@ -1,29 +1,34 @@
 <template>
-  <div v-if="$state.gamestate === 'declare'">
-    <AttackCardDeclare />
-  </div>
-  <div
-    v-else-if="
+  <transition name="slide-fade">
+    <div
+      v-if="
+        $state.gamestate === 'declare' &&
+        $attackstate.attackerId === $clientstate.myid
+      "
+    >
+      <AttackCardDeclare />
+    </div>
+    <div v-else class="players-container">
+      <div class="left-grid">
+        <div class="left-grid1"><Player :player="playersList[0]" /></div>
+        <div class="left-grid2">
+          <Player :player="playersList[1]" />
+        </div>
+        <div class="left-grid3"><Player :player="playersList[2]" /></div>
+      </div>
+      <div class="right-grid">
+        <div class="right-grid1"><Player :player="playersList[3]" /></div>
+        <div class="right-grid2"><Player :player="playersList[4]" /></div>
+        <div class="right-grid3"><Player :player="playersList[5]" /></div>
+      </div>
+    </div>
+  </transition>
+  <DefendJudge
+    v-if="
       $state.gamestate === 'judge' &&
       $attackstate.defenderId === $clientstate.myid
     "
-  >
-    <DefendJudge />
-  </div>
-  <div v-else class="players-container">
-    <div class="left-grid">
-      <div class="left-grid1"><Player :player="playersList[0]" /></div>
-      <div class="left-grid2">
-        <Player :player="playersList[1]" />
-      </div>
-      <div class="left-grid3"><Player :player="playersList[2]" /></div>
-    </div>
-    <div class="right-grid">
-      <div class="right-grid1"><Player :player="playersList[3]" /></div>
-      <div class="right-grid2"><Player :player="playersList[4]" /></div>
-      <div class="right-grid3"><Player :player="playersList[5]" /></div>
-    </div>
-  </div>
+  />
 </template>
 
 <script setup>
@@ -159,5 +164,13 @@ $hobulhoSocket.on("players-refresh", function () {
 }
 .right-grid3 {
   height: 27vh;
+}
+.slide-fade-enter-active {
+  transition: all 0.8s ease;
+}
+
+.slide-fade-enter-from {
+  transform: translateX(100px);
+  opacity: 0;
 }
 </style>
