@@ -3,8 +3,8 @@ package com.ssafy.webrtc.domain.game.service;
 import com.ssafy.webrtc.domain.game.dao.GameSessionDao;
 import com.ssafy.webrtc.domain.game.dto.GameSessionJoinResponseDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionRequestDto;
+import com.ssafy.webrtc.domain.game.dto.GameSessionResponseDto;
 import com.ssafy.webrtc.domain.game.entity.GameSession;
-import com.ssafy.webrtc.domain.game.entity.Player;
 import com.ssafy.webrtc.domain.game.enums.GameState;
 import com.ssafy.webrtc.domain.game.repository.GameSessionRedisRepository;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
@@ -17,27 +17,23 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class GameSessionServiceImpl implements GameSessionService{
 
+    public static final int MAX_PLAYER_COUNT = 6;
     private final GameSessionRedisRepository gameSessionRedisRepository;
 
     private final OpenVidu openVidu;
 
 
     @Override
-    public GameSession makeSession(CustomUserDetails user, GameSessionRequestDto gameSessionRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
-//        String id = "";
-//
-//        do {
-//            id = RoomIdUtils.randomRoomId(gameSessionRequestDto.getAccessType());
-//
-//            // id 중복 없으면
-//        } while (!gameSessionRedisRepository.findById(id).equals(Optional.empty()));
+    public GameSessionResponseDto makeSession(CustomUserDetails user, GameSessionRequestDto gameSessionRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
 
         if (gameSessionRedisRepository.findByCreator(user.getName()).size() > 1) {
             throw new DataIntegrityViolationException("더 이상 방을 만들 수 없습니다!");
@@ -60,9 +56,13 @@ public class GameSessionServiceImpl implements GameSessionService{
                 .build();
 
 
-        return GameSession.of(gameSessionRedisRepository.save(GameSessionDao.of(gameSession)));
+        return GameSessionResponseDto.of(GameSession.of(gameSessionRedisRepository.save(GameSessionDao.of(gameSession))));
     }
 
+    public List<GameSession> findAll() {
+        List<GameSessionDao> allOfGameSession = gameSessionRedisRepository.findAll();
+        return allOfGameSession.stream().map(GameSession::of).collect(Collectors.toCollection(ArrayList::new));
+    }
 
     @Override
     public GameSessionJoinResponseDto addUser(String roomId, String nickname) {
@@ -87,7 +87,7 @@ public class GameSessionServiceImpl implements GameSessionService{
             gameSession.getMapSessionNamesTokens().put(token, role);
 
             if (gameSession.getMapSessionNamesTokens().size() == 1) {
-                gameSession.setMasterId(userId);
+                gameSession.setHostId(userId);
             }
             update(gameSession);
 
@@ -110,7 +110,7 @@ public class GameSessionServiceImpl implements GameSessionService{
     }
 
     @Override
-    public boolean removeUser(String roomId, String token) {
+    public boolean removeUser(String roomId, String userId) {
         GameSession gameSession = findById(roomId);
         Session session = gameSession.getSession();
         Map<String, OpenViduRole> mapSessionNamesTokens = gameSession.getMapSessionNamesTokens();
@@ -121,7 +121,7 @@ public class GameSessionServiceImpl implements GameSessionService{
             System.out.println("Problems in the app server: the SESSION does not exist");
             return false;
         }
-        if (mapSessionNamesTokens.remove(token) == null) {
+        if (mapSessionNamesTokens.remove(userId) == null) {
             // The TOKEN wasn't valid
             System.out.println("Problems in the app server: the TOKEN wasn't valid");
             return false;
@@ -129,9 +129,19 @@ public class GameSessionServiceImpl implements GameSessionService{
         // User left the session
         if (mapSessionNamesTokens.isEmpty()) {
             removeSession(gameSession);
+        } else {
+            // 방장 나가면 남은 사람 중 한명 호스트로 바꾸기
+            makeHostForLeftUser(userId, gameSession, mapSessionNamesTokens);
         }
         return true;
     }
+
+    private void makeHostForLeftUser(String userId, GameSession gameSession, Map<String, OpenViduRole> mapSessionNamesTokens) {
+        if (userId.equals(gameSession.getHostId())) {
+            gameSession.setHostId(mapSessionNamesTokens.keySet().iterator().next());
+        }
+    }
+
     @Override
     public GameSession enterSession(CustomUserDetails user, String roomId) {
 
@@ -140,7 +150,7 @@ public class GameSessionServiceImpl implements GameSessionService{
 //        Player
 //                .builder()
 //                .id()
-        if (gameSession.getPlayerMap().size() > 6) {
+        if (gameSession.getPlayerMap().size() > MAX_PLAYER_COUNT) {
             throw new DataIntegrityViolationException("방 정원이 가득 찼습니다.");
         }
 
@@ -167,5 +177,24 @@ public class GameSessionServiceImpl implements GameSessionService{
     public void update(GameSession update) {
 //        GameSessionDao updateDto = GameSessionDaoMapper.INSTANCE.toDao(update);
 //        gameSessionRedisRepository.save(updateDto);
+    }
+
+    @Override
+    public GameState getGameSessionState(String roomId) {
+        GameSession gameSession = findById(roomId);
+
+        validateCanJoin(gameSession);
+
+        return gameSession.getState();
+    }
+
+    private void validateCanJoin(GameSession gameSession) {
+        if (gameSession.getState() == GameState.STARTED) {
+            throw new RuntimeException("이미 게임이 시작됐습니다!");
+        }
+
+        if (gameSession.getMapSessionNamesTokens().size() > MAX_PLAYER_COUNT) {
+            throw new RuntimeException("정원 초과했습니다.");
+        }
     }
 }

@@ -10,9 +10,7 @@ import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Session;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
@@ -20,8 +18,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -56,7 +54,7 @@ public class GameSessionDao {
 
     private final Session session;
 
-    private final String masterId;
+    private final String hostId;
 
     private final Map<String, OpenViduRole> mapSessionNamesTokens;
 
@@ -74,7 +72,7 @@ public class GameSessionDao {
                 .createTime(gameSession.getCreateTime())
                 .lastEnter(gameSession.getLastEnter())
                 .session(gameSession.getSession())
-                .masterId(gameSession.getMasterId())
+                .hostId(gameSession.getHostId())
                 .mapSessionNamesTokens(gameSession.getMapSessionNamesTokens())
                 .playerMap(gameSession.getPlayerMap())
                 .build();

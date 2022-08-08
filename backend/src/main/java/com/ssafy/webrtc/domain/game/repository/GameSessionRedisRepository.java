@@ -12,4 +12,7 @@ import java.util.List;
 public interface GameSessionRedisRepository extends CrudRepository<GameSessionDao, String> {
 
     List<GameSessionDao> findByCreator(String memberNickname);
+
+    @Override
+    List<GameSessionDao> findAll();
 }

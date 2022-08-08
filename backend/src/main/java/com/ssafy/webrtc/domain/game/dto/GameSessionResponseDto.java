@@ -11,6 +11,7 @@ import lombok.Getter;
 public class GameSessionResponseDto {
     private String id;
     private AccessType accessType;
+    private String roomName;
     private RoomType roomType;
 
     public static GameSessionResponseDto of(GameSession gameSession) {
@@ -18,6 +19,7 @@ public class GameSessionResponseDto {
                 .builder()
                 .id(gameSession.getRoomId())
                 .accessType(gameSession.getAccessType())
+                .roomName(gameSession.getRoomName())
                 .roomType(gameSession.getRoomType())
                 .build();
     }

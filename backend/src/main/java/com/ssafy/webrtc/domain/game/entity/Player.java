@@ -1,6 +1,7 @@
 package com.ssafy.webrtc.domain.game.entity;
 
 
+import io.openvidu.java.client.OpenViduRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +21,9 @@ import java.util.List;
 public class Player implements Serializable {
 
     @Id
-    private String id;
+    private final String id;
 
-    private String nickname;
+    private final String nickname;
 
     // 자기만 보는 카드
     private List<Card> hands = new ArrayList<>();
@@ -31,4 +32,19 @@ public class Player implements Serializable {
     private List<Card> ground = new ArrayList<>();
 
     private boolean alive;
+
+    private final String token;
+
+    private final OpenViduRole openViduRole;
+
+    public static Player of(String id, String nickname, String token, OpenViduRole openViduRole) {
+        return Player
+                .builder()
+                .id(id)
+                .nickname(nickname)
+                .token(token)
+                .openViduRole(openViduRole)
+                .build();
+    }
+
 }

@@ -5,24 +5,18 @@ import com.ssafy.webrtc.domain.game.enums.AccessType;
 import com.ssafy.webrtc.domain.game.enums.GamePhase;
 import com.ssafy.webrtc.domain.game.enums.GameState;
 import com.ssafy.webrtc.domain.game.enums.RoomType;
-import com.ssafy.webrtc.domain.member.entity.Member;
 import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Session;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -63,7 +57,8 @@ public class GameSession {
     @NonNull
     private final Session session;
 
-    private String masterId;
+    @NonNull
+    private String hostId;
 
     private int maxParticipants;
 
@@ -82,7 +77,7 @@ public class GameSession {
                 .createTime(gameSessionDao.getCreateTime())
                 .lastEnter(gameSessionDao.getLastEnter())
                 .session(gameSessionDao.getSession())
-                .masterId(gameSessionDao.getMasterId())
+                .hostId(gameSessionDao.getHostId())
                 .mapSessionNamesTokens(gameSessionDao.getMapSessionNamesTokens())
                 .playerMap(gameSessionDao.getPlayerMap())
                 .build();
