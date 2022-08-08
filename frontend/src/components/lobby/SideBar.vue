@@ -28,8 +28,14 @@
       <SetProfile />
     </el-tab-pane>
   </el-tabs>
-  <ExitGame v-if="isWait" />
-  <StartGame v-if="!isWait" />
+  <transition name="fade" mode="out-in">
+    <div v-if="isWait"  key="exit-button">
+      <ExitGame />
+    </div>
+    <div v-else key="start-button">
+      <StartGame />
+    </div>
+  </transition>
 </template>
 
 <script setup>

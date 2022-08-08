@@ -17,7 +17,7 @@ const room = {
   actions: {
     fetchRooms({commit}) {
       commit('SET_ROOMS', [
-        { name: 'GameRoom1', isPlaying: false, type: 'Poker', maxParti: 6, nowParti: 4},
+        { name: 'GameRoom1ddddddddddddddddd', isPlaying: false, type: 'Poker', maxParti: 6, nowParti: 4},
         { name: 'GameRoom2', isPlaying: true, type: 'Soccer', maxParti: 6, nowParti: 6},
         { name: 'GameRoom3', isPlaying: false, type: 'Game', maxParti: 6, nowParti: 2},
         { name: 'GameRoom4', isPlaying: true, type: 'Poker', maxParti: 6, nowParti: 6},

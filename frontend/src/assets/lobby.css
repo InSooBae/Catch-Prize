@@ -46,7 +46,7 @@
   color: whitesmoke;
   /* border */
   /* animation */
-  transition: all ease-out 0.2s 0s;
+  transition: all ease-in 0.2s 0s;
 }
 
 .lobby-layout .el-header:hover .notice-marquee {
@@ -567,7 +567,11 @@
 }
 
 .lobby-room-item .room-name {
+  width: min(max(210px, calc(32vw - 270px)), 330px);
   font-size: 1.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .lobby-room-item:hover {
@@ -610,13 +614,21 @@
   font-size: 0.5rem;
 }
 
-.slide-fade-enter-active,
-.slide-fade-leave-active {
+.slide-fade-enter-active {
   transition: all 0.8s ease;
 }
 
-.slide-fade-enter-from,
-.slide-fade-leave-to {
+.slide-fade-enter-from {
   transform: translateX(100px);
   opacity: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.2s ease-out 0.05s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  filter: invert(0.5);
 }

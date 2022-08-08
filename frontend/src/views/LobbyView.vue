@@ -14,9 +14,11 @@
           <SideBar />
         </el-aside>
         <el-main>
-          <Transition name="slide-fade">
-            <RouterView />
-          </Transition>
+          <router-view v-slot="{ Component }">
+            <transition name="slide-fade">
+              <component :is="Component" />
+            </transition>
+          </router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -30,7 +32,7 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 // const notice = computed(() => store.getters.notice)
-const notice = {title: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'}
+const notice = { title: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.' }
 
 const fetchNotice = (id) => store.dispatch('fetchNotice', id)
 

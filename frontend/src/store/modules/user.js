@@ -1,8 +1,8 @@
-import axios from "axios";
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import { API_BASE_URL } from "../../constants";
 import jwt_decode from "jwt-decode";
 import router from "../../router";
+import { logout, getCurrentUser, findAllFriends, acceptFriend, addFriend, deleteFriend } from "../../util/api";
 
 const user = {
   state: {
@@ -11,6 +11,7 @@ const user = {
     friendsList: { 'pending': {}, 'online': {}, 'offline': {} },
     isAdmin: false,
     authError: null,
+    eventSource: {}
   },
   mutations: {
     SET_TOKEN: (state, token) => state.token = token,
@@ -18,6 +19,7 @@ const user = {
     SET_FRIENDS: (state, friendsList) => state.friendsList = friendsList,
     SET_AUTH_ERROR: (state, error) => state.authError = error,
     SET_IS_ADMIN: (state, role) => state.isAdmin = (role === 'ADMIN'),
+    SET_EVENT_SOURCE: (state, eventSource) => state.eventSource = eventSource
   },
   getters: {
     token: state => state.token,
@@ -27,6 +29,7 @@ const user = {
     authError: state => state.authError,
     authHeader: state => ({ Authorization: `Bearer ${state.token}` }),
     isAdmin: state => state.isAdmin,
+    eventSource: state => state.eventSource,
   },
   actions: {
     saveToken({ commit }, token) {
@@ -37,28 +40,16 @@ const user = {
     logout({ commit, getters }) {
       router.push({ name: 'home' })
       if (getters.isLoggedIn) {
-        axios({
-          url: API_BASE_URL + '/auth/logout',
-          method: 'post',
-          data: {},
-          headers: getters.authHeader,
-        })
+        logout(getters.authHeader)
           .then(res => {
-            commit('SET_TOKEN', '')
             sessionStorage.setItem('token', '')
-          })
-          .catch(err => {
-            console.log(err.response.data)
+            commit('SET_TOKEN', '')
           })
       }
     },
     fetchCurrentUser({ commit, getters, dispatch }) {
       if (getters.isLoggedIn) {
-        axios({
-          url: API_BASE_URL + '/user/me',
-          method: 'get',
-          headers: getters.authHeader,
-        })
+        getCurrentUser(getters.authHeader)
           .then(res => {
             commit('SET_CURRENT_USER', res.data)
             const role = jwt_decode(getters.token).role
@@ -73,20 +64,13 @@ const user = {
     },
     fetchFriendsList({ commit, getters }) {
       if (getters.isLoggedIn) {
-        axios({
-          url: API_BASE_URL + '/friend',
-          method: 'get',
-          headers: getters.authHeader,
-        })
+        findAllFriends(getters.authHeader)
           .then(res => {
             const friendsList = { 'pending': {}, 'online': {}, 'offline': {} }
             res.data.forEach(friend => {
               updateFriend(friend, friendsList)
             });
             commit('SET_FRIENDS', friendsList)
-          })
-          .catch(err => {
-            console.log(err)
           })
       }
     },
@@ -105,46 +89,32 @@ const user = {
           commit('SET_FRIENDS', friendsList)
         }
       })
+      commit('SET_EVENT_SOURCE', eventSource)
+    },
+    closeSubscribe({ getters }) {
+      const eventSource = getters.eventSource
+      if (!!eventSource) {
+        console.log(eventSource)
+        eventSource.close()
+        console.log(eventSource)
+      }
     },
     acceptFriend({ dispatch, getters }, friendNickname) {
-      console.log(`acceptFriend ${friendNickname}`)
-      axios({
-        url: API_BASE_URL + `/friend/${friendNickname}`,
-        method: 'put',
-        headers: getters.authHeader,
-      })
+      acceptFriend(getters.authHeader, friendNickname)
         .then(res => {
           dispatch('fetchFriendsList');
-        })
-        .catch(err => {
-          console.log(err.response.data)
         })
     },
     addFriend({ dispatch, getters }, friendNickname) {
-      console.log(`addFriend ${friendNickname}`)
-      axios({
-        url: API_BASE_URL + `/friend/${friendNickname}`,
-        method: 'post',
-        headers: getters.authHeader,
-      })
+      addFriend(getters.authHeader, friendNickname)
         .then(res => {
           dispatch('fetchFriendsList');
-        })
-        .catch(err => {
-          console.log(err.response.data)
         })
     },
     deleteFriend({ dispatch, getters }, friendNickname) {
-      axios({
-        url: API_BASE_URL + `/friend/${friendNickname}`,
-        method: 'delete',
-        headers: getters.authHeader,
-      })
+      deleteFriend(getters.authHeader, friendNickname)
         .then(res => {
           dispatch('fetchFriendsList');
-        })
-        .catch(err => {
-          console.log(err.response.data)
         })
     }
   },
