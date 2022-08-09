@@ -1,7 +1,7 @@
 <template>
   <div class="players-container">
     <div class="left-grid">
-      <div class="left-grid1"><Player :player="playersList[0]" /></div>
+      <div class="left-grid1"><Player :player="playersList[0]"/></div>
       <div class="left-grid2"><Player :player="playersList[1]"/></div>
       <div class="left-grid3"><Player :player="playersList[2]"/></div>
     </div>
@@ -15,11 +15,18 @@
 
 <script setup>
 import Player from "./Player.vue";
-
+import { useStore } from 'vuex';
 import { reactive, toRefs } from 'vue'
 
-
+const store = useStore()
+const mainStreamManager = () => store.commit('SET_MAINSTREAM')
 // 받아올 데이터
+
+// Large Screen에서 띄워줄 mainStreamManager 선정
+updateMainVideoStreamManager = (stream) => {
+  if (mainStreamManager === stream) return;
+  mainStreamManager(stream)
+}
 const players = reactive({
   playersList: [
     { name: 'player1', isDeath: false, fieldlist: [0,2,1,2,1,1], remain: 1},

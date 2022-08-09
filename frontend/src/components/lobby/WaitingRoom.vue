@@ -46,19 +46,12 @@ const route = useRoute()
 const store = useStore()
 const chatdata = ref('')
 const gameid = route.params.gameid;
-const mainStreamManager = () => store.commit('SET_MAINSTREAM')
 const players = computed(() => store.state.webrtc)
 const sessionId = computed(() => store.state.webrtc)
 
 
 const unSub = () => {
   store.dispatch('closeSubscribe')
-}
-
-// Large Screen에서 띄워줄 mainStreamManager 선정
-updateMainVideoStreamManager = (stream) => {
-  if (mainStreamManager === stream) return;
-  mainStreamManager(stream)
 }
 
 onMounted(() => {
