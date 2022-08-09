@@ -23,7 +23,7 @@ const mainStreamManager = () => store.commit('SET_MAINSTREAM')
 // 받아올 데이터
 
 // Large Screen에서 띄워줄 mainStreamManager 선정
-updateMainVideoStreamManager = (stream) => {
+const updateMainVideoStreamManager = (stream) => {
   if (mainStreamManager === stream) return;
   mainStreamManager(stream)
 }

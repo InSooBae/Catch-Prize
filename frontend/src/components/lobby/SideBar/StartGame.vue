@@ -20,7 +20,7 @@
       <el-form-item>
         <el-select placeholder="참여인원을 선택하세요" v-model="gameinfo.gamesize" :disabled="!gameinfo.gametype">
           <el-option :label="4" value=4 />
-          <el-option label="6" value=6 />
+          <el-option :label="6" value=6 />
         </el-select>
       </el-form-item>
       <el-button color="#00bd9d" type="info" class="start-button" @click="makeRoom">GAME START!</el-button>
@@ -31,8 +31,10 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 const router = useRouter()
+const store = useStore()
 
 const startVisible = ref(false)
 
@@ -43,10 +45,13 @@ const gameinfo = reactive({
 })
 
 const makeRoom = () => {
-  router.push({ name: 'gameroom', params: {gameid: gameinfo.roomname} })
+  router.push({ name: 'gameroom', params: {roomId: gameinfo.roomname} })
   gameinfo.roomname = ''
   gameinfo.gametype = ''
   gameinfo.gamesize = ''
   startVisible.value = false
+  const createRoom = () => store.dispatch('createRoom', gameinfo)
+  createRoom()
+
 }
 </script>
