@@ -29,7 +29,7 @@
         </div>  
       </div>
       <div class>
-        <el-button color="#7608d3" type="info" id="start-ready-button" @click="unSub"></el-button>
+        <el-button color="#7608d3" class="exit-button" type="info" id="start-ready-button" @click="unSub"></el-button>
       </div>
     </el-col>
   </el-row>
@@ -57,23 +57,19 @@ onMounted(() => {
 </script>
 
 <style>
-.wait-container .people-container {
-  padding-right: 20px;
-}
-
 .wait-container .person-container {
-  margin-bottom: 20px;
+  background-color: var(--main-bg-color);
 }
 
 .person-container .person-image {
-  width: 100%;
+  width: 80%;
 }
 
 .wait-container .chat-container {
   margin-bottom: 10px;
   padding: 10px;
   height: calc(100% - 90px);
-  background-color: #0F1E33;
+  background-color: var(--main-bg-color);
   border-radius: 10px;
 }
 

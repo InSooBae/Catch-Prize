@@ -230,7 +230,26 @@
   border: none;
   border-radius: 10px;
   /* animation */
-  transition: all 0.4s ease;
+  transition: invert 0.3s ease;
+}
+
+.lobby-layout .start-button,
+.lobby-layout .profile-update-button {
+  background: linear-gradient(40deg, rgb(0, 170, 141), rgb(0, 201, 167));
+}
+
+.lobby-layout .exit-button {
+  background: linear-gradient(40deg, rgb(104, 4, 185), rgb(130, 15, 224));
+}
+
+.lobby-layout .start-button:hover,
+.lobby-layout .profile-update-button:hover {
+  filter: brightness(1.2);
+}
+
+.lobby-layout .start-button:active,
+.lobby-layout .profile-update-button:active {
+  filter: brightness(0.8);
 }
 
 .add-friend-container {
@@ -558,7 +577,7 @@
   /* background */
   /* font */
   font-family: "PressStart2P", "Galmuri9";
-  font-size: medium;
+  font-size: 0.9rem;
   --el-color-black: whitesmoke;
   /* border */
   border: none;
