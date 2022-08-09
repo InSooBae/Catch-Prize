@@ -1,5 +1,6 @@
 package com.ssafy.webrtc.domain.game.controller;
 
+import com.ssafy.webrtc.domain.game.dto.GameSessionJoinResponseDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionLeaveRequestDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionRequestDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionResponseDto;
@@ -75,12 +76,12 @@ public class GameSessionController {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @PostMapping("/{roomId}")
-    public ResponseEntity<GameSessionResponseDto> enterSession(
+    public ResponseEntity<GameSessionJoinResponseDto> enterSession(
             @ApiIgnore @AuthenticationPrincipal CustomUserDetails user,
             @PathVariable("roomId") String roomId) {
-        GameSession gameSession = gameSessionService.enterSession(user, roomId);
+        GameSessionJoinResponseDto gameSessionJoinResponseDto = gameSessionService.addUser(roomId, user.getUsername());
 
-        return new ResponseEntity<>(GameSessionResponseDto.of(gameSession), HttpStatus.OK);
+        return new ResponseEntity<GameSessionJoinResponseDto>(gameSessionJoinResponseDto, HttpStatus.OK);
     }
 
 //    @ApiOperation(value = "방 생성", notes = "<strong>RoomName, maxPlayer ...</strong>를 통해 방을 생성한다.")

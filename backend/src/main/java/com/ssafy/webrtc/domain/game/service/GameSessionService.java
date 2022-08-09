@@ -16,14 +16,13 @@ public interface GameSessionService {
 
     GameSession makeSession(CustomUserDetails user, GameSessionRequestDto gameSessionRequestDto) throws OpenViduJavaClientException, OpenViduHttpException;;
 
-    public List<GameSession> findAll();
-    GameSession enterSession(CustomUserDetails user, String roomId);
+    List<GameSession> findAll();
 
     void removeSession(GameSession gameSession);
 
-    public GameSessionJoinResponseDto addUser(String roomId, String nickname);
+    GameSessionJoinResponseDto addUser(String roomId, String nickname);
 
-    public GameSession removeUser(String roomId, String userId);
+    GameSession removeUser(String roomId, String userId);
 
     GameSession findById(String id);
 

@@ -19,9 +19,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,15 +63,10 @@ public class GameSessionServiceImpl implements GameSessionService{
         return toEntity(gameSessionRedisRepository.save(GameSessionDao.of(gameSession)));
     }
 
-    @Override
     public List<GameSession> findAll() {
-        return null;
+        List<GameSessionDao> allOfGameSession = gameSessionRedisRepository.findAll();
+        return allOfGameSession.stream().map(this::toEntity).collect(Collectors.toCollection(ArrayList::new));
     }
-
-//    public List<GameSession> findAll() {
-//        List<GameSessionDao> allOfGameSession = gameSessionRedisRepository.findAll();
-//        return allOfGameSession.stream().map(GameSession::of).collect(Collectors.toCollection(ArrayList::new));
-//    }
 
     private GameSession toEntity(GameSessionDao dao) {
         Session entitySession = null;
@@ -182,25 +179,6 @@ public class GameSessionServiceImpl implements GameSessionService{
         if (userId.equals(gameSession.getHostId())) {
             gameSession.setHostId(playerMap.keySet().iterator().next());
         }
-    }
-
-    @Override
-    public GameSession enterSession(CustomUserDetails user, String roomId) {
-
-        GameSession gameSession = findById(roomId);
-
-//        Player
-//                .builder()
-//                .id()
-        if (gameSession.getPlayerMap().size() > MAX_PLAYER_COUNT) {
-            throw new DataIntegrityViolationException("방 정원이 가득 찼습니다.");
-        }
-
-        if (gameSession.getState().equals(GameState.STARTED)) {
-            throw new IllegalStateException("게임이 이미 시작됐습니다.");
-        }
-
-        return gameSession;
     }
 
     @Override
