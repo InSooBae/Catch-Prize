@@ -129,4 +129,4 @@ async function createSession(headers, sessionId) {
 }
 
 
-export {findNoticeByPgno, createNotice, findNoticeById, updateNotice, deleteNotice}
+export {findNoticeByPgno, createNotice, findNoticeById, updateNotice, deleteNotice, createSession, createToken}
