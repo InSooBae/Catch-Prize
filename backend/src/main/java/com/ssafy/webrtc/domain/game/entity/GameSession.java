@@ -1,8 +1,8 @@
 package com.ssafy.webrtc.domain.game.entity;
 
-import com.ssafy.webrtc.domain.game.enums.AccessType;
 import com.ssafy.webrtc.domain.game.enums.GamePhase;
 import com.ssafy.webrtc.domain.game.enums.GameState;
+import com.ssafy.webrtc.domain.game.enums.RoomType;
 import io.openvidu.java.client.Session;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,11 +31,8 @@ public class GameSession {
     private final String creator;
 
     @NonNull
-    private AccessType accessType;
-
-//    @NonNull
-//    @Enumerated(EnumType.STRING)
-//    private RoomType roomType;
+    @Enumerated(EnumType.STRING)
+    private RoomType roomType;
 
     @NonNull
     @Enumerated(EnumType.STRING)
@@ -62,12 +59,10 @@ public class GameSession {
 
 
 
-    public static GameSessionBuilder builder(String roomId, String creator, String roomName, AccessType accessType, LocalDateTime createTime, Session session, Map<String, Player> playerMap) {
+    public static GameSessionBuilder builder(String roomId, String creator, String roomName, LocalDateTime createTime, Session session, Map<String, Player> playerMap) {
 
         return new GameSessionBuilder()
                 .roomId(roomId)
-//                .roomType(gameSessionDao.getRoomType())
-                .accessType(accessType)
                 .roomName(roomName)
                 .creator(creator)
                 .state(GameState.WAIT)

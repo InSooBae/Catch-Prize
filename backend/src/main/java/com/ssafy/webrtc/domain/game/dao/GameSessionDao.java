@@ -2,12 +2,10 @@ package com.ssafy.webrtc.domain.game.dao;
 
 import com.ssafy.webrtc.domain.game.entity.GameSession;
 import com.ssafy.webrtc.domain.game.entity.Player;
-import com.ssafy.webrtc.domain.game.enums.AccessType;
 import com.ssafy.webrtc.domain.game.enums.GamePhase;
 import com.ssafy.webrtc.domain.game.enums.GameState;
 import com.ssafy.webrtc.domain.game.enums.RoomType;
 import io.openvidu.java.client.OpenViduRole;
-import io.openvidu.java.client.Session;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +17,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -37,10 +34,8 @@ public class GameSessionDao {
     @Indexed
     private final String creator;
 
-    private final AccessType accessType;
-
-//    @Enumerated(EnumType.STRING)
-//    private final RoomType roomType;
+    @Enumerated(EnumType.STRING)
+    private final RoomType roomType;
 
     @Enumerated(EnumType.STRING)
     private final GameState state;
@@ -65,8 +60,7 @@ public class GameSessionDao {
         return GameSessionDao
                 .builder()
                 .roomId(gameSession.getRoomId())
-//                .roomType(gameSession.getRoomType())
-                .accessType(gameSession.getAccessType())
+                .roomType(gameSession.getRoomType())
                 .roomName(gameSession.getRoomName())
                 .creator(gameSession.getCreator())
                 .state(gameSession.getState())

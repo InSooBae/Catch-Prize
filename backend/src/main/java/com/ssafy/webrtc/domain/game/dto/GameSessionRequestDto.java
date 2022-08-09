@@ -1,6 +1,5 @@
 package com.ssafy.webrtc.domain.game.dto;
 
-import com.ssafy.webrtc.domain.game.enums.AccessType;
 import com.ssafy.webrtc.domain.game.enums.RoomType;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,9 +8,7 @@ import lombok.Getter;
 @Builder
 public class GameSessionRequestDto {
 
-//    private RoomType roomType;
-
-    private AccessType accessType;
+    private RoomType roomType;
 
     private int maxParticipants;
 

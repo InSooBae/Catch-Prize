@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GameSessionServiceImpl implements GameSessionService{
+public class GameSessionServiceImpl implements GameSessionService {
 
     public static final int MAX_PLAYER_COUNT = 6;
     private final GameSessionRedisRepository gameSessionRedisRepository;
@@ -42,21 +42,27 @@ public class GameSessionServiceImpl implements GameSessionService{
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUserDetails userDetails = (CustomUserDetails) principal;
         System.out.println(userDetails.getUsername());
-        if (gameSessionRedisRepository.findByCreator(user.getUsername()).size() > 1) {
+        if (gameSessionRedisRepository.findByCreator(user.getUsername()).size() > 10) {
             throw new DataIntegrityViolationException("더 이상 방을 만들 수 없습니다!");
         }
 
         Session openViduSession = openVidu.createSession();
 
-        String roomId = RoomIdUtils.getIdPrefix(gameSessionRequestDto.getAccessType()) + openViduSession.getSessionId().split("_")[1];
+        String roomId = openViduSession.getSessionId().split("_")[1];
 
         LocalDateTime createdTime = LocalDateTime.now();
 
 
-        GameSession gameSession = GameSession
-                .builder(roomId, user.getUsername(), gameSessionRequestDto.getRoomName(), gameSessionRequestDto.getAccessType(), createdTime, openViduSession, null)
+        GameSession gameSession = GameSession.builder(
+                roomId,
+                user.getUsername(),
+                gameSessionRequestDto.getRoomName(),
+                createdTime,
+                openViduSession,
+                null)
                 .state(GameState.WAIT)
                 .maxParticipants(gameSessionRequestDto.getMaxParticipants())
+                .roomType(gameSessionRequestDto.getRoomType())
                 .finishedTime(createdTime)
                 .build();
 
@@ -77,7 +83,8 @@ public class GameSessionServiceImpl implements GameSessionService{
             }
         }
         if (entitySession == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("세션이 만료됐습니다!!");
+
         }
 
         Map<String, Player> playerMap = dao.getPlayerMap();
@@ -86,10 +93,15 @@ public class GameSessionServiceImpl implements GameSessionService{
         }
 
 
-
-        return GameSession.builder(dao.getRoomId(), dao.getCreator(), dao.getRoomName(),
-                        dao.getAccessType(), dao.getCreateTime(), entitySession, playerMap)
+        return GameSession.builder(
+                dao.getRoomId(),
+                dao.getCreator(),
+                dao.getRoomName(),
+                dao.getCreateTime(),
+                entitySession,
+                playerMap)
                 .finishedTime(dao.getFinishedTime())
+                .roomType(dao.getRoomType())
                 .phase(dao.getPhase())
                 .lastEnter(dao.getLastEnter())
                 .state(dao.getState())
@@ -110,17 +122,14 @@ public class GameSessionServiceImpl implements GameSessionService{
         String serverData = "{\"serverData\": \"" + nickname + "\"}";
 
         // Build connectionProperties object with the serverData and the role
-        ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
-                .type(ConnectionType.WEBRTC).data(serverData).role(role).build();
+        ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC).data(serverData).role(role).build();
 
         try {
             // ex> wss://localhost:4443?sessionId=ses_Ogize1yQIj&token=tok_A1c0pNsLJFwVJTeb
             String token = gameSession.getSession().createConnection(connectionProperties).getToken();
 
             // ex> tok_A1c0pNsLJFwVJTeb
-            String userId = UrlUtils.getUrlQueryParam(token, "token")
-                    .orElseThrow(() -> new EmptyResultDataAccessException(1))
-                    .substring(4);
+            String userId = UrlUtils.getUrlQueryParam(token, "token").orElseThrow(() -> new EmptyResultDataAccessException(1)).substring(4);
 
 
             Player player = Player.of(userId, nickname, token, role);
@@ -132,15 +141,10 @@ public class GameSessionServiceImpl implements GameSessionService{
             }
             update(gameSession);
 
-            return GameSessionJoinResponseDto
-                    .builder()
-                    .userId(userId)
-                    .token(token)
-                    .build();
+            return GameSessionJoinResponseDto.builder().userId(userId).token(token).build();
         } catch (OpenViduJavaClientException e1) {
             // If internal error generate an error message and return it to client
-            return GameSessionJoinResponseDto
-                    .builder().build();
+            return GameSessionJoinResponseDto.builder().build();
         } catch (OpenViduHttpException e2) {
             if (404 == e2.getStatus()) {
                 removeSession(gameSession);
@@ -188,9 +192,7 @@ public class GameSessionServiceImpl implements GameSessionService{
 
     @Override
     public GameSession findById(String roomId) {
-        return toEntity(gameSessionRedisRepository
-                .findById(roomId)
-                .orElseThrow(() -> new EmptyResultDataAccessException("방을 찾을 수 없습니다!", 1)));
+        return toEntity(gameSessionRedisRepository.findById(roomId).orElseThrow(() -> new EmptyResultDataAccessException("방을 찾을 수 없습니다!", 1)));
     }
 
     @Override
