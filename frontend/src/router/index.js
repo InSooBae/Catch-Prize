@@ -39,7 +39,7 @@ const router = createRouter({
           }
         },
         {
-          path: ':gameid',
+          path: ':roomId',
           name: 'gameroom',
           component: () => import('../components/lobby/WaitingRoom.vue'),
         },

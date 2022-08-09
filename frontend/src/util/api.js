@@ -155,6 +155,7 @@ async function createRoom(headers, data) {
   }
 }
 
+
 async function deleteRoom(headers, roomId) {
   try {
     const res = await api.delete(`/gamesession/${roomId}`, { headers })

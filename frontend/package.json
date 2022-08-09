@@ -11,6 +11,7 @@
     "core-js": "^3.23.4",
     "element-plus": "^2.2.9",
     "event-source-polyfill": "^1.0.28",
+    "face-api.js": "^0.22.2",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "openvidu-browser": "^2.22.0",

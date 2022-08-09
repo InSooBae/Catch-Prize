@@ -1,12 +1,13 @@
 <template>
-  <div class="lobby-room-item d-flex justify-content-between" @click="enter(room.name)">
+  <div class="lobby-room-item d-flex justify-content-between" @click="enter(room.roomId)">
   <div>
-    <p class="room-name text-white">{{ room.name }}</p>
+    <p class="room-name text-white">{{ room.roomName }}</p>
     <p v-if="room.isPlaying" class="text-green">NOW PLAYING</p>
     <p v-else class="text-green">WAITING</p>
-    <p class="text-green">{{ room.type }}...</p>
+    <p class="text-green">{{ room.roomType }}...</p>
+    {{ room.session }}
   </div>
-    <p class="text-white align-self-start">{{ room.nowParti }}/{{ room.maxParti }}</p>
+    <p class="text-white align-self-start">{{ room.nowParti }}/{{ room.maxParticipants }}</p>
   </div>
 </template>
 
@@ -18,8 +19,8 @@ const props = defineProps({
   room: Object
 })
 
-const enter = (name) => {
-  router.push({ name: 'gameroom', params: {gameid: name} })
+const enter = (roomId) => {
+  router.push({ name: 'gameroom', params: { roomId: roomId } })
 }
 
 </script>
