@@ -11,6 +11,7 @@ const store = createStore({
     notice,
     room,
     webrtc,
+    item
   },
 });
 
