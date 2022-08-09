@@ -21,9 +21,9 @@ const item = {
     SET_RECIPENT: (state, recipent) => state.recipent = recipent,
   },
   actions: {
-    applyFilter() {
+    applyFilter({ getters, commit }) {
       const filter = { type: '', options: {} }
-      switch (state.type) {
+      switch (getters.type) {
         // 회색화면
         case 'Grayscale':
           filter.type = 'GStreamerFilter';
@@ -52,8 +52,9 @@ const item = {
       }
       commit('SET_FILTER', filter)
     },
-    sendFilter({ commit }, recipent, type) {
-      if ( sate.isitem === true ) { 
+    sendFilter({ commit, getters }, recipent, type) {
+      console.log('send Filter !')
+      if ( getters.isitem === true ) { 
         console.log('item Active') 
         return;
       }
@@ -62,7 +63,7 @@ const item = {
       recipent.stream.applyFilter(filter.type, filter.options)
       setTimeout(() => recipent.stream.removeFilter(), 20000)
     },
-    // 턴이 끝났을 때 사용할 수 있음
+    // 턴이 끝났을 때, removeFilter 
     removeFilter(recipent) {
       recipent.stream.removeFilter()
     }
