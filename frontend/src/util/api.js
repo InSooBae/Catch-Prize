@@ -110,5 +110,23 @@ async function deleteNotice(headers, noticeId) {
   }
 }
 
+async function createToken(headers, sessionId) {
+  try {
+    const res = await api.post(`/__/${sessionId}`, { data: sessionId }, { headers })
+    return res
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function createSession(headers, sessionId) {
+  try {
+    const res = await api.post(`/__/${sessionId}`, { data: sessionId }, { headers })
+    return res
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 
 export {findNoticeByPgno, createNotice, findNoticeById, updateNotice, deleteNotice}
