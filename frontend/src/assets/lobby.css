@@ -92,7 +92,8 @@
   margin-bottom: 10px;
   /* BOX */
   /* background */
-  background-color: #262C3A;
+  /* background-color: #262C3A; */
+  background: linear-gradient(60deg, rgba(37, 43, 57, 0.9), rgba(49, 56, 71, 0.8));
   /* font */
   /* border */
   border-radius: 10px;
@@ -175,15 +176,19 @@
   height: calc(100vh - 488px);
 }
 
+.lobby-layout .el-tabs {
+  --el-border-color-light: transparent;
+}
+
 #sidebar .el-tabs__content {
   /* layout */
   padding: 15px;
   /* BOX */
   /* background */
-  background-color: #262C3A;
+  background-color: transparent;
   /* font */
   /* border */
-  border-radius: 15px;
+  border-radius: 10px;
 }
 
 .lobby-layout .el-tabs__active-bar {
@@ -197,7 +202,6 @@
   /* background */
   /* font */
   /* border */
-  border-bottom: solid #0F1E33;
 }
 
 .lobby-layout .el-tabs__item {
@@ -208,7 +212,7 @@
   /* background */
   /* font */
   /* border */
-  background-color: #262C3A;
+  background-color: transparent;
 }
 
 .lobby-layout .start-button,
@@ -238,6 +242,7 @@
   /* BOX */
   width: 2rem;
   /* background */
+  background-color: transparent;
   /* font */
   font-family: "PressStart2P", "Galmuri9";
   color: whitesmoke;
@@ -252,6 +257,18 @@
 
 .add-friend-container .add-button:hover img {
   opacity: 0.7;
+}
+
+.add-friend-container .add-button:hover {
+  background-color: rgb(103, 107, 117);
+}
+
+.add-friend-container .add-button:active {
+  background-color: rgb(34, 39, 50);
+}
+
+.add-friend-container .add-button:active img {
+  opacity: 0.4;
 }
 
 .notice-modal {
@@ -407,7 +424,7 @@
   --el-collapse-header-height: 2.3rem;
   --el-collapse-header-bg-color: transparent;
   --el-collapse-header-text-color: whitesmoke;
-  --el-collapse-header-font-size: 1.0rem;
+  --el-collapse-header-font-size: 0.85rem;
   --el-collapse-content-bg-color: transparent;
   --el-collapse-content-font-size: 13px;
   --el-collapse-content-text-color: whitesmoke;
@@ -460,6 +477,8 @@
 .friends-button {
   width: 32px;
   height: 32px;
+  background-color: transparent;
+  border: none;
 }
 
 .friends-button:hover .accept-icon, 
