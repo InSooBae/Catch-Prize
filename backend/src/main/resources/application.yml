@@ -3,9 +3,10 @@ server:
   # EMBEDDED SERVER CONFIGURATION
   ssl:
     key-store: classpath:keystore.jks
-    key-store-password: kurento
+    key-store-password: openvidu
     key-store-type: JKS
-    key-alias: kurento-selfsigned
+    key-alias: openvidu-selfsigned
+    enabled: true
 
 spring:
   datasource:

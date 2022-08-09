@@ -43,7 +43,7 @@ public class GameSession {
 
     @NonNull
     @Enumerated(EnumType.STRING)
-    private GameState state = GameState.WAIT;
+    private GameState state;
 
     @Enumerated(EnumType.STRING)
     private GamePhase phase;
@@ -71,7 +71,7 @@ public class GameSession {
                 .accessType(gameSessionDao.getAccessType())
                 .roomName(gameSessionDao.getRoomName())
                 .creator(gameSessionDao.getCreator())
-                .state(gameSessionDao.getState())
+                .state(GameState.WAIT)
                 .phase(gameSessionDao.getPhase())
                 .createTime(gameSessionDao.getCreateTime())
                 .lastEnter(gameSessionDao.getLastEnter())

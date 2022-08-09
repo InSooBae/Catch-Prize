@@ -26,10 +26,10 @@ public class Player implements Serializable {
     private final String nickname;
 
     // 자기만 보는 카드
-    private List<Card> hands = new ArrayList<>();
+    private List<Card> hands;
 
     // 땅바닥에 깔아서 보여주는 카드
-    private List<Card> ground = new ArrayList<>();
+    private List<Card> ground;
 
     private boolean alive;
 
@@ -44,6 +44,8 @@ public class Player implements Serializable {
                 .nickname(nickname)
                 .token(token)
                 .openViduRole(openViduRole)
+                .ground(new ArrayList<>())
+                .hands(new ArrayList<>())
                 .build();
     }
 

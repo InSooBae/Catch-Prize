@@ -11,12 +11,12 @@ import io.openvidu.java.client.Session;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
@@ -73,7 +73,6 @@ public class GameSessionDao {
                 .lastEnter(gameSession.getLastEnter())
                 .session(gameSession.getSession())
                 .hostId(gameSession.getHostId())
-                .mapSessionNamesTokens(gameSession.getMapSessionNamesTokens())
                 .playerMap(gameSession.getPlayerMap())
                 .build();
     }
