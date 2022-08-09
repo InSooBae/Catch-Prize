@@ -100,8 +100,8 @@ public class JwtTokenProvider {
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
         // FIXME: username 유뮤
-        log.info("username = {}", claims.get("username"));
-        CustomUserDetails principal = new CustomUserDetails(UUID.fromString(claims.getSubject()), "", authorities);
+//        log.info("username = {}", claims.get("username"));
+        CustomUserDetails principal = new CustomUserDetails(UUID.fromString(claims.getSubject()), (String) claims.get("username"), authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }

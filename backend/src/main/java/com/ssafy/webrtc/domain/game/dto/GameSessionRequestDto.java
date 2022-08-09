@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 public class GameSessionRequestDto {
 
-    private RoomType roomType;
+//    private RoomType roomType;
 
     private AccessType accessType;
 

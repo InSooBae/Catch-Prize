@@ -1,11 +1,8 @@
 package com.ssafy.webrtc.domain.game.entity;
 
-import com.ssafy.webrtc.domain.game.dao.GameSessionDao;
 import com.ssafy.webrtc.domain.game.enums.AccessType;
 import com.ssafy.webrtc.domain.game.enums.GamePhase;
 import com.ssafy.webrtc.domain.game.enums.GameState;
-import com.ssafy.webrtc.domain.game.enums.RoomType;
-import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Session;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +13,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -37,9 +33,9 @@ public class GameSession {
     @NonNull
     private AccessType accessType;
 
-    @NonNull
-    @Enumerated(EnumType.STRING)
-    private RoomType roomType;
+//    @NonNull
+//    @Enumerated(EnumType.STRING)
+//    private RoomType roomType;
 
     @NonNull
     @Enumerated(EnumType.STRING)
@@ -52,33 +48,32 @@ public class GameSession {
 //    @CreationTimestamp
     private LocalDateTime createTime;
 
+    @NonNull
+    private LocalDateTime finishedTime;
+
     private String lastEnter;
 
     @NonNull
     private final Session session;
 
-    @NonNull
     private String hostId;
 
     private int maxParticipants;
 
 
-    public static GameSession of(GameSessionDao gameSessionDao) {
-        return GameSession
-                .builder()
-                .roomId(gameSessionDao.getRoomId())
-                .roomType(gameSessionDao.getRoomType())
-                .accessType(gameSessionDao.getAccessType())
-                .roomName(gameSessionDao.getRoomName())
-                .creator(gameSessionDao.getCreator())
+
+    public static GameSessionBuilder builder(String roomId, String creator, String roomName, AccessType accessType, LocalDateTime createTime, Session session, Map<String, Player> playerMap) {
+
+        return new GameSessionBuilder()
+                .roomId(roomId)
+//                .roomType(gameSessionDao.getRoomType())
+                .accessType(accessType)
+                .roomName(roomName)
+                .creator(creator)
                 .state(GameState.WAIT)
-                .phase(gameSessionDao.getPhase())
-                .createTime(gameSessionDao.getCreateTime())
-                .lastEnter(gameSessionDao.getLastEnter())
-                .session(gameSessionDao.getSession())
-                .hostId(gameSessionDao.getHostId())
-                .playerMap(gameSessionDao.getPlayerMap())
-                .build();
+                .createTime(createTime)
+                .session(session)
+                .playerMap(playerMap);
     }
 
 }

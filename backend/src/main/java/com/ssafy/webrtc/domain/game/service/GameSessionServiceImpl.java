@@ -3,7 +3,6 @@ package com.ssafy.webrtc.domain.game.service;
 import com.ssafy.webrtc.domain.game.dao.GameSessionDao;
 import com.ssafy.webrtc.domain.game.dto.GameSessionJoinResponseDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionRequestDto;
-import com.ssafy.webrtc.domain.game.dto.GameSessionResponseDto;
 import com.ssafy.webrtc.domain.game.entity.GameSession;
 import com.ssafy.webrtc.domain.game.entity.Player;
 import com.ssafy.webrtc.domain.game.enums.GameState;
@@ -16,13 +15,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,9 +35,12 @@ public class GameSessionServiceImpl implements GameSessionService{
 
 
     @Override
-    public GameSessionResponseDto makeSession(CustomUserDetails user, GameSessionRequestDto gameSessionRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
+    public GameSession makeSession(CustomUserDetails user, GameSessionRequestDto gameSessionRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
 
-        if (gameSessionRedisRepository.findByCreator(user.getName()).size() > 1) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUserDetails userDetails = (CustomUserDetails) principal;
+        System.out.println(userDetails.getUsername());
+        if (gameSessionRedisRepository.findByCreator(user.getUsername()).size() > 1) {
             throw new DataIntegrityViolationException("더 이상 방을 만들 수 없습니다!");
         }
 
@@ -48,24 +50,56 @@ public class GameSessionServiceImpl implements GameSessionService{
 
         LocalDateTime createdTime = LocalDateTime.now();
 
+
         GameSession gameSession = GameSession
-                .builder()
-                .roomId(roomId)
-                .creator(user.getName())
-                .roomName(gameSessionRequestDto.getRoomName())
-                .roomType(gameSessionRequestDto.getRoomType())
-                .accessType(gameSessionRequestDto.getAccessType())
-                .createTime(createdTime)
+                .builder(roomId, user.getUsername(), gameSessionRequestDto.getRoomName(), gameSessionRequestDto.getAccessType(), createdTime, openViduSession, null)
+                .state(GameState.WAIT)
                 .maxParticipants(gameSessionRequestDto.getMaxParticipants())
+                .finishedTime(createdTime)
                 .build();
 
-        return GameSessionResponseDto.of(GameSession.of(gameSessionRedisRepository.save(GameSessionDao.of(gameSession))));
+        return toEntity(gameSessionRedisRepository.save(GameSessionDao.of(gameSession)));
     }
 
+    @Override
     public List<GameSession> findAll() {
-        List<GameSessionDao> allOfGameSession = gameSessionRedisRepository.findAll();
-        return allOfGameSession.stream().map(GameSession::of).collect(Collectors.toCollection(ArrayList::new));
+        return null;
     }
+
+//    public List<GameSession> findAll() {
+//        List<GameSessionDao> allOfGameSession = gameSessionRedisRepository.findAll();
+//        return allOfGameSession.stream().map(GameSession::of).collect(Collectors.toCollection(ArrayList::new));
+//    }
+
+    private GameSession toEntity(GameSessionDao dao) {
+        Session entitySession = null;
+        for (Session session : openVidu.getActiveSessions()) {
+            if (session.getSessionId().equals(dao.getSessionId())) {
+                entitySession = session;
+                break;
+            }
+        }
+        if (entitySession == null) {
+            throw new NullPointerException();
+        }
+
+        Map<String, Player> playerMap = dao.getPlayerMap();
+        if (playerMap == null) {
+            playerMap = new LinkedHashMap<>();
+        }
+
+
+
+        return GameSession.builder(dao.getRoomId(), dao.getCreator(), dao.getRoomName(),
+                        dao.getAccessType(), dao.getCreateTime(), entitySession, playerMap)
+                .finishedTime(dao.getFinishedTime())
+                .phase(dao.getPhase())
+                .lastEnter(dao.getLastEnter())
+                .state(dao.getState())
+                .hostId(dao.getHostId())
+                .build();
+    }
+
 
     @Override
     public GameSessionJoinResponseDto addUser(String roomId, String nickname) {
@@ -176,7 +210,7 @@ public class GameSessionServiceImpl implements GameSessionService{
 
     @Override
     public GameSession findById(String roomId) {
-        return GameSession.of(gameSessionRedisRepository
+        return toEntity(gameSessionRedisRepository
                 .findById(roomId)
                 .orElseThrow(() -> new EmptyResultDataAccessException("방을 찾을 수 없습니다!", 1)));
     }

@@ -39,8 +39,8 @@ public class GameSessionDao {
 
     private final AccessType accessType;
 
-    @Enumerated(EnumType.STRING)
-    private final RoomType roomType;
+//    @Enumerated(EnumType.STRING)
+//    private final RoomType roomType;
 
     @Enumerated(EnumType.STRING)
     private final GameState state;
@@ -50,9 +50,11 @@ public class GameSessionDao {
 
     private final LocalDateTime createTime;
 
+    private final LocalDateTime finishedTime;
+
     private final String lastEnter;
 
-    private final Session session;
+    private final String sessionId;
 
     private final String hostId;
 
@@ -63,7 +65,7 @@ public class GameSessionDao {
         return GameSessionDao
                 .builder()
                 .roomId(gameSession.getRoomId())
-                .roomType(gameSession.getRoomType())
+//                .roomType(gameSession.getRoomType())
                 .accessType(gameSession.getAccessType())
                 .roomName(gameSession.getRoomName())
                 .creator(gameSession.getCreator())
@@ -71,8 +73,9 @@ public class GameSessionDao {
                 .phase(gameSession.getPhase())
                 .createTime(gameSession.getCreateTime())
                 .lastEnter(gameSession.getLastEnter())
-                .session(gameSession.getSession())
+                .sessionId(gameSession.getSession().getSessionId())
                 .hostId(gameSession.getHostId())
+                .finishedTime(gameSession.getFinishedTime())
                 .playerMap(gameSession.getPlayerMap())
                 .build();
     }

@@ -12,7 +12,7 @@ public class GameSessionResponseDto {
     private String id;
     private AccessType accessType;
     private String roomName;
-    private RoomType roomType;
+//    private RoomType roomType;
 
     public static GameSessionResponseDto of(GameSession gameSession) {
         return GameSessionResponseDto
@@ -20,7 +20,7 @@ public class GameSessionResponseDto {
                 .id(gameSession.getRoomId())
                 .accessType(gameSession.getAccessType())
                 .roomName(gameSession.getRoomName())
-                .roomType(gameSession.getRoomType())
+//                .roomType(gameSession.getRoomType())
                 .build();
     }
 }

@@ -42,11 +42,11 @@ public class GameSessionController {
     })
     @PostMapping("")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<GameSessionResponseDto> makeSession(
+    public ResponseEntity<GameSession> makeSession(
             @ApiIgnore @AuthenticationPrincipal CustomUserDetails user,
             @RequestBody GameSessionRequestDto gameSessionRequestDto)
             throws OpenViduJavaClientException, OpenViduHttpException {
-        return new ResponseEntity<GameSessionResponseDto>(gameSessionService.makeSession(user, gameSessionRequestDto), HttpStatus.CREATED);
+        return new ResponseEntity<GameSession>(gameSessionService.makeSession(user, gameSessionRequestDto), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "방 목록 조회", notes = "<strong>방 목록 조회</strong>")

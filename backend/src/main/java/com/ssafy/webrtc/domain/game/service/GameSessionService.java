@@ -14,7 +14,7 @@ import java.util.List;
 
 public interface GameSessionService {
 
-    GameSessionResponseDto makeSession(CustomUserDetails user, GameSessionRequestDto gameSessionRequestDto) throws OpenViduJavaClientException, OpenViduHttpException;;
+    GameSession makeSession(CustomUserDetails user, GameSessionRequestDto gameSessionRequestDto) throws OpenViduJavaClientException, OpenViduHttpException;;
 
     public List<GameSession> findAll();
     GameSession enterSession(CustomUserDetails user, String roomId);
