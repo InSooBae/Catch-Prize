@@ -4,14 +4,19 @@ const webrtc = {
   state: {
     ovToken: '',
     sessionId: '',
+    mainStreamManager: '',
+    players: {},
+    roomlist: {},
   },
   mutation: {
     ovToken: state => state.ovToken,
     sessionId: state => state.sessionId,
+    mainStreamManager: state => state.mainStreamManager,
   },
   getters: {
     SET_OVTOKEN: (state, ovToken) => state.ovToken = ovToken,
     SET_SSESIONID: (state, sessionId) => state.sessionId = sessionId,
+    SET_MAINSTREAM: (state, mainStreamManager) => state.mainStreamManager = mainStreamManager,
   },
   actions: {
     createSession({ commit }, sessionId) {
@@ -32,6 +37,7 @@ const webrtc = {
         dispatch('createToken', res.data)
       })
     },
+    
   }
 }
 

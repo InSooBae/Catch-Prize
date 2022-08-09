@@ -5,7 +5,8 @@
       <el-row :gutter="20" class="people-container">
         <el-col class="person-container" :lg="8" v-for="person in 6" :key="person">
           <div>name-tag</div>
-          <img class="person-image" src="@/components/hobulho-game/assets/person.png" alt="">
+          <!-- webRTC uservideo -->
+          <user-video v-for="player in players" :stream-manager="player" @click.native="updateMainVideoStreamManager(player)"/>
         </el-col>
       </el-row>
     </el-col>
@@ -36,17 +37,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+import UserVideo from '../webrtc/UserVideo.vue';
 
 const route = useRoute()
 const store = useStore()
 const chatdata = ref('')
 const gameid = route.params.gameid;
+const mainStreamManager = () => store.commit('SET_MAINSTREAM')
+const players = computed(() => store.state.webrtc)
+const sessionId = computed(() => store.state.webrtc)
+
 
 const unSub = () => {
   store.dispatch('closeSubscribe')
+}
+
+// Large Screen에서 띄워줄 mainStreamManager 선정
+updateMainVideoStreamManager = (stream) => {
+  if (mainStreamManager === stream) return;
+  mainStreamManager(stream)
 }
 
 onMounted(() => {
