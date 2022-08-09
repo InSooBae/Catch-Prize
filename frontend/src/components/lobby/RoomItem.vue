@@ -11,12 +11,15 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 const props = defineProps({
   room: Object
 })
 
 const enter = (name) => {
-  console.log(name)
+  router.push({ name: 'gameroom', params: {gameid: name} })
 }
 
 </script>

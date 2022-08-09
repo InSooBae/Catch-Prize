@@ -9,12 +9,16 @@
 <script setup>
 import RoomItem from '@/components/lobby/RoomItem.vue'
 import { useStore } from 'vuex'
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 const store = useStore()
 
 const roomsList = computed(() => store.getters.roomsList)
 store.dispatch('fetchRooms')
+
+onMounted(() => {
+  store.commit('SET_ISWAIT', false)
+})
 
 </script>
 
