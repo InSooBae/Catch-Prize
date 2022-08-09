@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import user from "./modules/user"
 import notice from "./modules/notice"
 import room from "./modules/room"
+import webrtc from "./modules/webrtc";
 
 
 const store = createStore({
@@ -9,6 +10,7 @@ const store = createStore({
     user,
     notice,
     room,
+    webrtc,
   },
 });
 

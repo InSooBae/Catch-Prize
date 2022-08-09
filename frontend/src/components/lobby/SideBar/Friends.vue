@@ -2,7 +2,7 @@
   <el-collapse class="friends-list" v-model="activeNames">
     <el-collapse-item name="pending">
       <template #title>
-        <span style="margin-right: 0.35rem;">대기</span>
+        <span style="margin: 0 0.25rem 0 2px;">대기</span>
         <span>중</span>
       </template>
       <ul>
@@ -16,7 +16,10 @@
         </li>
       </ul>
     </el-collapse-item>
-    <el-collapse-item title="온라인" name="online">
+    <el-collapse-item name="online">
+      <template #title>
+        <span style="margin-left: 2px;">온라인</span>
+      </template>
       <ul>
         <li v-for="friend in friendsList.online" :key="friend.id" class="d-flex p-1 friends-item">
           <el-avatar shape="circle" class="me-1 avatar" :size="28"
@@ -28,7 +31,10 @@
         </li>
       </ul>
     </el-collapse-item>
-    <el-collapse-item title="오프라인" name="offline">
+    <el-collapse-item name="offline">
+      <template #title>
+        <span style="margin-left: 2px;">오프라인</span>
+      </template>
       <ul>
         <li v-for="friend in friendsList.offline" :key="friend.id" class="d-flex p-1 friends-item friends-offline">
           <el-avatar shape="circle" class="me-1" :size="28"
