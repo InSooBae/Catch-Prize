@@ -139,7 +139,7 @@ async function fetchRooms(headers) {
 
 async function fetchRoomById(headers, roomId) {
   try {
-    const res = await api.get(`/gamesession/${roomId}`, { headers })
+    const res = await api.post(`/gamesession/${roomId}`, { data: roomId }, { headers })
     return res
   } catch (err) {
     console.log(err)

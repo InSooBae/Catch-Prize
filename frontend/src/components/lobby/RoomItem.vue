@@ -5,7 +5,6 @@
     <p v-if="room.isPlaying" class="text-green">NOW PLAYING</p>
     <p v-else class="text-green">WAITING</p>
     <p class="text-green">{{ room.roomType }}...</p>
-    {{ room.session }}
   </div>
     <p class="text-white align-self-start">{{ room.nowParti }}/{{ room.maxParticipants }}</p>
   </div>
