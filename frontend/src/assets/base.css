@@ -85,3 +85,12 @@ body {
 .text-yello {
   color: #f2e63c;
 }
+
+@keyframes fadein {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}

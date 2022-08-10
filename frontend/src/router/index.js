@@ -28,9 +28,9 @@ const router = createRouter({
       path: '/lobby',
       name: 'lobby',
       component: () => import('../views/LobbyView.vue'),
-      beforeEnter : () => checkAuth(store.getters.isLoggedIn),
+      beforeEnter: () => checkAuth(store.getters.isLoggedIn),
       children: [
-        { 
+        {
           path: '',
           name: 'lobbyMain',
           components: {
@@ -49,13 +49,13 @@ const router = createRouter({
       path: '/game',
       name: 'game',
       component: () => import('../views/GameView.vue'),
-      beforeEnter : () => checkAuth(store.getters.isLoggedIn)
+      beforeEnter: () => checkAuth(store.getters.isLoggedIn)
     },
     {
       path: '/notice',
       name: 'notice',
       component: () => import('../views/NoticeView.vue'),
-      beforeEnter : () => checkAuth(store.getters.isAdmin),
+      beforeEnter: () => checkAuth(store.getters.isAdmin),
       children: [
         {
           path: '',
@@ -79,7 +79,16 @@ const router = createRouter({
           // props: true,
         }
       ]
-    }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/404'
+    },
+    { 
+      path: "/404",
+      name: "notFound",
+      component: () => import('../views/NotFoundView.vue'),
+    } 
   ]
 })
 
