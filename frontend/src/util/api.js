@@ -156,9 +156,9 @@ async function createRoom(headers, data) {
 }
 
 
-async function deleteRoom(headers, roomId) {
+async function removeUser(headers, roomId, data) {
   try {
-    const res = await api.delete(`/gamesession/${roomId}`, { headers })
+    const res = await api.delete(`/gamesession/${roomId}`, data, { headers })
     return res
   } catch (err) {
     console.log(err)
@@ -166,4 +166,4 @@ async function deleteRoom(headers, roomId) {
 }
 
 export { findNoticeByPgno, createNotice, findNoticeById, updateNotice, deleteNotice, 
-        createSession, createToken, fetchRooms, fetchRoomById, createRoom, deleteRoom }
+        createSession, createToken, fetchRooms, fetchRoomById, createRoom, removeUser }

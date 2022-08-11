@@ -9,7 +9,12 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter()
 
+
 const exitGame = () => {
   router.push({ name: 'lobbyMain' })
 }
+
+
+
+
 </script>

@@ -2,11 +2,10 @@ import { createToken, createSession } from "../../util/api";
 
 const webrtc = {
   state: {
-    ovToken: '',
-    sessionId: '',
-    mainStreamManager: '',
-    players: {},
-    roomlist: {},
+    // ovToken: '',
+    // sessionId: '',
+    // mainStreamManager: '',
+    // players: {},
   },
   mutation: {
     ovToken: state => state.ovToken,
@@ -41,4 +40,4 @@ const webrtc = {
   }
 }
 
-export default webrtc;
+// export default webrtc;
