@@ -99,6 +99,11 @@
   border-radius: 10px;
 }
 
+#sidebar .el-avatar {
+  --el-avatar-bg-color : transparent;
+  border: 1px solid #00bd9d;
+}
+
 .sidebar-profile {
   /* layout */
   padding: 5px 0 5px 5px;
