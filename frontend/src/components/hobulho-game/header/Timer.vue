@@ -8,7 +8,7 @@
 import { ref } from "vue";
 const seconds = ref(null);
 function stateTimer() {
-  let timer = 30;
+  let timer = 20;
   let interval = setInterval(() => {
     if (timer === -1) {
       clearInterval(interval);
@@ -19,7 +19,7 @@ function stateTimer() {
         seconds.value.textContent = timer;
       }
       timer--;
-      console.log(timer);
+      // console.log(timer);
     }
   }, 1000);
 }

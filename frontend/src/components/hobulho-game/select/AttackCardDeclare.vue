@@ -27,11 +27,10 @@ import { ref, onMounted, inject } from "vue";
 // const declareRef = ref(null);
 const $hobulhoSocket = inject("$hobulhoSocket");
 const $clientstate = inject("$clientstate");
-const $state = inject("$state");
 
 function attackDeclare(data) {
   let declareCard = data;
-  $hobulhoSocket.emit("declare-click", declareCard);
+  $hobulhoSocket.emit("declare-click", $clientstate.roomid, declareCard);
 }
 </script>
 <style scoped>

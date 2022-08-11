@@ -2,171 +2,184 @@ var app = require("express")();
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
 
+//roomid 별 data box
+const statebox = [];
+
 //시작할때 보내줄 데이터
-const state = {
-  response: {
-    success: "false",
-    error: {
-      code: "7",
-      message: "More players are required",
-    },
-  },
-  isShuffled: false,
-  gamestate: "",
-  deathplayer: "",
-  winner: "",
-  players: [
-    {
-      playerId: "player1",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: true,
-    },
-    {
-      playerId: "player2",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: true,
-    },
-    {
-      playerId: "player3",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: true,
-    },
-    {
-      playerId: "player4",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: true,
-    },
-    {
-      playerId: "player5",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: true,
-    },
-    {
-      playerId: "player6",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: true,
-    },
-  ],
-};
+// const state = {
+//   response: {
+//     success: "false",
+//     error: {
+//       code: "7",
+//       message: "More players are required",
+//     },
+//   },
+//   controlstate: {
+//     roomId: "",
+//     isShuffled: false,
+//     gamestate: "",
+//     deathplayer: "",
+//     winner: "",
+//   },
+//   players: [
+//     {
+//       playerId: "player1",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       point: 0,
+//       isAlive: true,
+//     },
+//     {
+//       playerId: "player2",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       point: 0,
+//       isAlive: true,
+//     },
+//     {
+//       playerId: "player3",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       point: 0,
+//       isAlive: true,
+//     },
+//     {
+//       playerId: "player4",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       point: 0,
+//       isAlive: true,
+//     },
+//     {
+//       playerId: "player5",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       point: 0,
+//       isAlive: true,
+//     },
+//     {
+//       playerId: "player6",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       point: 0,
+//       isAlive: true,
+//     },
+//   ],
+// };
 // 공격하고 판단후 보내는 데이터
-const attackstate = {
-  attackerId: "",
-  defenderId: "",
-  selectedcard: "",
-  declaredcard: "",
-  declaration: true,
-};
+// const attackstate = {
+//   attackerId: "",
+//   defenderId: "",
+//   selectedcard: "",
+//   declaredcard: "",
+//   declaration: true,
+// };
+
 //6종류 10장씩의 카드를 랜덤으로 8장씩 분배
-function cardshuffle() {
-  if (state.isShuffled === false) {
+function cardshuffle(roomnum) {
+  if (statebox[roomnum].controlstate.isShuffled === false) {
     const cardlist = ["cake", "durian", "eggplant", "insect", "mint", "pizza"];
     const list = [];
     for (let t = 0; t < 6; t++) {
@@ -178,83 +191,105 @@ function cardshuffle() {
     let cnt = 0;
     for (let t = 0; t < 6; t++) {
       for (let i = 0; i < 8; i++) {
-        if (list[cnt] === "cake") state.players[t].cards.hand.cake++;
-        if (list[cnt] === "durian") state.players[t].cards.hand.durian++;
-        if (list[cnt] === "eggplant") state.players[t].cards.hand.eggplant++;
-        if (list[cnt] === "insect") state.players[t].cards.hand.insect++;
-        if (list[cnt] === "mint") state.players[t].cards.hand.mint++;
-        if (list[cnt] === "pizza") state.players[t].cards.hand.pizza++;
+        if (list[cnt] === "cake")
+          statebox[roomnum].players[t].cards.hand.cake++;
+        if (list[cnt] === "durian")
+          statebox[roomnum].players[t].cards.hand.durian++;
+        if (list[cnt] === "eggplant")
+          statebox[roomnum].players[t].cards.hand.eggplant++;
+        if (list[cnt] === "insect")
+          statebox[roomnum].players[t].cards.hand.insect++;
+        if (list[cnt] === "mint")
+          statebox[roomnum].players[t].cards.hand.mint++;
+        if (list[cnt] === "pizza")
+          statebox[roomnum].players[t].cards.hand.pizza++;
         cnt++;
       }
     }
-    state.isShuffled = true;
+    statebox[roomnum].controlstate.isShuffled = true;
   }
 }
 
-function checkdeclaration() {
-  if (attackstate.selectedcard == attackstate.declaredcard) {
-    attackstate.declaration = true;
-  } else if (attackstate.selectedcard != attackstate.declaredcard) {
-    attackstate.declaration = false;
+function checkdeclaration(roomnum) {
+  if (
+    statebox[roomnum].attackstate.selectedcard ==
+    statebox[roomnum].attackstate.declaredcard
+  ) {
+    statebox[roomnum].attackstate.declaration = true;
+  } else if (
+    statebox[roomnum].attackstate.selectedcard !=
+    statebox[roomnum].attackstate.declaredcard
+  ) {
+    statebox[roomnum].attackstate.declaration = false;
   }
 }
 
 //방어 성공
-function defendSuccess() {
+function defendSuccess(roomnum) {
   for (let t = 0; t < 6; t++) {
-    if (state.players[t].playerId === attackstate.attackerId) {
-      if (attackstate.selectedcard === "cake")
-        state.players[t].cards.board.cake++;
-      if (attackstate.selectedcard === "durian")
-        state.players[t].cards.board.durian++;
-      if (attackstate.selectedcard === "eggplant")
-        state.players[t].cards.board.eggplant++;
-      if (attackstate.selectedcard === "insect")
-        state.players[t].cards.board.insect++;
-      if (attackstate.selectedcard === "mint")
-        state.players[t].cards.board.mint++;
-      if (attackstate.selectedcard === "pizza")
-        state.players[t].cards.board.pizza++;
+    if (
+      statebox[roomnum].players[t].playerId ===
+      statebox[roomnum].attackstate.attackerId
+    ) {
+      if (statebox[roomnum].attackstate.selectedcard === "cake")
+        statebox[roomnum].players[t].cards.board.cake++;
+      if (statebox[roomnum].attackstate.selectedcard === "durian")
+        statebox[roomnum].players[t].cards.board.durian++;
+      if (statebox[roomnum].attackstate.selectedcard === "eggplant")
+        statebox[roomnum].players[t].cards.board.eggplant++;
+      if (statebox[roomnum].attackstate.selectedcard === "insect")
+        statebox[roomnum].players[t].cards.board.insect++;
+      if (statebox[roomnum].attackstate.selectedcard === "mint")
+        statebox[roomnum].players[t].cards.board.mint++;
+      if (statebox[roomnum].attackstate.selectedcard === "pizza")
+        statebox[roomnum].players[t].cards.board.pizza++;
     }
   }
 }
 //방어 실패
-function defendFail() {
+function defendFail(roomnum) {
   for (let t = 0; t < 6; t++) {
-    if (state.players[t].playerId === attackstate.defenderId) {
-      if (attackstate.selectedcard === "cake")
-        state.players[t].cards.board.cake++;
-      if (attackstate.selectedcard === "durian")
-        state.players[t].cards.board.durian++;
-      if (attackstate.selectedcard === "eggplant")
-        state.players[t].cards.board.eggplant++;
-      if (attackstate.selectedcard === "insect")
-        state.players[t].cards.board.insect++;
-      if (attackstate.selectedcard === "mint")
-        state.players[t].cards.board.mint++;
-      if (attackstate.selectedcard === "pizza")
-        state.players[t].cards.board.pizza++;
+    if (
+      statebox[roomnum].players[t].playerId ===
+      statebox[roomnum].attackstate.defenderId
+    ) {
+      if (statebox[roomnum].attackstate.selectedcard === "cake")
+        statebox[roomnum].players[t].cards.board.cake++;
+      if (statebox[roomnum].attackstate.selectedcard === "durian")
+        statebox[roomnum].players[t].cards.board.durian++;
+      if (statebox[roomnum].attackstate.selectedcard === "eggplant")
+        statebox[roomnum].players[t].cards.board.eggplant++;
+      if (statebox[roomnum].attackstate.selectedcard === "insect")
+        statebox[roomnum].players[t].cards.board.insect++;
+      if (statebox[roomnum].attackstate.selectedcard === "mint")
+        statebox[roomnum].players[t].cards.board.mint++;
+      if (statebox[roomnum].attackstate.selectedcard === "pizza")
+        statebox[roomnum].players[t].cards.board.pizza++;
     }
   }
 }
-function checkDeath(player) {
+function checkDeath(roomnum, player) {
   for (let t = 0; t < 6; t++) {
-    if (player === state.players[t].playerId) {
+    if (player === statebox[roomnum].players[t].playerId) {
       if (
-        state.players[t].cards.board.cake >= 1 ||
-        state.players[t].cards.board.durian >= 1 ||
-        state.players[t].cards.board.eggplant >= 1 ||
-        state.players[t].cards.board.insect >= 1 ||
-        state.players[t].cards.board.mint >= 1 ||
-        state.players[t].cards.board.pizza >= 1
+        statebox[roomnum].players[t].cards.board.cake >= 2 ||
+        statebox[roomnum].players[t].cards.board.durian >= 2 ||
+        statebox[roomnum].players[t].cards.board.eggplant >= 2 ||
+        statebox[roomnum].players[t].cards.board.insect >= 2 ||
+        statebox[roomnum].players[t].cards.board.mint >= 2 ||
+        statebox[roomnum].players[t].cards.board.pizza >= 2
       ) {
-        state.players[t].isAlive = false;
-        state.deathplayer = player;
-        state.gamestate = "death";
-        if (player === attackstate.attackerId) {
-          attackstate.attackerId = attackstate.defenderId;
-        } else if (player === attackstate.defenderId) {
-          attackstate.attackerId = attackstate.attackerId;
+        statebox[roomnum].players[t].isAlive = false;
+        statebox[roomnum].controlstate.deathplayer = player;
+        setTimeout(() => {
+          statebox[roomnum].controlstate.gamestate = "death";
+        },3000);
+        if (player === statebox[roomnum].attackstate.attackerId) {
+          statebox[roomnum].attackstate.attackerId =
+            statebox[roomnum].attackstate.defenderId;
+        } else if (player === statebox[roomnum].attackstate.defenderId) {
+          statebox[roomnum].attackstate.attackerId =
+            statebox[roomnum].attackstate.attackerId;
         }
         return 1;
       }
@@ -263,22 +298,250 @@ function checkDeath(player) {
   return 0;
 }
 //우승자 확인
-function checkwin() {
+function checkwin(roomnum) {
   let cnt = 0;
   for (let t = 0; t < 6; t++) {
-    if (state.players[t].isAlive === false) {
+    if (statebox[roomnum].players[t].isAlive === false) {
       cnt++;
     }
   }
   if (cnt === 5) {
     for (let t = 0; t < 6; t++) {
-      if (state.players[t].isAlive === true) {
-        state.winner = state.players[t].playerId;
+      if (statebox[roomnum].players[t].isAlive === true) {
+        statebox[roomnum].controlstate.winner =
+          statebox[roomnum].players[t].playerId;
       }
     }
     return 1;
   }
   return 0;
+}
+
+//룸 서버에서 roomid와 player정보를 받으면 statebox에 push
+//roomid = roomId
+//playerslist = ["player1","player2","player3","player4","player5","player6",]
+const roomid1 = "room1";
+const playerslist1 = [
+  "player11",
+  "player21",
+  "player31",
+  "player41",
+  "player51",
+  "player61",
+];
+const roomid2 = "room2";
+const playerslist2 = [
+  "player12",
+  "player22",
+  "player32",
+  "player42",
+  "player52",
+  "player62",
+];
+function stateBoxPush(roomid, playerslist) {
+  const state = {
+    response: {
+      success: "false",
+      error: {
+        code: "7",
+        message: "More players are required",
+      },
+    },
+    controlstate: {
+      roomId: "",
+      isShuffled: false,
+      gamestate: "",
+      deathplayer: "",
+      winner: "",
+    },
+    attackstate: {
+      attackerId: "",
+      defenderId: "",
+      selectedcard: "",
+      declaredcard: "",
+      declaration: true,
+    },
+    players: [
+      {
+        playerId: "player1",
+        cards: {
+          hand: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+          remain: 8,
+          board: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+        },
+        point: 0,
+        isAlive: true,
+      },
+      {
+        playerId: "player2",
+        cards: {
+          hand: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+          remain: 8,
+          board: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+        },
+        point: 0,
+        isAlive: true,
+      },
+      {
+        playerId: "player3",
+        cards: {
+          hand: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+          remain: 8,
+          board: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+        },
+        point: 0,
+        isAlive: true,
+      },
+      {
+        playerId: "player4",
+        cards: {
+          hand: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+          remain: 8,
+          board: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+        },
+        point: 0,
+        isAlive: true,
+      },
+      {
+        playerId: "player5",
+        cards: {
+          hand: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+          remain: 8,
+          board: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+        },
+        point: 0,
+        isAlive: true,
+      },
+      {
+        playerId: "player6",
+        cards: {
+          hand: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+          remain: 8,
+          board: {
+            cake: 0,
+            durian: 0,
+            eggplant: 0,
+            insect: 0,
+            mint: 0,
+            pizza: 0,
+          },
+        },
+        point: 0,
+        isAlive: true,
+      },
+    ],
+  };
+  state.controlstate.roomId = roomid;
+  for (let t = 0; t < 6; t++) {
+    state.players[t].playerId = playerslist[t];
+  }
+  statebox.push(state);
+}
+stateBoxPush(roomid1, playerslist1);
+// console.log(statebox);
+stateBoxPush(roomid2, playerslist2);
+// console.log(statebox[0].players);
+// console.log(statebox[1].players);
+
+// console.log(statebox[0].roomId);
+// console.log(statebox[1].roomId);
+// console.log(statebox[0].players);
+// console.log(statebox[1].players);
+
+//승자가 있는 방의 데이터는 삭제
+function stateBoxDelete() {
+  for (let t = 0; t < statebox.length; t++) {
+    if (statebox[t].controlstate.winner != "") {
+      statebox.splice(t, 1);
+      t--;
+    }
+  }
+}
+
+//어떤 방인지 찾는 함수
+function whichRoom(roomid) {
+  for (let t = 0; t < statebox.length; t++) {
+    if (statebox[t].controlstate.roomId === roomid) {
+      return t;
+    }
+  }
 }
 
 //setting cors
@@ -292,151 +555,169 @@ app.get("/", function (req, res) {
   res.sendFile("Hellow Chating App Server");
 });
 
-var hobulhoSocket = io.of("/hobulhoSocket");
+// var io = io.of("/io");
 
 //connection event handler
-hobulhoSocket.on("connection", function (socket) {
+io.on("connection", function (socket) {
   //서버연결되면 loading 보냄
-  cardshuffle();
-  state.gamestate = "loading";
-  socket.emit("data-refresh", state);
-  //게임 시작
-  socket.emit("game-start-ready");
+  socket.on("server-get-roomid", function (roomid) {
+    let roomnum = whichRoom(roomid);
+    cardshuffle(roomnum);
+    statebox[roomnum].controlstate.gamestate = "loading";
+    io.emit("data-refresh", statebox[roomnum]);
+    //게임 시작 hobulhoGame.vue
+    io.emit("game-start-ready");
+  });
 
   //게임 시작 요청이 들어오면
-  socket.on("hobulho-start-req", function (data) {
-    if (state.gamestate === "loading") state.gamestate = "start";
+  socket.on("hobulho-start-req", function (roomid) {
+    let roomnum = whichRoom(roomid);
+    if (statebox[roomnum].controlstate.gamestate === "loading")
+      statebox[roomnum].controlstate.gamestate = "start";
 
     //state 보내기
-    socket.emit("data-refresh", state);
+    io.emit("data-refresh", statebox[roomnum]);
     //카드 세팅 Mycards.vue
-    socket.emit("hobulho-start-card");
+    io.emit("hobulho-start-card");
+    io.emit("players-profile-setting");
     //데이터 뿌리기 HobulhoGame.vue
     //첫공격  PlayersHome.vue
     socket.emit("first-attack");
   });
 
-  socket.on("select-ready-req", function (data) {
+  socket.on("select-ready-req", function (roomid) {
+    let roomnum = whichRoom(roomid);
     //attacker 저장
-    attackstate.attackerId = state.players[0].playerId;
+    statebox[roomnum].attackstate.attackerId =
+      statebox[roomnum].players[0].playerId;
     //state 보내기
 
-    hobulhoSocket.emit("attackdata-refresh", attackstate);
-    hobulhoSocket.emit("data-refresh", state);
+    // io.emit("attackdata-refresh", statebox[roomnum].attackstate);
+    io.emit("data-refresh", statebox[roomnum]);
     //내차례가 아니면 gamestate = turn
-    hobulhoSocket.emit("whose-turn");
+    io.emit("whose-turn");
   });
 
-  socket.on("card-click", function (cardname, playerid) {
+  socket.on("card-click", function (roomid, cardname, playerid) {
+    let roomnum = whichRoom(roomid);
     //선택된 카드를 저장
-    attackstate.selectedcard = cardname;
+    statebox[roomnum].attackstate.selectedcard = cardname;
     for (let t = 0; t < 6; t++) {
-      if (state.players[t].playerId === playerid) {
-        state.players[t].cards.remain--;
-        if (cardname === "cake") state.players[t].cards.hand.cake--;
-        if (cardname === "durian") state.players[t].cards.hand.durian--;
-        if (cardname === "eggplant") state.players[t].cards.hand.eggplant--;
-        if (cardname === "insect") state.players[t].cards.hand.insect--;
-        if (cardname === "mint") state.players[t].cards.hand.mint--;
-        if (cardname === "pizza") state.players[t].cards.hand.pizza--;
+      if (statebox[roomnum].players[t].playerId === playerid) {
+        statebox[roomnum].players[t].cards.remain--;
+        if (cardname === "cake") statebox[roomnum].players[t].cards.hand.cake--;
+        if (cardname === "durian")
+          statebox[roomnum].players[t].cards.hand.durian--;
+        if (cardname === "eggplant")
+          statebox[roomnum].players[t].cards.hand.eggplant--;
+        if (cardname === "insect")
+          statebox[roomnum].players[t].cards.hand.insect--;
+        if (cardname === "mint") statebox[roomnum].players[t].cards.hand.mint--;
+        if (cardname === "pizza")
+          statebox[roomnum].players[t].cards.hand.pizza--;
       }
     }
-    hobulhoSocket.emit("data-refresh", state);
+    io.emit("data-refresh", statebox[roomnum]);
     //Mycards.vue PlayersHome.vue
-    hobulhoSocket.emit("players-refresh");
+    io.emit("players-refresh");
     // 클라이언트에게 메시지를 전송한다
-    hobulhoSocket.emit("whose-attack");
+    io.emit("whose-attack");
   });
 
   //공격할 플레이어를 클릭했을때
-  socket.on("player-click", function (defender) {
-    attackstate.defenderId = defender;
-    state.gamestate = "declare";
+  socket.on("player-click", function (roomid, defender) {
+    let roomnum = whichRoom(roomid);
+    statebox[roomnum].attackstate.defenderId = defender;
+    statebox[roomnum].controlstate.gamestate = "declare";
 
     //데이터 뿌리기
-    hobulhoSocket.emit("attackdata-refresh", attackstate);
-    hobulhoSocket.emit("data-refresh", state);
+    io.emit("data-refresh", statebox[roomnum]);
   });
 
   //뭐라고 할지 클릭했을때
-  socket.on("declare-click", function (data) {
-    attackstate.declaredcard = data;
+  socket.on("declare-click", function (roomid, data) {
+    let roomnum = whichRoom(roomid);
+    statebox[roomnum].attackstate.declaredcard = data;
     // state.gamestate = "judge";
     //카드와 주장이 일치하는지 판단
-    checkdeclaration();
+    checkdeclaration(roomnum);
 
     //데이터 뿌리기
-    hobulhoSocket.emit("data-refresh", state);
-    //attack 데이터 뿌리기
-    hobulhoSocket.emit("attackdata-refresh", attackstate);
-    hobulhoSocket.emit("whose-judge");
+    io.emit("data-refresh", statebox[roomnum]);
+    io.emit("whose-judge");
   });
 
   //방어자가 judge 선택
-  socket.on("judge-selected", function (data) {
+  socket.on("judge-selected", function (roomid, data) {
+    let roomnum = whichRoom(roomid);
     //방어성공
-    if (data === attackstate.declaration) {
-      state.gamestate = "success";
-      hobulhoSocket.emit("data-refresh", state);
-      defendSuccess();
+    if (data === statebox[roomnum].attackstate.declaration) {
+      statebox[roomnum].controlstate.gamestate = "success";
+      io.emit("data-refresh", statebox[roomnum]);
+      defendSuccess(roomnum);
       //카드를 먹은 사람이 죽었을 경우
-      if (checkDeath(attackstate.attackerId)) {
+      if (checkDeath(roomnum, statebox[roomnum].attackstate.attackerId)) {
         setTimeout(() => {
-          hobulhoSocket.emit("data-refresh", state);
-          hobulhoSocket.emit("players-refresh");
+          io.emit("data-refresh", statebox[roomnum]);
+          io.emit("players-refresh");
         }, 3000);
-        if (checkwin()) {
+        if (checkwin(roomnum)) {
           setTimeout(() => {
-            state.gamestate = "win";
-            hobulhoSocket.emit("data-refresh", state);
+            statebox[roomnum].controlstate.gamestate = "win";
+            io.emit("data-refresh", statebox[roomnum]);
           }, 6000);
         } else {
           setTimeout(() => {
-            hobulhoSocket.emit("whose-turn");
+            io.emit("whose-turn");
           }, 6000);
         }
         //죽지 않았을 경우
       } else {
-        attackstate.attackerId = attackstate.attackerId;
+        statebox[roomnum].attackstate.attackerId =
+          statebox[roomnum].attackstate.attackerId;
         setTimeout(() => {
-          hobulhoSocket.emit("whose-turn");
+          io.emit("whose-turn");
         }, 3000);
       }
       //방어 실패
     } else {
-      state.gamestate = "fail";
-      hobulhoSocket.emit("data-refresh", state);
-      defendFail();
+      statebox[roomnum].controlstate.gamestate = "fail";
+      io.emit("data-refresh", statebox[roomnum]);
+      defendFail(roomnum);
       //카드를 먹은 사람이 죽었을 경우
-      if (checkDeath(attackstate.defenderId)) {
+      if (checkDeath(roomnum, statebox[roomnum].attackstate.defenderId)) {
         setTimeout(() => {
-          hobulhoSocket.emit("data-refresh", state);
-          hobulhoSocket.emit("players-refresh");
+          io.emit("data-refresh", statebox[roomnum]);
+          io.emit("players-refresh");
         }, 3000);
-        if (checkwin()) {
+        if (checkwin(roomnum)) {
           setTimeout(() => {
-            state.gamestate = "win";
-            hobulhoSocket.emit("data-refresh", state);
+            statebox[roomnum].controlstate.gamestate = "win";
+            io.emit("data-refresh", statebox[roomnum]);
           }, 6000);
         } else {
           setTimeout(() => {
-            hobulhoSocket.emit("whose-turn");
+            io.emit("whose-turn");
           }, 6000);
         }
         //죽지 않았을 경우
       } else {
-        attackstate.attackerId = attackstate.defenderId;
+        statebox[roomnum].attackstate.attackerId =
+          statebox[roomnum].attackstate.defenderId;
         setTimeout(() => {
-          hobulhoSocket.emit("whose-turn");
+          io.emit("whose-turn");
         }, 3000);
       }
     }
     //플레이어창 새로고침
     //다음턴
-    hobulhoSocket.emit("attackdata-refresh", attackstate);
+    io.emit("data-refresh", statebox[roomnum]);
+    io.emit("players-refresh");
   });
 });
 
-server.listen(8081, function () {
-  console.log("socket io server listening on port 8080");
+const SERVER_PORT = parseInt(process.env.ROOM_SV_PORT);
+
+server.listen(8080, function () {
+  console.log("socket io server listening on port server");
 });

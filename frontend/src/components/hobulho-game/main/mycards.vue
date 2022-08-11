@@ -5,7 +5,7 @@
       <div>님의 카드입니다.</div>
     </div>
     <transition name="card-fade">
-      <div class="mycards-wrapper" v-if="myHandcardsList!=''">
+      <div class="mycards-wrapper" v-if="myHandcardsList != ''">
         <div
           v-for="(myHand, i) in myHandcardsList"
           :key="i"
@@ -57,8 +57,7 @@ import { ref, onMounted, inject, computed, reactive, toRefs } from "vue";
 const asd = ref(null);
 const $hobulhoSocket = inject("$hobulhoSocket");
 const $clientstate = inject("$clientstate");
-const $state = inject("$state");
-const $attackstate = inject("$attackstate");
+const $dataBox = inject("$dataBox");
 const myHandcards = reactive([
   {
     name: "cake",
@@ -85,20 +84,28 @@ const myHandcards = reactive([
     num: 1,
   },
 ]);
+function whichData(roomid) {
+  for (let t = 0; t < $dataBox.length; t++) {
+    if ($dataBox[t].controlstate.roomId === roomid) {
+      return t;
+    }
+  }
+}
 let Hand = reactive({
   myHandcardsList: [],
 });
 const myHandupdate = () => {
+  let boxnum = whichData($clientstate.roomid);
   let list = [];
   //내아이디와 같은 핸드를 푸쉬
   for (let t = 0; t < 6; t++) {
-    if ($state.players[t].playerId === $clientstate.myid) {
-      myHandcards[0].num = $state.players[t].cards.hand.cake;
-      myHandcards[1].num = $state.players[t].cards.hand.durian;
-      myHandcards[2].num = $state.players[t].cards.hand.eggplant;
-      myHandcards[3].num = $state.players[t].cards.hand.insect;
-      myHandcards[4].num = $state.players[t].cards.hand.mint;
-      myHandcards[5].num = $state.players[t].cards.hand.pizza;
+    if ($dataBox[boxnum].players[t].playerId === $clientstate.myid) {
+      myHandcards[0].num = $dataBox[boxnum].players[t].cards.hand.cake;
+      myHandcards[1].num = $dataBox[boxnum].players[t].cards.hand.durian;
+      myHandcards[2].num = $dataBox[boxnum].players[t].cards.hand.eggplant;
+      myHandcards[3].num = $dataBox[boxnum].players[t].cards.hand.insect;
+      myHandcards[4].num = $dataBox[boxnum].players[t].cards.hand.mint;
+      myHandcards[5].num = $dataBox[boxnum].players[t].cards.hand.pizza;
     }
   }
   for (let t = 0; t < 6; t++) {
@@ -126,21 +133,22 @@ const mintimgsrc = computed(() => {
 const pizzaimgsrc = computed(() => {
   return pizzasrc;
 });
-$hobulhoSocket.on("hobulho-start-card", function (data) {
-  myHandupdate();
-});
 
 function onClick(myHand) {
-  if ($state.gamestate === "select") {
+  if ($clientstate.gamestate === "select") {
     const cardname = myHand;
     //카드를 선택하면 카드이름과 내 아이디를 보냄
-    $hobulhoSocket.emit("card-click", cardname, $clientstate.myid);
+    $hobulhoSocket.emit("card-click", $clientstate.roomid, cardname, $clientstate.myid);
     $hobulhoSocket.on("players-refresh", function () {
       //gamestate attack으로 변경
       myHandupdate();
     });
   }
 }
+
+$hobulhoSocket.on("hobulho-start-card", function () {
+  myHandupdate();
+});
 
 const { myHandcardsList } = toRefs(Hand);
 </script>

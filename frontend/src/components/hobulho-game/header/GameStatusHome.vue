@@ -2,7 +2,7 @@
   <div class="game-status-home">
     <div
       v-for="(guide, i) in statuseList.filter(
-        (c) => c.name === $state.gamestate
+        (c) => c.name === $clientstate.gamestate
       )"
       :key="i"
       class="guide"
@@ -24,8 +24,7 @@ import { reactive, toRefs, inject } from "vue";
 
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
-const $attackstate = inject("$attackstate");
-const $state = inject("$state");
+const $dataBox = inject("$dataBox");
 
 const guides = reactive({
   statuseList: [
@@ -40,12 +39,12 @@ const guides = reactive({
     { name: "judge", guideText: "진실을 파헤치세요!" },
     { name: "success", guideText: "정답입니다!" },
     { name: "fail", guideText: "틀렸습니다!" },
-    { name: "death", guideText: `${$state.deathplayer} 님이 죽었습니다...` },
-    { name: "win", guideText: `${$state.winner} 님의 승리입니다!` },
-    { name: "turn", guideText: `${$attackstate.attackerId} 님의 차례입니다.` },
+    { name: "death", guideText: `${$clientstate.deathplayer} 님이 죽었습니다...` },
+    { name: "win", guideText: `${$clientstate.winner} 님의 승리입니다!` },
+    { name: "turn", guideText: `${$clientstate.attackerId} 님의 차례입니다.` },
     {
       name: "judge-turn",
-      guideText: `${$attackstate.defenderId} 님이 진실을 파헤치는중..`,
+      guideText: `${$clientstate.defenderId} 님이 진실을 파헤치는중..`,
     },
   ],
 });

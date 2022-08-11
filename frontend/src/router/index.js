@@ -24,14 +24,14 @@ const router = createRouter({
           component: () => import('../components/lobby/RoomList.vue'),
         },
         {
-          path: ':gameid',
+          path: ':roomid',
           name: 'gameroom',
           component: () => import('../components/lobby/WaitingRoom.vue'),
         },
       ],
     },
     {
-      path: '/game/:gameid',
+      path: '/game/:roomid',
       name: 'game',
       component: () => import('../views/GameView.vue'),
       children: [

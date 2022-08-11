@@ -2,8 +2,8 @@
   <transition name="slide-fade">
     <div
       v-if="
-        $state.gamestate === 'declare' &&
-        $attackstate.attackerId === $clientstate.myid
+        $clientstate.gamestate === 'declare' &&
+        $clientstate.attackerId === $clientstate.myid
       "
     >
       <AttackCardDeclare />
@@ -25,8 +25,8 @@
   </transition>
   <DefendJudge
     v-if="
-      $state.gamestate === 'judge' &&
-      $attackstate.defenderId === $clientstate.myid
+      $clientstate.gamestate === 'judge' &&
+      $clientstate.defenderId === $clientstate.myid
     "
   />
 </template>
@@ -40,9 +40,7 @@ import { reactive, toRefs, inject, ref } from "vue";
 
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
-const $state = inject("$state");
-const $attackstate = inject("$attackstate");
-const nowstate = $state.gamestate;
+const $dataBox = inject("$dataBox");
 
 // 받아올 데이터
 const players = reactive({
@@ -85,29 +83,45 @@ const players = reactive({
     },
   ],
 });
+const { playersList } = toRefs(players);
 //위의 players를 세팅하는 함수
-function playersSetting() {
-  for (let t = 0; t < 6; t++) {
-    players.playersList[t].name = $state.players[t].playerId;
-    players.playersList[t].isAlive = $state.players[t].isAlive;
-    players.playersList[t].remain = $state.players[t].cards.remain;
-    players.playersList[t].fieldlist[0] = $state.players[t].cards.board.cake;
-    players.playersList[t].fieldlist[1] = $state.players[t].cards.board.durian;
-    players.playersList[t].fieldlist[2] =
-      $state.players[t].cards.board.eggplant;
-    players.playersList[t].fieldlist[3] = $state.players[t].cards.board.insect;
-    players.playersList[t].fieldlist[4] = $state.players[t].cards.board.mint;
-    players.playersList[t].fieldlist[5] = $state.players[t].cards.board.pizza;
+function whichData(roomid) {
+  for (let t = 0; t < $dataBox.length; t++) {
+    if ($dataBox[t].controlstate.roomId === roomid) {
+      return t;
+    }
   }
 }
-const { playersList } = toRefs(players);
+function playersSetting() {
+  for (let t = 0; t < 6; t++) {
+    players.playersList[t].name =
+      $dataBox[whichData($clientstate.roomid)].players[t].playerId;
+    players.playersList[t].isAlive =
+      $dataBox[whichData($clientstate.roomid)].players[t].isAlive;
+    players.playersList[t].remain =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.remain;
+    players.playersList[t].fieldlist[0] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.cake;
+    players.playersList[t].fieldlist[1] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.durian;
+    players.playersList[t].fieldlist[2] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.eggplant;
+    players.playersList[t].fieldlist[3] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.insect;
+    players.playersList[t].fieldlist[4] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.mint;
+    players.playersList[t].fieldlist[5] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.pizza;
+  }
+}
 
 //처음 게임이 시작하고 첫 공격자 함수
 function firstattacker() {
-  if ($state.gamestate === "start") {
+  let boxnum = whichData($clientstate.roomid);
+  if ($dataBox[boxnum].controlstate.gamestate === "start") {
     setTimeout(() => {
       //카드 선택 준비
-      $hobulhoSocket.emit("select-ready-req", $clientstate.myid);
+      $hobulhoSocket.emit("select-ready-req", $clientstate.roomid);
     }, 3000);
   }
 }
@@ -119,6 +133,7 @@ $hobulhoSocket.on("first-attack", function () {
 });
 //새로고침
 $hobulhoSocket.on("players-refresh", function () {
+  console.log("qqww");
   playersSetting();
 });
 </script>

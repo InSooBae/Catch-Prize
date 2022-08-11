@@ -10,11 +10,11 @@
 import { ref, onMounted, inject, reactive } from "vue";
 const $hobulhoSocket = inject("$hobulhoSocket");
 const $clientstate = inject("$clientstate");
-const $attackstate = inject("$attackstate");
+// const $attackstate = inject("$attackstate");
 
 // 답에 따라서 TF 리턴하는 함수
 function defendJudge(answer) {
-  $hobulhoSocket.emit("judge-selected", answer);
+  $hobulhoSocket.emit("judge-selected", $clientstate.roomid, answer);
 }
 </script>
 <style>

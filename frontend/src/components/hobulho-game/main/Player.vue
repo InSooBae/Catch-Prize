@@ -11,7 +11,7 @@
           v-on:click="attackTo"
           ref="nicknameRef"
           class="nickname-else"
-          :class="{ nickname: $state.gamestate === 'attack' }"
+          :class="{ nickname: $clientstate.gamestate === 'attack' }"
         >
           {{ player.name }}
         </div>
@@ -68,13 +68,12 @@ const props = defineProps({
 const nicknameRef = ref(null);
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
-const $state = inject("$state");
 
 //공격할사람 클릭하면 함수 실행
 function attackTo() {
-  if ($state.gamestate === "attack") {
+  if ($clientstate.gamestate === "attack") {
     const defender = nicknameRef.value.textContent;
-    $hobulhoSocket.emit("player-click", defender);
+    $hobulhoSocket.emit("player-click", $clientstate.roomid, defender);
   }
 }
 </script>

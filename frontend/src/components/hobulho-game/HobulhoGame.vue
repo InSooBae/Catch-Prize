@@ -19,48 +19,70 @@ import HeaderHome from "./header/HeaderHome.vue";
 import LeftHome from "./main/LeftHome.vue";
 import RightHome from "./main/PlayersHome.vue";
 import { useStore } from "vuex";
+import { Data } from "phaser";
 
 // const store = useStore();
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
-const $state = inject("$state");
-const $attackstate = inject("$attackstate");
+const $dataBox = inject("$dataBox");
 
 const route = useRoute();
 const myid = route.params.myid;
+const roomid = route.params.roomid;
 $clientstate.myid = myid;
+$clientstate.roomid = roomid;
+
+$hobulhoSocket.emit("server-get-roomid", $clientstate.roomid);
+
+function whichData(roomid) {
+  for (let t = 0; t < $dataBox.length; t++) {
+    if ($dataBox[t].controlstate.roomId === roomid) {
+      return t;
+    }
+  }
+}
 
 //현재상태가 loading 일때 게임 시작 요청
 const gameStart = () => {
-  if ($state.gamestate === "loading") {
+  let boxnum = whichData($clientstate.roomid);
+  if ($dataBox[boxnum].controlstate.gamestate === "loading") {
     setTimeout(() => {
-      $hobulhoSocket.emit("hobulho-start-req", $clientstate.myid);
+      $hobulhoSocket.emit("hobulho-start-req", $clientstate.roomid);
     }, 3000);
   }
 };
 $hobulhoSocket.on("game-start-ready", function () {
-  gameStart();
+  if ($clientstate.roomid != "") {
+    gameStart();
+  }
 });
 
 $hobulhoSocket.on("whose-turn", function () {
-  if ($attackstate.attackerId === $clientstate.myid) {
-    $state.gamestate = "select";
+  // console.log($state);
+  let boxnum = whichData($clientstate.roomid);
+  console.log($dataBox)
+  if ($dataBox[boxnum].attackstate.attackerId === $clientstate.myid) {
+    $clientstate.gamestate = "select";
   } else {
-    $state.gamestate = "turn";
+    $clientstate.gamestate = "turn";
   }
 });
 $hobulhoSocket.on("whose-attack", function () {
-  if ($attackstate.attackerId === $clientstate.myid) {
-    $state.gamestate = "attack";
+  let boxnum = whichData($clientstate.roomid);
+
+  if ($dataBox[boxnum].attackstate.attackerId === $clientstate.myid) {
+    $clientstate.gamestate = "attack";
   } else {
-    $state.gamestate = "turn";
+    $clientstate.gamestate = "turn";
   }
 });
 $hobulhoSocket.on("whose-judge", function () {
-  if ($attackstate.defenderId === $clientstate.myid) {
-    $state.gamestate = "judge";
+  let boxnum = whichData($clientstate.roomid);
+
+  if ($dataBox[boxnum].attackstate.defenderId === $clientstate.myid) {
+    $clientstate.gamestate = "judge";
   } else {
-    $state.gamestate = "judge-turn";
+    $clientstate.gamestate = "judge-turn";
   }
 });
 </script>

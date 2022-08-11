@@ -10,191 +10,236 @@ import "element-plus/theme-chalk/display.css";
 
 import "./assets/main.css";
 
+// import io from "socket.io-client";
+// const hobulhoSocket = io("https://rsv.catch-prize.com"
+// // , {
+//   //transports: ["websocket"],
+// // }
+// );
 import io from "socket.io-client";
-const hobulhoSocket = io("http://localhost:8081/hobulhoSocket", {
+const hobulhoSocket = io("http://localhost:8080", {
   transports: ["websocket"],
 });
 const app = createApp(App);
 const clientstate = reactive({
   myid: "",
-});
-const attackstate = reactive({
-  attackerId: "",
-  defenderId: "",
-  selectedcard: "",
-  declaredcard: "",
-  declaration: true,
-});
-const state = reactive({
-  response: {
-    success: "false",
-    error: {
-      code: "7",
-      message: "More players are required",
-    },
-  },
+  roomid: "",
   gamestate: "",
+  attackerId: "",
   deathplayer: "",
   winner: "",
-  players: [
-    {
-      playerId: "player1",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: false,
-    },
-    {
-      playerId: "player2",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: false,
-    },
-    {
-      playerId: "player3",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: false,
-    },
-    {
-      playerId: "player4",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: false,
-    },
-    {
-      playerId: "player5",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: false,
-    },
-    {
-      playerId: "player6",
-      cards: {
-        hand: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-        remain: 8,
-        board: {
-          cake: 0,
-          durian: 0,
-          eggplant: 0,
-          insect: 0,
-          mint: 0,
-          pizza: 0,
-        },
-      },
-      isAlive: false,
-    },
-  ],
+  defenderId: "",
 });
+// const attackstate = reactive({
+//   attackerId: "",
+//   defenderId: "",
+//   selectedcard: "",
+//   declaredcard: "",
+//   declaration: true,
+// });
+// const state = reactive({
+//   response: {
+//     success: "false",
+//     error: {
+//       code: "7",
+//       message: "More players are required",
+//     },
+//   },
+//   gamestate: "",
+//   deathplayer: "",
+//   winner: "",
+//   players: [
+//     {
+//       playerId: "player11",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       isAlive: false,
+//     },
+//     {
+//       playerId: "player21",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       isAlive: false,
+//     },
+//     {
+//       playerId: "player31",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       isAlive: false,
+//     },
+//     {
+//       playerId: "player41",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       isAlive: false,
+//     },
+//     {
+//       playerId: "player51",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       isAlive: false,
+//     },
+//     {
+//       playerId: "player61",
+//       cards: {
+//         hand: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//         remain: 8,
+//         board: {
+//           cake: 0,
+//           durian: 0,
+//           eggplant: 0,
+//           insect: 0,
+//           mint: 0,
+//           pizza: 0,
+//         },
+//       },
+//       isAlive: false,
+//     },
+//   ],
+// });
+
+const dataBox = reactive([]);
+
 hobulhoSocket.on("data-refresh", function (data) {
-  state.players = data.players;
-  state.gamestate = data.gamestate;
-  state.deathplayer = data.deathplayer;
-  state.winner = data.winner;
+  if (dataBox.length === 0) {
+    dataBox.push(data);
+  }
+  let cnt = 0;
+  for (let t = 0; t < dataBox.length; t++) {
+    if (dataBox[t].controlstate.roomId === data.controlstate.roomId) {
+      dataBox[t] = data;
+      cnt++;
+    }
+  }
+  if (cnt === 0) {
+    dataBox.push;
+  }
+  for (let t = 0; t < dataBox.length; t++) {
+    if (dataBox[t].controlstate.roomId === clientstate.roomid) {
+      clientstate.gamestate = dataBox[t].controlstate.gamestate;
+      clientstate.deathplayer = dataBox[t].controlstate.deathplayer;
+      clientstate.winner = dataBox[t].controlstate.winner;
+      clientstate.attackerId = dataBox[t].attackstate.attackerId;
+      clientstate.defenderId = dataBox[t].attackstate.defenderId;
+    }
+  }
+  // console.log(dataBox);
+  // console.log(clientstate.roomid);
+  // state.players = data.players;
+  // state.gamestate = data.controlstate.gamestate;
+  // state.deathplayer = data.controlstate.deathplayer;
+  // state.winner = data.controlstate.winner;
+  // attackstate.attackerId = data.attackstate.attackerId;
+  // attackstate.defenderId = data.attackstate.defenderId;
+  // attackstate.selectedcard = data.attackstate.selectedcard;
+  // attackstate.declaredcard = data.attackstate.declaredcard;
+  // attackstate.declaration = data.attackstate.declaration;
 });
-hobulhoSocket.on("attackdata-refresh", function (data) {
-  attackstate.attackerId = data.attackerId;
-  attackstate.defenderId = data.defenderId;
-  attackstate.selectedcard = data.selectedcard;
-  attackstate.declaredcard = data.declaredcard;
-  attackstate.declaration = data.declaration;
-});
+// hobulhoSocket.on("attackdata-refresh", function (data) {
+//   attackstate.attackerId = data.attackstate.attackerId;
+//   attackstate.defenderId = data.attackstate.defenderId;
+//   attackstate.selectedcard = data.attackstate.selectedcard;
+//   attackstate.declaredcard = data.attackstate.declaredcard;
+//   attackstate.declaration = data.attackstate.declaration;
+// });
 
 app.provide("$hobulhoSocket", hobulhoSocket);
 app.provide("$clientstate", clientstate);
-app.provide("$state", state);
-app.provide("$attackstate", attackstate);
+// app.provide("$state", state);
+// app.provide("$attackstate", attackstate);
+app.provide("$dataBox", dataBox);
 app.use(router);
 app.use(ElementPlus);
 app.use(store);
