@@ -101,7 +101,6 @@ public class GameSessionServiceImpl implements GameSessionService {
                         playerMap)
                 .finishedTime(dao.getFinishedTime())
                 .roomType(dao.getRoomType())
-                .phase(dao.getPhase())
                 .lastEnter(dao.getLastEnter())
                 .state(dao.getState())
                 .hostName(dao.getHostName())

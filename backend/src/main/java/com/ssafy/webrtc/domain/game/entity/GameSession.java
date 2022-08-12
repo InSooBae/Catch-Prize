@@ -1,6 +1,5 @@
 package com.ssafy.webrtc.domain.game.entity;
 
-import com.ssafy.webrtc.domain.game.enums.GamePhase;
 import com.ssafy.webrtc.domain.game.enums.GameState;
 import com.ssafy.webrtc.domain.game.enums.RoomType;
 import io.openvidu.java.client.Session;
@@ -37,9 +36,6 @@ public class GameSession {
     @NonNull
     @Enumerated(EnumType.STRING)
     private GameState state;
-
-    @Enumerated(EnumType.STRING)
-    private GamePhase phase;
 
     @NonNull
 //    @CreationTimestamp

@@ -2,7 +2,6 @@ package com.ssafy.webrtc.domain.game.dao;
 
 import com.ssafy.webrtc.domain.game.entity.GameSession;
 import com.ssafy.webrtc.domain.game.entity.Player;
-import com.ssafy.webrtc.domain.game.enums.GamePhase;
 import com.ssafy.webrtc.domain.game.enums.GameState;
 import com.ssafy.webrtc.domain.game.enums.RoomType;
 import io.openvidu.java.client.OpenViduRole;
@@ -40,9 +39,6 @@ public class GameSessionDao {
     @Enumerated(EnumType.STRING)
     private final GameState state;
 
-    @Enumerated(EnumType.STRING)
-    private final GamePhase phase;
-
     private final LocalDateTime createTime;
 
     private final LocalDateTime finishedTime;
@@ -66,7 +62,6 @@ public class GameSessionDao {
                 .roomName(gameSession.getRoomName())
                 .creator(gameSession.getCreator())
                 .state(gameSession.getState())
-                .phase(gameSession.getPhase())
                 .createTime(gameSession.getCreateTime())
                 .lastEnter(gameSession.getLastEnter())
                 .sessionId(gameSession.getSession().getSessionId())
