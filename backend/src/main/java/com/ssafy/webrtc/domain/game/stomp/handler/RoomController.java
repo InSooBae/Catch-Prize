@@ -53,6 +53,6 @@ public class RoomController {
             return;
         }
 
-        // 게임 시작
+        // 게임 시작 (게임 서버에 데이터 보내기)
     }
 }

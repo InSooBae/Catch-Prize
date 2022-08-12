@@ -59,7 +59,7 @@ public class GameSessionController {
     })
     // FIXME : RESPONSE DTO 내용
     @GetMapping("")
-    public ResponseEntity<List<GameSession>> findAll() {
+    public ResponseEntity<List<GameSessionResponseDto>> findAll() {
         return new ResponseEntity<>(gameSessionService.findAll(), HttpStatus.OK);
     }
 

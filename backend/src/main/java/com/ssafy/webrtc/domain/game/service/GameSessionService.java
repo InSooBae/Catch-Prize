@@ -3,7 +3,6 @@ package com.ssafy.webrtc.domain.game.service;
 import com.ssafy.webrtc.domain.game.dto.GameSessionJoinResponseDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionRequestDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionResponseDto;
-import com.ssafy.webrtc.domain.game.entity.Game;
 import com.ssafy.webrtc.domain.game.entity.GameSession;
 import com.ssafy.webrtc.domain.game.enums.GameState;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
@@ -16,7 +15,7 @@ public interface GameSessionService {
 
     GameSession makeSession(CustomUserDetails user, GameSessionRequestDto gameSessionRequestDto) throws OpenViduJavaClientException, OpenViduHttpException;;
 
-    List<GameSession> findAll();
+    List<GameSessionResponseDto> findAll();
 
     void removeSession(GameSession gameSession);
 

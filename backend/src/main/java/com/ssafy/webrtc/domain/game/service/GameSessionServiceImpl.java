@@ -3,6 +3,7 @@ package com.ssafy.webrtc.domain.game.service;
 import com.ssafy.webrtc.domain.game.dao.GameSessionDao;
 import com.ssafy.webrtc.domain.game.dto.GameSessionJoinResponseDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionRequestDto;
+import com.ssafy.webrtc.domain.game.dto.GameSessionResponseDto;
 import com.ssafy.webrtc.domain.game.entity.GameSession;
 import com.ssafy.webrtc.domain.game.entity.Player;
 import com.ssafy.webrtc.domain.game.enums.GameState;
@@ -53,12 +54,12 @@ public class GameSessionServiceImpl implements GameSessionService {
 
 
         GameSession gameSession = GameSession.builder(
-                roomId,
-                user.getUsername(),
-                gameSessionRequestDto.getRoomName(),
-                createdTime,
-                openViduSession,
-                null)
+                        roomId,
+                        user.getUsername(),
+                        gameSessionRequestDto.getRoomName(),
+                        createdTime,
+                        openViduSession,
+                        null)
                 .state(GameState.WAIT)
                 .maxParticipants(gameSessionRequestDto.getMaxParticipants())
                 .roomType(gameSessionRequestDto.getRoomType())
@@ -68,9 +69,13 @@ public class GameSessionServiceImpl implements GameSessionService {
         return toEntity(gameSessionRedisRepository.save(GameSessionDao.of(gameSession)));
     }
 
-    public List<GameSession> findAll() {
+    public List<GameSessionResponseDto> findAll() {
         List<GameSessionDao> allOfGameSession = gameSessionRedisRepository.findAll();
-        return allOfGameSession.stream().map(this::toEntity).collect(Collectors.toCollection(ArrayList::new));
+        return allOfGameSession
+                .stream()
+                .map(gameSessionDao ->
+                        GameSessionResponseDto.of(toEntity(gameSessionDao)))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private GameSession toEntity(GameSessionDao dao) {

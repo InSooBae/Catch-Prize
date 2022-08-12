@@ -9,6 +9,9 @@ import lombok.Getter;
 public class GameSessionResponseDto {
     private String roomId;
     private String roomName;
+    private String hostName;
+    private int maxParticipants;
+    private int participantsCnt;
 //    private RoomType roomType;
 
     public static GameSessionResponseDto of(GameSession gameSession) {
@@ -17,6 +20,10 @@ public class GameSessionResponseDto {
                 .roomId(gameSession.getRoomId())
                 .roomName(gameSession.getRoomName())
 //                .roomType(gameSession.getRoomType())
+                .hostName(gameSession.getHostName())
+                .maxParticipants(gameSession.getMaxParticipants())
+                .participantsCnt(gameSession.getPlayerMap().size())
                 .build();
     }
+
 }
