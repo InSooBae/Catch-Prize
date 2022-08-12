@@ -156,9 +156,10 @@ async function createRoom(headers, data) {
 }
 
 
-async function removeUser(headers, roomId, data) {
+async function removeUser(headers, roomId, ovdata) {
   try {
-    const res = await api.delete(`/gamesession/${roomId}`, data, { headers })
+    console.log(headers)
+    const res = await api.delete(`/gamesession/${roomId}`, { data: ovdata, headers: headers } )
     return res
   } catch (err) {
     console.log(err)

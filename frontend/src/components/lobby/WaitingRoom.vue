@@ -10,9 +10,8 @@
           <user-video v-for="sub in cam.subscribers" :stream-manager="sub"></user-video>
         </el-col>
       </el-row>
-      <!-- {{room.room}} -->
       {{roomId}}
-      <!-- {{ov.token}} -->
+
     </el-col>
     <el-col :xs="24" :lg="9" style="height: calc(100vh - 125px);">
       <div class="chat-container">
@@ -45,24 +44,12 @@ import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '../webrtc/UserVideo.vue';
-import { fetchRoomById } from '../../util/api';
-
+import { fetchRoomById, removeUser } from '../../util/api';
 
 const route = useRoute()
 const store = useStore()
 const chatdata = ref('')
-// const players = computed(() => store.room)
-
-
 const roomId = route.params.roomId
-// const room = computed(() => store.state.room)
-
-// const ov = computed(() => store.state.room.ov)
-// store.dispatch('fetchRoom', roomId)
-// .then(joinSession())
-// const ovtoken = computed(() => store.getters.room.ov.token)
-
-
 
 const cam = reactive({
 	OV: undefined,
@@ -134,7 +121,6 @@ const cam = reactive({
 //   // window.addEventListener('beforeunload', leaveSession)
 // }
 
-
 const joinSession = () => {
 	cam.OV = new OpenVidu();
 	cam.session = cam.OV.initSession();
@@ -154,10 +140,12 @@ const joinSession = () => {
 		console.warn(exception);
 	});
   
-  getToken(roomId).then(ovtoken => {
-  cam.session.connect(ovtoken, { clientData: cam.myUserName })
+  getToken(roomId).then(ovdata => {
+  cam.session.connect(ovdata.token, { clientData: cam.myUserName })
     .then(() => {
-      console.log(ovtoken)
+      store.commit('SET_OV', ovdata)
+      sessionStorage.setItem('ovdata', JSON.stringify(ovdata))
+      console.log(ovdata.token)
       console.log('토큰입니다')
       // --- Get your own camera stream with the desired properties ---
       let publisher = cam.OV.initPublisher(undefined, {
@@ -181,30 +169,40 @@ const joinSession = () => {
   })
 	window.addEventListener('beforeunload', leaveSession)
 }
+
+
 const leaveSession = () => {
-  // --- Leave the session by calling 'disconnect' method over the Session object ---
-  store.dispatch('removeUser', roomId)
+  console.log('leavsessino')
+  console.log(`Bearer ${sessionStorage.getItem('token')}`)
+  console.log(roomId)
+  console.log(JSON.parse(sessionStorage.getItem('ovdata')))
+
+  removeUser(
+    { Authorization: `Bearer ${sessionStorage.getItem('token')}` }, 
+    sessionStorage.getItem('roomId'), 
+    JSON.parse(sessionStorage.getItem('ovdata'))
+  )
+
   if (cam.session) cam.session.disconnect();
   cam.session = undefined;
   cam.mainStreamManager = undefined;
   cam.publisher = undefined;
   cam.subscribers = [];
   cam.OV = undefined;
-
   window.removeEventListener('beforeunload',leaveSession);
 }
+
+
+
 const getToken = (roomId) => {
-  // store.dispatch('fetchRoom', roomId)
-  // const ovtoken = computed(() => store.state.room.ov.token)
   return new Promise((resolve, reject) => {
     fetchRoomById({ Authorization: `Bearer ${sessionStorage.getItem('token')}` }, roomId)
-    .then(response => response.data)
-    .then(data => resolve(data.token))
+    .then(response => {
+      resolve(response.data)
+      })
     .catch(error => reject(error.response))
     })
-
 }    
-
 
 joinSession()
 
@@ -213,6 +211,10 @@ onMounted(() => {
   startReady.innerText = 'Ready!'
   store.commit('SET_ISWAIT', true)
   
+})
+// beforeunmount
+onBeforeUnmount(() => {
+  leaveSession()
 })
 
 

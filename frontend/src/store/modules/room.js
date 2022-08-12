@@ -38,13 +38,13 @@ const room = {
       })
     },
 
-    fetchRoom({ commit, getters }, roomId) {
-      fetchRoomById(getters.authHeader, roomId)
-      .then(res => {
-        console.log(res.data)
-        commit('SET_OV', res.data)
-      })
-    },
+    // fetchRoom({ commit, getters }, roomId) {
+    //   fetchRoomById(getters.authHeader, roomId)
+    //   .then(res => {
+    //     console.log(res.data)
+    //     commit('SET_OV', res.data)
+    //   })
+    // },
 
     createRoom({ commit, getters }, gameinfo) {
       createRoom(getters.authHeader, gameinfo)
@@ -59,20 +59,12 @@ const room = {
         })
     },
 
-    removeUser({ commit, getters }, roomId) {
-      removeUser(getters.authHeader, roomId, getters.ov)
-      .then(() => {
-        commit('SET_GAMEINFO', {})
-        router.push({ name: 'lobbyMain' })
-      })
-    },
-
-    // leavSession({ commit }) {
-    //   router.push({ name: 'lobby' })
-    //   sessionStorage.setItem('sessionId', '')
-    //   sessionStorage.setItem('ovtoken', '')
-    //   commit('SET_SESSIONID', '')
-    //   commit('SET_OV', '')
+    // removeUser({ commit, getters }, roomId, data) {
+    //   removeUser(getters.authHeader, roomId, data)
+    //   .then(() => {
+    //     commit('SET_GAMEINFO', {})
+    //     router.push({ name: 'lobbyMain' })
+    //   })
     // },
 
   }
