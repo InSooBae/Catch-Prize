@@ -1,37 +1,141 @@
 <template>
-  <div class="players-container">
-    <div class="left-grid">
-      <div class="left-grid1"><Player :player="playersList[0]" /></div>
-      <div class="left-grid2"><Player :player="playersList[1]"/></div>
-      <div class="left-grid3"><Player :player="playersList[2]"/></div>
+  <transition name="slide-fade">
+    <div
+      v-if="
+        $clientstate.gamestate === 'declare' &&
+        $clientstate.attackerId === $clientstate.myid
+      "
+    >
+      <AttackCardDeclare />
     </div>
-    <div class="right-grid">
-      <div class="right-grid1"><Player :player="playersList[3]"/></div>
-      <div class="right-grid2"><Player :player="playersList[4]"/></div>
-      <div class="right-grid3"><Player :player="playersList[5]"/></div>
+    <div v-else class="players-container">
+      <div class="left-grid">
+        <div class="left-grid1"><Player :player="playersList[0]" /></div>
+        <div class="left-grid2">
+          <Player :player="playersList[1]" />
+        </div>
+        <div class="left-grid3"><Player :player="playersList[2]" /></div>
+      </div>
+      <div class="right-grid">
+        <div class="right-grid1"><Player :player="playersList[3]" /></div>
+        <div class="right-grid2"><Player :player="playersList[4]" /></div>
+        <div class="right-grid3"><Player :player="playersList[5]" /></div>
+      </div>
     </div>
-  </div>
+  </transition>
+  <DefendJudge
+    v-if="
+      $clientstate.gamestate === 'judge' &&
+      $clientstate.defenderId === $clientstate.myid
+    "
+  />
 </template>
 
 <script setup>
 import Player from "./Player.vue";
+import AttackCardDeclare from "../select/AttackCardDeclare.vue";
+import DefendJudge from "../select/DefendJudge.vue";
 
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, inject, ref } from "vue";
 
+const $clientstate = inject("$clientstate");
+const $hobulhoSocket = inject("$hobulhoSocket");
+const $dataBox = inject("$dataBox");
 
 // 받아올 데이터
 const players = reactive({
   playersList: [
-    { name: 'player1', isDeath: false, fieldlist: [0,2,1,2,1,1], remain: 1},
-    { name: 'player2', isDeath: true, fieldlist: [0,2,1,2,1,0], remain: 3},
-    { name: 'player3', isDeath: false, fieldlist: [0,2,1,2,1,2], remain: 2},
-    { name: 'player4', isDeath: true, fieldlist: [0,2,1,2,0,1], remain: 4},
-    { name: 'player5', isDeath: false, fieldlist: [0,2,1,2,2,1], remain: 5},
-    { name: 'player6', isDeath: true, fieldlist: [0,2,1,1,1,1], remain: 2}
+    {
+      name: "player1",
+      isAlive: false,
+      fieldlist: [0, 0, 0, 0, 0, 0],
+      remain: 0,
+    },
+    {
+      name: "player2",
+      isAlive: false,
+      fieldlist: [0, 0, 0, 0, 0, 0],
+      remain: 0,
+    },
+    {
+      name: "player3",
+      isAlive: false,
+      fieldlist: [0, 0, 0, 0, 0, 0],
+      remain: 0,
+    },
+    {
+      name: "player4",
+      isAlive: false,
+      fieldlist: [0, 0, 0, 0, 0, 0],
+      remain: 0,
+    },
+    {
+      name: "player5",
+      isAlive: false,
+      fieldlist: [0, 0, 0, 0, 0, 0],
+      remain: 0,
+    },
+    {
+      name: "player6",
+      isAlive: false,
+      fieldlist: [0, 0, 0, 0, 0, 0],
+      remain: 0,
+    },
   ],
-})
+});
+const { playersList } = toRefs(players);
+//위의 players를 세팅하는 함수
+function whichData(roomid) {
+  for (let t = 0; t < $dataBox.length; t++) {
+    if ($dataBox[t].controlstate.roomId === roomid) {
+      return t;
+    }
+  }
+}
+function playersSetting() {
+  for (let t = 0; t < 6; t++) {
+    players.playersList[t].name =
+      $dataBox[whichData($clientstate.roomid)].players[t].playerId;
+    players.playersList[t].isAlive =
+      $dataBox[whichData($clientstate.roomid)].players[t].isAlive;
+    players.playersList[t].remain =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.remain;
+    players.playersList[t].fieldlist[0] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.cake;
+    players.playersList[t].fieldlist[1] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.durian;
+    players.playersList[t].fieldlist[2] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.eggplant;
+    players.playersList[t].fieldlist[3] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.insect;
+    players.playersList[t].fieldlist[4] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.mint;
+    players.playersList[t].fieldlist[5] =
+      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.pizza;
+  }
+}
 
-const { playersList } = toRefs(players)
+//처음 게임이 시작하고 첫 공격자 함수
+function firstattacker() {
+  let boxnum = whichData($clientstate.roomid);
+  if ($dataBox[boxnum].controlstate.gamestate === "start") {
+    setTimeout(() => {
+      //카드 선택 준비
+      $hobulhoSocket.emit("select-ready-req", $clientstate.roomid);
+    }, 3000);
+  }
+}
+
+//첫공격
+$hobulhoSocket.on("first-attack", function () {
+  playersSetting();
+  firstattacker();
+});
+//새로고침
+$hobulhoSocket.on("players-refresh", function () {
+  console.log("qqww");
+  playersSetting();
+});
 </script>
 
 <style>
@@ -75,5 +179,13 @@ const { playersList } = toRefs(players)
 }
 .right-grid3 {
   height: 27vh;
+}
+.slide-fade-enter-active {
+  transition: all 0.8s ease;
+}
+
+.slide-fade-enter-from {
+  transform: translateX(100px);
+  opacity: 0;
 }
 </style>

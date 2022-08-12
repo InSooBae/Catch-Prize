@@ -39,17 +39,24 @@ const router = createRouter({
           }
         },
         {
-          path: ':gameid',
+          path: ':roomid',
           name: 'gameroom',
           component: () => import('../components/lobby/WaitingRoom.vue'),
         },
       ],
     },
     {
-      path: '/game',
+      path: '/game/:roomid',
       name: 'game',
       component: () => import('../views/GameView.vue'),
-      beforeEnter: () => checkAuth(store.getters.isLoggedIn)
+      beforeEnter: () => checkAuth(store.getters.isLoggedIn),
+      children: [
+        {
+          path: ':myid',
+          name: 'gameplayroom',
+          component: () => import('../components/hobulho-game/HobulhoGame.vue')
+        }
+      ]
     },
     {
       path: '/notice',
