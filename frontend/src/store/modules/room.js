@@ -1,5 +1,5 @@
 import router from '../../router';
-import { fetchRooms, fetchRoomById, createRoom, removeUser } from "../../util/api";
+import { fetchRooms, createRoom, removeUser } from "../../util/api";
 
 const room = {
   state: {
@@ -38,14 +38,6 @@ const room = {
       })
     },
 
-    // fetchRoom({ commit, getters }, roomId) {
-    //   fetchRoomById(getters.authHeader, roomId)
-    //   .then(res => {
-    //     console.log(res.data)
-    //     commit('SET_OV', res.data)
-    //   })
-    // },
-
     createRoom({ commit, getters }, gameinfo) {
       createRoom(getters.authHeader, gameinfo)
         .then(res => {
@@ -59,13 +51,16 @@ const room = {
         })
     },
 
-    // removeUser({ commit, getters }, roomId, data) {
-    //   removeUser(getters.authHeader, roomId, data)
-    //   .then(() => {
-    //     commit('SET_GAMEINFO', {})
-    //     router.push({ name: 'lobbyMain' })
-    //   })
-    // },
+    removeUser({ getters }, {roomId, ovdata}) {
+      console.log(roomId, ovdata)
+      console.log('22')
+      removeUser(getters.authHeader, roomId, ovdata)
+      .then(res => {
+        sessionStorage.setItem('ovdata','')
+        sessionStorage.setItem('roomId','')
+        sessionStorage.setItem('sessionId','')
+      })
+    }
 
   }
 };

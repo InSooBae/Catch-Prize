@@ -1,17 +1,16 @@
 <template>
   <el-row id="elem" class="wait-container" style="height: calc(100vh - 80px);">
     <el-col :sm="15" class="hidden-md-and-down">
-      <el-row :gutter="20" class="people-container">
-        <el-col class="person-container" :lg="8" >
-          <div>name-tag</div>
-          <!-- webRTC uservideo -->
-          <!-- <user-video v-for="player in players" :stream-manager="player" @click.native="updateMainVideoStreamManager(player)"/> -->
-          <user-video :stream-manager="cam.publisher"></user-video>
-          <user-video v-for="sub in cam.subscribers" :stream-manager="sub"></user-video>
-        </el-col>
-      </el-row>
-      {{roomId}}
-
+      <div :gutter="20"  class="people-container">
+        <div class="person-container" >
+          <div  class="persion-video">
+            <user-video :stream-manager="cam.publisher"></user-video>
+          </div>
+          <div  class="persion-video" v-for="sub in cam.subscribers">
+            <user-video :stream-manager="sub"></user-video>
+          </div>
+        </div>
+      </div>
     </el-col>
     <el-col :xs="24" :lg="9" style="height: calc(100vh - 125px);">
       <div class="chat-container">
@@ -39,12 +38,13 @@
 </template>
 
 <script setup>
+import { ElMessage } from 'element-plus'
 import { reactive, ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '../webrtc/UserVideo.vue';
-import { fetchRoomById, removeUser } from '../../util/api';
+import { fetchRoomById } from '../../util/api';
 
 const route = useRoute()
 const store = useStore()
@@ -65,66 +65,10 @@ const cam = reactive({
 //   store.dispatch('closeSubscribe')
 // }
 
-
-// const joinSession = () => {
-//   console.log(cam.sessions)
-//   cam.OV = new OpenVidu();
-//   cam.session = cam.OV.initSession();
-//   console.log('init 세션', cam.session)
-//   cam.session.on('streamCreated', ({ stream }) => {
-//     console.log('첫번째 세션')
-//     const subscriber = cam.session.subscribe(stream);
-//     cam.subscribers.push(subscriber);
-//   });
-//   cam.session.on('streamDestroyed', ({ stream }) => {
-//     const index = cam.subscribers.indexOf(stream.streamManager, 0);
-//     if (index >= 0) {
-//       cam.subscribers.splice(index, 1);
-//     }
-//   });
-//   cam.session.on('exception', ({ exception }) => {
-//     console.warn(exception);
-//   });
-//   cam.session.connect(ovtoken, { clientData: cam.myUserName })
-//     .then(() => {
-//       // --- Get your own camera stream with the desired properties ---
-//       let publisher = cam.OV.initPublisher(undefined, {
-//         audioSource: undefined, // The source of audio. If undefined default microphone
-//         videoSource: undefined, // The source of video. If undefined default webcam
-//         publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
-//         publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-//         resolution: '200x100',  // The resolution of your video
-//         frameRate: 30,			// The frame rate of your video
-//         insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
-//         mirror: false       	// Whether to mirror your local video or not
-//       });
-//       cam.mainStreamManager = publisher;
-//       cam.publisher = publisher;
-//       // --- Publish your stream ---
-//       cam.session.publish(cam.publisher);
-//     })
-//     .catch(error => {
-//       console.log('There was an error connecting to the session:', error.code, error.message);
-//     });
-//   const leaveSession = () => {
-//     // --- Leave the session by calling 'disconnect' method over the Session object ---
-//     if (cam.session) {
-//       cam.session.disconnect();
-//     }
-//     cam.session = undefined;
-//     cam.mainStreamManager = undefined;
-//     cam.publisher = undefined;
-//     cam.subscribers = [];
-//     cam.OV = undefined;
-//     window.removeEventListener('beforeunload', leaveSession)
-// }
-//   // window.addEventListener('beforeunload', leaveSession)
-// }
-
 const joinSession = () => {
 	cam.OV = new OpenVidu();
+  // session을 사용할 수 있게함
 	cam.session = cam.OV.initSession();
-  console.log('session 생성',cam.session)
 
 	cam.session.on('streamCreated', ({ stream }) => {
 		const subscriber = cam.session.subscribe(stream);
@@ -139,21 +83,21 @@ const joinSession = () => {
 	cam.session.on('exception', ({ exception }) => {
 		console.warn(exception);
 	});
-  
+
+  // getToken에서 ovdata를 반환
+  // ovdata.token을 이용해서 session에 연결할 수 있음
   getToken(roomId).then(ovdata => {
   cam.session.connect(ovdata.token, { clientData: cam.myUserName })
     .then(() => {
       store.commit('SET_OV', ovdata)
       sessionStorage.setItem('ovdata', JSON.stringify(ovdata))
-      console.log(ovdata.token)
-      console.log('토큰입니다')
       // --- Get your own camera stream with the desired properties ---
       let publisher = cam.OV.initPublisher(undefined, {
         audioSource: undefined, // The source of audio. If undefined default microphone
         videoSource: undefined, // The source of video. If undefined default webcam
         publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
         publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-        resolution: '640x480',  // The resolution of your video
+        resolution: '280x200',  // Cam Size
         frameRate: 30,			// The frame rate of your video
         insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
         mirror: false       	// Whether to mirror your local video or not
@@ -167,33 +111,33 @@ const joinSession = () => {
       console.log('There was an error connecting to the session:', error.code, error.message);
     });
   })
+  // joinSession을 하면서 beforeunload 
 	window.addEventListener('beforeunload', leaveSession)
 }
 
-
+// 세션 퇴장
 const leaveSession = () => {
-  console.log('leavsessino')
-  console.log(`Bearer ${sessionStorage.getItem('token')}`)
-  console.log(roomId)
-  console.log(JSON.parse(sessionStorage.getItem('ovdata')))
-
-  removeUser(
-    { Authorization: `Bearer ${sessionStorage.getItem('token')}` }, 
-    sessionStorage.getItem('roomId'), 
-    JSON.parse(sessionStorage.getItem('ovdata'))
+  const roomId = sessionStorage.getItem('roomId')
+  const ovdata = JSON.parse(sessionStorage.getItem('ovdata'))
+  // 서버에 유저 삭제 요청
+  store.dispatch('removeUser', { roomId, ovdata})
+  .then(
+    ElMessage({
+      type: 'message',
+      message: '방에서 퇴장하셨습니다.'
+    })
   )
-
+  // 초기화 및 이벤트 삭제
   if (cam.session) cam.session.disconnect();
-  cam.session = undefined;
-  cam.mainStreamManager = undefined;
-  cam.publisher = undefined;
-  cam.subscribers = [];
-  cam.OV = undefined;
-  window.removeEventListener('beforeunload',leaveSession);
+    cam.session = undefined;
+    cam.mainStreamManager = undefined;
+    cam.publisher = undefined;
+    cam.subscribers = [];
+    cam.OV = undefined;
+    window.removeEventListener('beforeunload',leaveSession);
 }
 
-
-
+// roomId를 이용해서 ovtoken, userId 가져오는 요청 보내기
 const getToken = (roomId) => {
   return new Promise((resolve, reject) => {
     fetchRoomById({ Authorization: `Bearer ${sessionStorage.getItem('token')}` }, roomId)
@@ -210,8 +154,8 @@ onMounted(() => {
   const startReady = document.getElementById('start-ready-button');
   startReady.innerText = 'Ready!'
   store.commit('SET_ISWAIT', true)
-  
 })
+
 // beforeunmount
 onBeforeUnmount(() => {
   leaveSession()
@@ -222,15 +166,30 @@ onBeforeUnmount(() => {
 
 <style>
 .wait-container .people-container {
-  padding-right: 20px;
+  /* layout */
+  /* BOX */
+  min-width: 56rem;
+  max-width: 38rem;
+  min-height: 38rem;
+  padding: 2.1%;
+  margin: 1rem;
+  /* background */
+  background-color: rgba(255, 255, 255, 0.15);
+  /* font */
+  /* border */
+
 }
 
 .wait-container .person-container {
-  margin-bottom: 20px;
+  /* layout */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
-.person-container .person-image {
-  width: 100%;
+.wait-container .person-container video{
+  margin-bottom: 5rem;
+  margin-right: 0.3rem;
 }
 
 .wait-container .chat-container {
@@ -250,7 +209,6 @@ onBeforeUnmount(() => {
   /* font */
   color: whitesmoke;
   /* border */
-
 }
 
 .chat-container .chat-view::-webkit-scrollbar {
@@ -288,7 +246,6 @@ onBeforeUnmount(() => {
   box-shadow: 0 0 0 1px #00bd9d inset;
 }
 
-
 #start-ready-button {
   /* layout */
   height: 60px;
@@ -303,4 +260,11 @@ onBeforeUnmount(() => {
   border: none;
   border-radius: 10px;
 }
+
+  /* layout */
+  /* BOX */
+  /* background */
+  /* font */
+  /* border */
 </style>
+
