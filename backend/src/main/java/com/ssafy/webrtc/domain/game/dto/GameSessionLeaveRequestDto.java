@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class GameSessionLeaveRequestDto {
     private String token;
-    private String userId;
+    private String userName;
 }

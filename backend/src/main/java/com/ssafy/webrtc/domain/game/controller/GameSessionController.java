@@ -98,7 +98,7 @@ public class GameSessionController {
                 || UrlUtils.getUrlQueryParam(token, "token").isEmpty()) {
             throw new RuntimeException("잘못된 형식의 토큰입니다. - reqeusted token : " + token);
         }
-        gameSessionService.removeUser(roomId, gameSessionLeaveRequestDto.getUserId());
+        gameSessionService.removeUser(roomId, gameSessionLeaveRequestDto.getUserName());
 
         return new ResponseEntity<>(true, HttpStatus.OK);
     }

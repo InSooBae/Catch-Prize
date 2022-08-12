@@ -8,7 +8,6 @@ import com.ssafy.webrtc.domain.game.entity.Player;
 import com.ssafy.webrtc.domain.game.enums.GameState;
 import com.ssafy.webrtc.domain.game.repository.GameSessionRedisRepository;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
-import com.ssafy.webrtc.global.util.RoomIdUtils;
 import com.ssafy.webrtc.global.util.UrlUtils;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
@@ -105,7 +104,7 @@ public class GameSessionServiceImpl implements GameSessionService {
                 .phase(dao.getPhase())
                 .lastEnter(dao.getLastEnter())
                 .state(dao.getState())
-                .hostId(dao.getHostId())
+                .hostName(dao.getHostName())
                 .maxParticipants(dao.getMaxParticipants())
                 .build();
     }
@@ -134,16 +133,16 @@ public class GameSessionServiceImpl implements GameSessionService {
             String userId = UrlUtils.getUrlQueryParam(token, "token").orElseThrow(() -> new EmptyResultDataAccessException(1)).substring(4);
 
 
-            Player player = Player.of(userId, nickname, token, role);
+            Player player = Player.of(nickname, token, role);
 
-            gameSession.getPlayerMap().put(userId, player);
+            gameSession.getPlayerMap().put(nickname, player);
 
             if (gameSession.getPlayerMap().size() == 1) {
-                gameSession.setHostId(userId);
+                gameSession.setHostName(nickname);
             }
             update(gameSession);
 
-            return GameSessionJoinResponseDto.builder().userId(userId).token(token).build();
+            return GameSessionJoinResponseDto.builder().userName(nickname).token(token).build();
         } catch (OpenViduJavaClientException e1) {
             // If internal error generate an error message and return it to client
             return GameSessionJoinResponseDto.builder().build();
@@ -156,7 +155,7 @@ public class GameSessionServiceImpl implements GameSessionService {
     }
 
     @Override
-    public GameSession removeUser(String roomId, String userId) {
+    public GameSession removeUser(String roomId, String userName) {
         GameSession gameSession = findById(roomId);
         Session session = gameSession.getSession();
         Map<String, Player> playerMap = gameSession.getPlayerMap();
@@ -167,23 +166,26 @@ public class GameSessionServiceImpl implements GameSessionService {
             log.info("Problems in the app server: the SESSION does not exist");
             throw new NullPointerException("세션이 존재하지 않음");
         }
-        if (playerMap.remove(userId) == null) {
+        if (playerMap.remove(userName) == null) {
             // The TOKEN wasn't valid
-            log.info("Problems in the app server: the TOKEN - {} wasn't valid", userId);
+            log.info("Problems in the app server: the TOKEN - {} wasn't valid", userName);
         }
         // User left the session
         if (playerMap.isEmpty()) {
             removeSession(gameSession);
         } else {
             // 방장 나가면 남은 사람 중 한명 호스트로 바꾸기
-            makeHostForLeftUser(userId, gameSession, playerMap);
+            makeHostForLeftUser(userName, gameSession, playerMap);
         }
+
+        update(gameSession);
+
         return gameSession;
     }
 
-    private void makeHostForLeftUser(String userId, GameSession gameSession, Map<String, Player> playerMap) {
-        if (userId.equals(gameSession.getHostId())) {
-            gameSession.setHostId(playerMap.keySet().iterator().next());
+    private void makeHostForLeftUser(String userName, GameSession gameSession, Map<String, Player> playerMap) {
+        if (userName.equals(gameSession.getHostName())) {
+            gameSession.setHostName(playerMap.keySet().iterator().next());
         }
     }
 

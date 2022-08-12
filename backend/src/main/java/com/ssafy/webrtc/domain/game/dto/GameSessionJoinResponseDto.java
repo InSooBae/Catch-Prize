@@ -9,6 +9,6 @@ import lombok.Getter;
 public class GameSessionJoinResponseDto {
 
     private String token;
-    private String userId;
+    private String userName;
 
 }

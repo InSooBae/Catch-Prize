@@ -53,7 +53,7 @@ public class GameSession {
     @NonNull
     private final Session session;
 
-    private String hostId;
+    private String hostName;
 
     private int maxParticipants;
 

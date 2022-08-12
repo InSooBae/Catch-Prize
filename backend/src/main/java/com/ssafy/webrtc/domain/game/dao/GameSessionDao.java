@@ -51,7 +51,7 @@ public class GameSessionDao {
 
     private final String sessionId;
 
-    private final String hostId;
+    private final String hostName;
 
     private final int maxParticipants;
 
@@ -70,7 +70,7 @@ public class GameSessionDao {
                 .createTime(gameSession.getCreateTime())
                 .lastEnter(gameSession.getLastEnter())
                 .sessionId(gameSession.getSession().getSessionId())
-                .hostId(gameSession.getHostId())
+                .hostName(gameSession.getHostName())
                 .finishedTime(gameSession.getFinishedTime())
                 .maxParticipants(gameSession.getMaxParticipants())
                 .playerMap(gameSession.getPlayerMap())

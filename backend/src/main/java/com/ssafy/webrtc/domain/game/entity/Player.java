@@ -20,32 +20,20 @@ import java.util.List;
 @Builder
 public class Player implements Serializable {
 
+
     @Id
-    private final String id;
-
     private final String nickname;
-
-    // 자기만 보는 카드
-    private List<Card> hands;
-
-    // 땅바닥에 깔아서 보여주는 카드
-    private List<Card> ground;
-
-    private boolean alive;
 
     private final String token;
 
     private final OpenViduRole openViduRole;
 
-    public static Player of(String id, String nickname, String token, OpenViduRole openViduRole) {
+    public static Player of(String nickname, String token, OpenViduRole openViduRole) {
         return Player
                 .builder()
-                .id(id)
                 .nickname(nickname)
                 .token(token)
                 .openViduRole(openViduRole)
-                .ground(new ArrayList<>())
-                .hands(new ArrayList<>())
                 .build();
     }
 

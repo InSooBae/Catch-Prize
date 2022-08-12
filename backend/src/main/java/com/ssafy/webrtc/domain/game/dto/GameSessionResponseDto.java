@@ -7,14 +7,14 @@ import lombok.Getter;
 @Getter
 @Builder
 public class GameSessionResponseDto {
-    private String id;
+    private String roomId;
     private String roomName;
 //    private RoomType roomType;
 
     public static GameSessionResponseDto of(GameSession gameSession) {
         return GameSessionResponseDto
                 .builder()
-                .id(gameSession.getRoomId())
+                .roomId(gameSession.getRoomId())
                 .roomName(gameSession.getRoomName())
 //                .roomType(gameSession.getRoomType())
                 .build();

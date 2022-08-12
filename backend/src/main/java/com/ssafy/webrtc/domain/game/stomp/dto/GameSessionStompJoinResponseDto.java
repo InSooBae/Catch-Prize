@@ -21,6 +21,6 @@ public class GameSessionStompJoinResponseDto {
     gameSession.getPlayerMap().forEach((playerId, player) ->
         newPlayerMap.put(playerId, PlayerStompJoinResponseDto.of(player))
     );
-    return new GameSessionStompJoinResponseDto(gameSession.getHostId(), newPlayerMap);
+    return new GameSessionStompJoinResponseDto(gameSession.getHostName(), newPlayerMap);
   }
 }
