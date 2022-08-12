@@ -176,9 +176,9 @@ public class GameSessionServiceImpl implements GameSessionService {
         } else {
             // 방장 나가면 남은 사람 중 한명 호스트로 바꾸기
             makeHostForLeftUser(userName, gameSession, playerMap);
+            update(gameSession);
         }
 
-        update(gameSession);
 
         return gameSession;
     }
