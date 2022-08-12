@@ -283,7 +283,7 @@ function checkDeath(roomnum, player) {
         statebox[roomnum].controlstate.deathplayer = player;
         setTimeout(() => {
           statebox[roomnum].controlstate.gamestate = "death";
-        },3000);
+        }, 3000);
         if (player === statebox[roomnum].attackstate.attackerId) {
           statebox[roomnum].attackstate.attackerId =
             statebox[roomnum].attackstate.defenderId;
@@ -339,6 +339,7 @@ const playerslist2 = [
   "player62",
 ];
 function stateBoxPush(roomid, playerslist) {
+  //게임 데이터
   const state = {
     response: {
       success: "false",
@@ -517,13 +518,6 @@ function stateBoxPush(roomid, playerslist) {
 stateBoxPush(roomid1, playerslist1);
 // console.log(statebox);
 stateBoxPush(roomid2, playerslist2);
-// console.log(statebox[0].players);
-// console.log(statebox[1].players);
-
-// console.log(statebox[0].roomId);
-// console.log(statebox[1].roomId);
-// console.log(statebox[0].players);
-// console.log(statebox[1].players);
 
 //승자가 있는 방의 데이터는 삭제
 function stateBoxDelete() {
@@ -564,9 +558,9 @@ io.on("connection", function (socket) {
     let roomnum = whichRoom(roomid);
     cardshuffle(roomnum);
     statebox[roomnum].controlstate.gamestate = "loading";
-    io.emit("data-refresh", statebox[roomnum]);
+    socket.emit("data-refresh", statebox[roomnum]);
     //게임 시작 hobulhoGame.vue
-    io.emit("game-start-ready");
+    socket.emit("game-start-ready");
   });
 
   //게임 시작 요청이 들어오면
@@ -576,10 +570,10 @@ io.on("connection", function (socket) {
       statebox[roomnum].controlstate.gamestate = "start";
 
     //state 보내기
-    io.emit("data-refresh", statebox[roomnum]);
+    socket.emit("data-refresh", statebox[roomnum]);
     //카드 세팅 Mycards.vue
-    io.emit("hobulho-start-card");
-    io.emit("players-profile-setting");
+    socket.emit("hobulho-start-card");
+    socket.emit("players-profile-setting");
     //데이터 뿌리기 HobulhoGame.vue
     //첫공격  PlayersHome.vue
     socket.emit("first-attack");
@@ -593,9 +587,10 @@ io.on("connection", function (socket) {
     //state 보내기
 
     // io.emit("attackdata-refresh", statebox[roomnum].attackstate);
-    io.emit("data-refresh", statebox[roomnum]);
+    socket.emit("data-refresh", statebox[roomnum]);
     //내차례가 아니면 gamestate = turn
-    io.emit("whose-turn");
+    socket.emit("whose-turn");
+    socket.emit("set-timer");
   });
 
   socket.on("card-click", function (roomid, cardname, playerid) {
@@ -622,6 +617,7 @@ io.on("connection", function (socket) {
     io.emit("players-refresh");
     // 클라이언트에게 메시지를 전송한다
     io.emit("whose-attack");
+    socket.emit("set-timer");
   });
 
   //공격할 플레이어를 클릭했을때
@@ -632,6 +628,8 @@ io.on("connection", function (socket) {
 
     //데이터 뿌리기
     io.emit("data-refresh", statebox[roomnum]);
+    io.emit("whose-declare");
+    socket.emit("set-timer");
   });
 
   //뭐라고 할지 클릭했을때
@@ -645,6 +643,7 @@ io.on("connection", function (socket) {
     //데이터 뿌리기
     io.emit("data-refresh", statebox[roomnum]);
     io.emit("whose-judge");
+    socket.emit("set-timer");
   });
 
   //방어자가 judge 선택

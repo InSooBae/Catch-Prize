@@ -52,7 +52,13 @@
     <v-typical
       v-else-if="$clientstate.gamestate === 'judge'"
       class="blink"
-      :steps="[guide.guideText, 1000]"
+      :steps="[
+        $clientstate.attackerId +
+          ' 님이 의문의 카드를 ' +
+          $clientstate.cardname +
+          ' (이)라고 주장했습니다. 진실일까요?',
+        1000,
+      ]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
@@ -87,14 +93,22 @@
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
+    <v-typical
+      v-else-if="$clientstate.gamestate === 'declare-turn'"
+      class="blink"
+      :steps="[$clientstate.defenderId + ' 님이 지목 당했습니다.', 1000]"
+      :loop="1"
+      :wrapper="'h1'"
+    ></v-typical>
   </div>
 </template>
 
 <script setup>
 import VTypical from "vue-typical";
-import { reactive, toRefs, inject } from "vue";
+import { reactive, toRefs, inject, onMounted } from "vue";
 const $clientstate = inject("$clientstate");
 const $dataBox = inject("$dataBox");
+const $hobulhoSocket = inject("$hobulhoSocket");
 const props = defineProps({
   guide: Object,
 });

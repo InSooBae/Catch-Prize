@@ -60,7 +60,7 @@ $hobulhoSocket.on("game-start-ready", function () {
 $hobulhoSocket.on("whose-turn", function () {
   // console.log($state);
   let boxnum = whichData($clientstate.roomid);
-  console.log($dataBox)
+  console.log($dataBox);
   if ($dataBox[boxnum].attackstate.attackerId === $clientstate.myid) {
     $clientstate.gamestate = "select";
   } else {
@@ -74,6 +74,15 @@ $hobulhoSocket.on("whose-attack", function () {
     $clientstate.gamestate = "attack";
   } else {
     $clientstate.gamestate = "turn";
+  }
+});
+$hobulhoSocket.on("whose-declare", function () {
+  let boxnum = whichData($clientstate.roomid);
+
+  if ($dataBox[boxnum].attackstate.attackerId === $clientstate.myid) {
+    $clientstate.gamestate = "declare";
+  } else {
+    $clientstate.gamestate = "declare-turn";
   }
 });
 $hobulhoSocket.on("whose-judge", function () {

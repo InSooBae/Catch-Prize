@@ -29,6 +29,8 @@ const clientstate = reactive({
   deathplayer: "",
   winner: "",
   defenderId: "",
+  declaredcard: "",
+  cardname: "",
 });
 // const attackstate = reactive({
 //   attackerId: "",
@@ -213,7 +215,27 @@ hobulhoSocket.on("data-refresh", function (data) {
       clientstate.winner = dataBox[t].controlstate.winner;
       clientstate.attackerId = dataBox[t].attackstate.attackerId;
       clientstate.defenderId = dataBox[t].attackstate.defenderId;
+      clientstate.declaredcard = dataBox[t].attackstate.declaredcard;
     }
+  }
+  if (clientstate.declaredcard === "cake") {
+    console.log("aaaaaaaa");
+    clientstate.cardname = "오이케이크";
+  }
+  if (clientstate.declaredcard === "durian") {
+    clientstate.cardname = "두리안";
+  }
+  if (clientstate.declaredcard === "eggplant") {
+    clientstate.cardname = "가지";
+  }
+  if (clientstate.declaredcard === "insect") {
+    clientstate.cardname = "곤충튀김";
+  }
+  if (clientstate.declaredcard === "mint") {
+    clientstate.cardname = "민트초코";
+  }
+  if (clientstate.declaredcard === "pizza") {
+    clientstate.cardname = "파인애플피자";
   }
   // console.log(dataBox);
   // console.log(clientstate.roomid);

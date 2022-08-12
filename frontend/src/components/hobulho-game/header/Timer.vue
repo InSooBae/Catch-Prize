@@ -5,12 +5,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, inject } from "vue";
 const seconds = ref(null);
-function stateTimer() {
-  let timer = 20;
-  let interval = setInterval(() => {
+const $hobulhoSocket = inject("$hobulhoSocket");
+let interval;
+function setTimer(time) {
+  let timer = time;
+  interval = setInterval(() => {
     if (timer === -1) {
+      clearInterval(interval);
+    } else if (stoptimer === true) {
       clearInterval(interval);
     } else {
       if (timer < 10) {
@@ -23,16 +27,13 @@ function stateTimer() {
     }
   }, 1000);
 }
-stateTimer();
-// function startTimer() {
-//   for (let t = 10; t >= 0; t--) {
-//     setTimeout(() => {
-//       seconds.value.textContent = t;
-//     }, 1000);
-//   }
-//   return 1;
-// }
-// startTimer();
+function stoptimer() {
+  clearInterval(interval);
+}
+$hobulhoSocket.on("set-timer", function () {
+  stoptimer();
+  setTimer(20);
+});
 </script>
 
 <style scoped>
