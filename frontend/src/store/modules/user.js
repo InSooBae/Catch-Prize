@@ -1,25 +1,35 @@
-import axios from "axios";
+import { EventSourcePolyfill } from 'event-source-polyfill';
 import { API_BASE_URL } from "../../constants";
+import jwt_decode from "jwt-decode";
+import router from "../../router";
+import { logout, getCurrentUser, findAllFriends, acceptFriend, addFriend, deleteFriend } from "../../util/api";
 
 const user = {
   state: {
-    token: sessionStorage.getItem('token') || '' ,
+    token: sessionStorage.getItem('token') || '',
     currentUser: {},
-    profile: {},
+    friendsList: { 'pending': {}, 'online': {}, 'offline': {} },
+    isAdmin: false,
     authError: null,
+    eventSource: {}
   },
   mutations: {
     SET_TOKEN: (state, token) => state.token = token,
     SET_CURRENT_USER: (state, user) => state.currentUser = user,
-    SET_PROFILE: (state, profile) => state.profile = profile,
-    SET_AUTH_ERROR: (state, error) => state.authError = error
+    SET_FRIENDS: (state, friendsList) => state.friendsList = friendsList,
+    SET_AUTH_ERROR: (state, error) => state.authError = error,
+    SET_IS_ADMIN: (state, role) => state.isAdmin = (role === 'ADMIN'),
+    SET_EVENT_SOURCE: (state, eventSource) => state.eventSource = eventSource
   },
   getters: {
+    token: state => state.token,
     isLoggedIn: state => !!state.token,
     currentUser: state => state.currentUser,
-    profile: state => state.profile,
+    friendsList: state => state.friendsList,
     authError: state => state.authError,
-    authHeader: state => ({ Authorization: `Bearer ${state.token}`})
+    authHeader: state => ({ Authorization: `Bearer ${state.token}` }),
+    isAdmin: state => state.isAdmin,
+    eventSource: state => state.eventSource,
   },
   actions: {
     saveToken({ commit }, token) {
@@ -27,26 +37,107 @@ const user = {
       localStorage.setItem('token', '')
       sessionStorage.setItem('token', token)
     },
-    removeToken({ commit }) {
-      commit('SET_TOKEN', '')
-      sessionStorage.setItem('token', '')
+    logout({ commit, getters }) {
+      router.push({ name: 'home' })
+      if (getters.isLoggedIn) {
+        logout(getters.authHeader)
+          .then(res => {
+            sessionStorage.setItem('token', '')
+            commit('SET_TOKEN', '')
+          })
+      }
     },
     fetchCurrentUser({ commit, getters, dispatch }) {
       if (getters.isLoggedIn) {
-        axios.get(API_BASE_URL + '/user/me', {headers: getters.authHeader})
+        getCurrentUser(getters.authHeader)
           .then(res => {
             commit('SET_CURRENT_USER', res.data)
-        })
+            const role = jwt_decode(getters.token).role
+            commit('SET_IS_ADMIN', role)
+          })
           .catch(err => {
             if (err.response.status === 401) {
-              dispatch('removeToken')
-              router.push({ name: 'home' })
+              dispatch('logout')
             }
           })
       }
     },
+    fetchFriendsList({ commit, getters }) {
+      if (getters.isLoggedIn) {
+        findAllFriends(getters.authHeader)
+          .then(res => {
+            const friendsList = { 'pending': {}, 'online': {}, 'offline': {} }
+            res.data.forEach(friend => {
+              updateFriend(friend, friendsList)
+            });
+            commit('SET_FRIENDS', friendsList)
+          })
+      }
+    },
+    subscribeFriends({ commit, getters }, method) {
+      console.log("변동 알림 보내기");
+      const eventSource = new EventSourcePolyfill(`${API_BASE_URL}/friend/subscribe`, { headers: getters.authHeader });
+      eventSource.addEventListener("sse", function (event) {
+        console.log(event.data)
+        if (event.data[0] === '{') {
+          const friendsList = getters.friendsList;
+          const friend = JSON.parse(event.data);
+          delete friendsList.offline[friend.id]
+          delete friendsList.online[friend.id]
+          delete friendsList.pending[friend.id]
+          updateFriend(friend, friendsList)
+          commit('SET_FRIENDS', friendsList)
+        }
+      })
+      commit('SET_EVENT_SOURCE', eventSource)
+    },
+    closeSubscribe({ getters }) {
+      const eventSource = getters.eventSource
+      if (!!eventSource) {
+        console.log(eventSource)
+        eventSource.close()
+        console.log(eventSource)
+      }
+    },
+    acceptFriend({ dispatch, getters }, friendNickname) {
+      acceptFriend(getters.authHeader, friendNickname)
+        .then(res => {
+          dispatch('fetchFriendsList');
+        })
+    },
+    addFriend({ dispatch, getters }, friendNickname) {
+      addFriend(getters.authHeader, friendNickname)
+        .then(res => {
+          dispatch('fetchFriendsList');
+        })
+    },
+    deleteFriend({ dispatch, getters }, friendNickname) {
+      deleteFriend(getters.authHeader, friendNickname)
+        .then(res => {
+          dispatch('fetchFriendsList');
+        })
+    }
   },
-
 };
+
+const updateFriend = (friend, friendsList) => {
+  if (friend.friend) {
+    if (friend.online) {
+      friendsList.online[friend.id] = {
+        'friendNickname': friend.friendNickname
+      }
+    }
+    else {
+      friendsList.offline[friend.id] = {
+        'friendNickname': friend.friendNickname
+      }
+    }
+  }
+  else if (friend.pending) {
+    friendsList.pending[friend.id] = {
+      'friendNickname': friend.friendNickname
+    }
+  }
+}
 
 export default user;

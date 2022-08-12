@@ -10,7 +10,7 @@ const route = useRoute();
 
 onMounted(() => {
   localStorage.setItem('token', route.query.accessToken)
-  window.opener.location.reload()
+  opener.checkLogin()
   window.close()
 })
 </script>

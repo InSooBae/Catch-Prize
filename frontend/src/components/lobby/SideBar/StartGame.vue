@@ -15,12 +15,11 @@
       <el-form-item>
         <el-select placeholder="게임을 선택하세요." v-model="gameinfo.gametype">
           <el-option label="호불호 포커" value="poker" />
-          <el-option label="불호불 포커" value="rekop" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select placeholder="참여인원을 선택하세요" v-model="gameinfo.gamesize">
-          <el-option label="4" value=4 />
+        <el-select placeholder="참여인원을 선택하세요" v-model="gameinfo.gamesize" :disabled="!gameinfo.gametype">
+          <el-option :label="4" value=4 />
           <el-option label="6" value=6 />
         </el-select>
       </el-form-item>
@@ -31,6 +30,9 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const startVisible = ref(false)
 
@@ -41,7 +43,7 @@ const gameinfo = reactive({
 })
 
 const makeRoom = () => {
-  console.log(gameinfo)
+  router.push({ name: 'gameroom', params: {gameid: gameinfo.roomname} })
   gameinfo.roomname = ''
   gameinfo.gametype = ''
   gameinfo.gamesize = ''

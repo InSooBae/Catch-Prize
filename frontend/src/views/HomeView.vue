@@ -17,7 +17,7 @@
         <p class="text-green text-animation">E</p>
       </div>
       <div class="d-flex justify-content-center">
-        <div id="login_button_group">
+        <div id="login_button_group" class="fade-animation">
           <button type="button" class="login_button">
             <img class="login_button_image" src="@/assets/login/google.png" alt="login with google"
               @click="loginPopup('google')" />
@@ -43,7 +43,7 @@
 <script setup>
 import StarBackground from '@/components/StarBackground.vue'
 import Game from '@/components/sample-game/SampleGame.vue'
-import { ref, onMounted, computed, watchEffect } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { BASE_URL } from '../constants'
@@ -51,7 +51,6 @@ import { BASE_URL } from '../constants'
 const store = useStore()
 const router = useRouter()
 
-store.dispatch('saveToken', localStorage.getItem('token'));
 const isLoggedIn = computed(() => store.getters.isLoggedIn)
 const drawer = ref(false)
 const isMobile = ref(false)
@@ -61,9 +60,7 @@ const gameOpen = () => {
   if (!isMobile.value) drawer.value = true
 }
 
-const loginPopup = (url) => {
-  window.open(`${BASE_URL}/login/${url}`, 'window', option);
-}
+const loginPopup = (url) => window.open(`${BASE_URL}/login/${url}`, '_blank', option);
 
 const detectMobile = () => {
   try {
@@ -72,18 +69,21 @@ const detectMobile = () => {
     document.getElementById('catch_prize').style.fontSize = '28px';
     document.getElementById('catch_prize').style.margin = '10px 0';
     return true;
-  } catch (e) {
+  } catch (err) {
     return false;
   }
 };
 
-const storageListener = () => {console.log('dd')}
+window.checkLogin = () => {
+  store.dispatch('saveToken', localStorage.getItem('token'));
+  if (isLoggedIn.value) {
+    router.push({ name:'lobbyMain' })
+    }
+}
 
 onMounted(() => {
   isMobile.value = detectMobile();
-  if (isLoggedIn.value) router.push({ name:'lobby' })
 })
-
 </script>
 
 <style>
@@ -116,6 +116,7 @@ onMounted(() => {
 
 #login_button_group {
   width: 380px;
+  animation: fadein 1.55s;
 }
 
 .login_button {
@@ -150,12 +151,12 @@ onMounted(() => {
 .text-animation {
   transition: all ease 0.3s 0s;
   vertical-align: bottom;
-  padding-top: 15px;
+  padding-top: 30px;
 }
 
 .text-animation:hover {
   padding: 0 1px;
-  padding-bottom: 15px;
+  padding-bottom: 30px;
 }
 
 @keyframes blink-effect {
