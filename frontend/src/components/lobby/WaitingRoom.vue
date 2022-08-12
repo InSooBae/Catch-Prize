@@ -2,13 +2,13 @@
   <el-row id="elem" class="wait-container" style="height: calc(100vh - 80px);">
     <el-col :sm="15" class="hidden-md-and-down">
       <div :gutter="20"  class="people-container">
-        <div class="person-container" >
-          <div  class="persion-video">
-            <user-video :stream-manager="cam.publisher"></user-video>
-          </div>
-          <div  class="persion-video" v-for="sub in cam.subscribers">
-            <user-video :stream-manager="sub"></user-video>
-          </div>
+        <div class="person-container">
+          <user-video :stream-manager="cam.publisher"></user-video>
+          <el-button id="ready-btn" color="#626aef">Ready</el-button>
+        </div>
+        <div v-for="sub in cam.subscribers" class="person-container">
+          <user-video  v-if="sub" :stream-manager="sub"></user-video>
+          <el-button id="ready-btn-ready" color="#626aef">Ready</el-button>
         </div>
       </div>
     </el-col>
@@ -51,6 +51,7 @@ const store = useStore()
 const chatdata = ref('')
 const roomId = route.params.roomId
 
+
 const cam = reactive({
 	OV: undefined,
 	session: undefined,
@@ -58,7 +59,7 @@ const cam = reactive({
 	publisher: undefined,
 	subscribers: [],
 	mySessionId: computed(() => store.state.room.sessionId),
-	myUserName: computed(() => store.state.user.currentUser),
+	myUserName: computed(() => store.state.user.currentUser.username),
 })
 
 // const unSub = () => {
@@ -87,7 +88,8 @@ const joinSession = () => {
   // getToken에서 ovdata를 반환
   // ovdata.token을 이용해서 session에 연결할 수 있음
   getToken(roomId).then(ovdata => {
-  cam.session.connect(ovdata.token, { clientData: cam.myUserName })
+  console.log(cam.myUserName)
+  cam.session.connect(ovdata.token)
     .then(() => {
       store.commit('SET_OV', ovdata)
       sessionStorage.setItem('ovdata', JSON.stringify(ovdata))
@@ -97,7 +99,7 @@ const joinSession = () => {
         videoSource: undefined, // The source of video. If undefined default webcam
         publishAudio: true,  	// Whether you want to start publishing with your audio unmuted or not
         publishVideo: true,  	// Whether you want to start publishing with your video enabled or not
-        resolution: '280x200',  // Cam Size
+        resolution: '280x150',  // Cam Size
         frameRate: 30,			// The frame rate of your video
         insertMode: 'APPEND',	// How the video is inserted in the target element 'video-container'
         mirror: false       	// Whether to mirror your local video or not
@@ -167,6 +169,9 @@ onBeforeUnmount(() => {
 <style>
 .wait-container .people-container {
   /* layout */
+    display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   /* BOX */
   min-width: 56rem;
   max-width: 38rem;
@@ -180,15 +185,10 @@ onBeforeUnmount(() => {
 
 }
 
-.wait-container .person-container {
-  /* layout */
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
+
 
 .wait-container .person-container video{
-  margin-bottom: 5rem;
+  margin-bottom: 1rem;
   margin-right: 0.3rem;
 }
 
@@ -261,6 +261,14 @@ onBeforeUnmount(() => {
   border-radius: 10px;
 }
 
+#ready-btn {
+  width: 98%;
+}
+
+#ready-btn-ready {
+  width: 98%;
+  background-color:#262C3A;
+}
   /* layout */
   /* BOX */
   /* background */
