@@ -53,6 +53,8 @@ public class GameSessionDao {
 
     private final String hostId;
 
+    private final int maxParticipants;
+
     private final Map<String, OpenViduRole> mapSessionNamesTokens;
 
     public static GameSessionDao of(GameSession gameSession) {
@@ -70,6 +72,7 @@ public class GameSessionDao {
                 .sessionId(gameSession.getSession().getSessionId())
                 .hostId(gameSession.getHostId())
                 .finishedTime(gameSession.getFinishedTime())
+                .maxParticipants(gameSession.getMaxParticipants())
                 .playerMap(gameSession.getPlayerMap())
                 .build();
     }

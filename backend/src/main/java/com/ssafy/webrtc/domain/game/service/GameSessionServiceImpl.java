@@ -94,18 +94,19 @@ public class GameSessionServiceImpl implements GameSessionService {
 
 
         return GameSession.builder(
-                dao.getRoomId(),
-                dao.getCreator(),
-                dao.getRoomName(),
-                dao.getCreateTime(),
-                entitySession,
-                playerMap)
+                        dao.getRoomId(),
+                        dao.getCreator(),
+                        dao.getRoomName(),
+                        dao.getCreateTime(),
+                        entitySession,
+                        playerMap)
                 .finishedTime(dao.getFinishedTime())
                 .roomType(dao.getRoomType())
                 .phase(dao.getPhase())
                 .lastEnter(dao.getLastEnter())
                 .state(dao.getState())
                 .hostId(dao.getHostId())
+                .maxParticipants(dao.getMaxParticipants())
                 .build();
     }
 
@@ -115,6 +116,7 @@ public class GameSessionServiceImpl implements GameSessionService {
 
         GameSession gameSession = findById(roomId);
 
+        log.info("gameSession size = {}", gameSession.getMaxParticipants());
         validateCanJoin(gameSession);
 
         OpenViduRole role = OpenViduRole.PUBLISHER;
@@ -197,8 +199,8 @@ public class GameSessionServiceImpl implements GameSessionService {
 
     @Override
     public void update(GameSession update) {
-//        GameSessionDao updateDto = GameSessionDaoMapper.INSTANCE.toDao(update);
-//        gameSessionRedisRepository.save(updateDto);
+        GameSessionDao updateDto = GameSessionDao.of(update);
+        gameSessionRedisRepository.save(updateDto);
     }
 
     @Override
