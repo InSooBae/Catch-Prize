@@ -13,7 +13,7 @@ import java.util.Map;
 public class GameSessionStompJoinResponseDto {
 
   private final StompMessageType type = StompMessageType.JOIN;
-  private final String hostId;
+  private final String hostName;
   private final Map<String, PlayerStompJoinResponseDto> playerMap;
 
   public static GameSessionStompJoinResponseDto of(GameSession gameSession) {

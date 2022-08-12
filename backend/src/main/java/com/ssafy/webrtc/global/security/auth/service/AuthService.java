@@ -41,9 +41,8 @@ public class AuthService {
         String oldRefreshToken = CookieUtil.getCookie(request, cookieKey)
                 .map(Cookie::getValue).orElseThrow(() -> new RuntimeException("no Refresh Token Cookie"));
 
-        if (!tokenProvider.validateToken(oldRefreshToken)) {
-            throw new RuntimeException("Not Validated Refresh Token");
-        }
+        tokenProvider.validateToken(oldRefreshToken);
+
 
         // 2. 유저정보 얻기
         Authentication authentication = tokenProvider.getAuthentication(oldAccessToken);

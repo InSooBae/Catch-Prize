@@ -19,9 +19,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // sockjs 지원
-        registry.addEndpoint("/gamesocket/**").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/room-stomp")
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
         // 그냥 websocket 지원
-        registry.addEndpoint("/gamesocket/**").setAllowedOriginPatterns("*");
+//        registry.addEndpoint("/room-stomp").setAllowedOriginPatterns("*");
     }
 
     @Override

@@ -25,7 +25,7 @@ public class JwtTokenProvider {
 
     private final String SECRET_KEY;
     private final String COOKIE_REFRESH_TOKEN_KEY;
-    private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60;        // 1hour
+    private final Long ACCESS_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 3;        // 3hour
     private final Long REFRESH_TOKEN_EXPIRE_LENGTH = 1000L * 60 * 60 * 24 * 7;    // 1week
     private final String AUTHORITIES_KEY = "role";
 
@@ -106,28 +106,33 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
-    public boolean validateToken(String token) {
+    public String getUserNameFromJwt(String accessToken) {
+        return (String) validateToken(accessToken).getBody().get("username");
+    }
+
+    public Jws<Claims> validateToken(String token) {
         try {
             //log.info("bearerToken = {} \n oAuth2Config.getAuth()={}", token, oAuth2Config.getAuth().getTokenSecret());
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
-            return true;
+            return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
         } catch (SecurityException | MalformedJwtException ex) {
             log.error("A잘못된 JWT 서명입니다.");
+            throw ex;
         } catch (ExpiredJwtException ex) {
             log.error("B만료된 JWT 토큰입니다.");
+            throw ex;
         } catch (UnsupportedJwtException ex) {
             log.error("C지원되지 않는 JWT 토큰입니다.");
+            throw ex;
         } catch (IllegalArgumentException ex) {
             log.error("JWT 토큰이 잘못되었습니다.");
+            throw ex;
         }
-        return false;
     }
 
     // Access Token 만료시 갱신때 사용할 정보를 얻기 위해 Claim 리턴
     private Claims parseClaims(String accessToken) {
         try {
-            log.info("jwtProvider token : {}", accessToken);
-            return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(accessToken).getBody();
+            return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }

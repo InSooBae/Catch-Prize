@@ -3,6 +3,8 @@ package com.ssafy.webrtc.domain.game.stomp.handler;
 import com.ssafy.webrtc.domain.game.stomp.entity.PlayerStompPrincipal;
 import com.ssafy.webrtc.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -26,20 +28,11 @@ public class StompHandler implements ChannelInterceptor {
 //        System.out.println("message:" + message);
 //        System.out.println("헤더 : " + message.getHeaders());
 //        System.out.println("토큰" + accessor.getNativeHeader("Authorization"));
+        // Websocket 연결시 헤더의 jwt token 검증
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
             jwtTokenProvider.validateToken(Objects.requireNonNull(accessor.getFirstNativeHeader("Authorization")).substring(7));
-            Object raw = message
-                    .getHeaders()
-                    .get(SimpMessageHeaderAccessor.NATIVE_HEADERS);
-
-            if (raw instanceof Map) {
-                Object name = ((Map<?, ?>) raw).get("playerId");
-
-                if (name instanceof List) {
-                    accessor.setUser(new PlayerStompPrincipal(((List<?>) name).get(0).toString()));
-                }
-            }
         }
+
         return message;
     }
 }
