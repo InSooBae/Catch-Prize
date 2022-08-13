@@ -1,5 +1,6 @@
 package com.ssafy.webrtc.domain.game.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.ssafy.webrtc.domain.game.dto.GameSessionJoinResponseDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionRequestDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionResponseDto;
@@ -29,5 +30,6 @@ public interface GameSessionService {
 
     GameState getGameSessionState(String roomId);
 
+    JsonNode postStartToGameServer(GameSession gameSession);
 
 }

@@ -1,5 +1,8 @@
 package com.ssafy.webrtc.domain.game.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.webrtc.domain.game.dao.GameSessionDao;
 import com.ssafy.webrtc.domain.game.dto.GameSessionJoinResponseDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionRequestDto;
@@ -13,11 +16,22 @@ import com.ssafy.webrtc.global.util.UrlUtils;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -34,6 +48,8 @@ public class GameSessionServiceImpl implements GameSessionService {
     private final GameSessionRedisRepository gameSessionRedisRepository;
 
     private final OpenVidu openVidu;
+
+    private final ObjectMapper objectMapper;
 
 
     @Override
@@ -216,6 +232,46 @@ public class GameSessionServiceImpl implements GameSessionService {
         validateCanJoin(gameSession);
 
         return gameSession.getState();
+    }
+
+    @Override
+    public JsonNode postStartToGameServer(GameSession gameSession) {
+
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpPost httpPost = new HttpPost("http://localhost:8080");
+
+        try {
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Connection", "keep-alive");
+            httpPost.setHeader("Content-Type", "application/json");
+
+            String json = objectMapper.writeValueAsString(gameSession);
+            httpPost.setEntity(new StringEntity(json));
+
+            CloseableHttpResponse response = client.execute(httpPost);
+
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                BasicResponseHandler handler = new BasicResponseHandler();
+                String body = handler.handleResponse(response);
+
+                log.info("[RESPONSE] requestHttpJson() {}", body);
+
+
+                return objectMapper.readTree(body);
+            } else {
+                log.info("response is error : {}", response.getStatusLine().getStatusCode());
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private void validateCanJoin(GameSession gameSession) {

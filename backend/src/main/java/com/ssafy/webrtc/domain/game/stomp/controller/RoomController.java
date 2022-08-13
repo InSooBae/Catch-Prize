@@ -1,4 +1,4 @@
-package com.ssafy.webrtc.domain.game.stomp.handler;
+package com.ssafy.webrtc.domain.game.stomp.controller;
 
 import com.ssafy.webrtc.domain.game.entity.GameSession;
 import com.ssafy.webrtc.domain.game.enums.GameState;
