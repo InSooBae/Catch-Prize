@@ -58,9 +58,8 @@ $hobulhoSocket.on("game-start-ready", function () {
 });
 
 $hobulhoSocket.on("whose-turn", function () {
-  // console.log($state);
   let boxnum = whichData($clientstate.roomid);
-  console.log($dataBox);
+  
   if ($dataBox[boxnum].attackstate.attackerId === $clientstate.myid) {
     $clientstate.gamestate = "select";
   } else {

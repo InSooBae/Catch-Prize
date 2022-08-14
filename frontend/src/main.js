@@ -17,7 +17,7 @@ import "./assets/main.css";
 // // }
 // );
 import io from "socket.io-client";
-const hobulhoSocket = io("http://localhost:8080", {
+const hobulhoSocket = io("http://localhost:8081", {
   transports: ["websocket"],
 });
 const app = createApp(App);

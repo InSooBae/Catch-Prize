@@ -53,6 +53,7 @@ const guides = reactive({
       name: "declare-turn",
       guideText: `$clientstate.defenderId + ' 님이 지목 당했습니다.'`,
     },
+    {name: "no-card-death", guideText: ""},
   ],
 });
 const { statuseList } = toRefs(guides);
