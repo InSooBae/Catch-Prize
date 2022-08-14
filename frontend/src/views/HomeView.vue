@@ -17,7 +17,7 @@
         <p class="text-green text-animation">E</p>
       </div>
       <div class="d-flex justify-content-center">
-        <div id="login_button_group">
+        <div id="login_button_group" class="fade-animation">
           <button type="button" class="login_button">
             <img class="login_button_image" src="@/assets/login/google.png" alt="login with google"
               @click="loginPopup('google')" />
@@ -56,8 +56,6 @@ const drawer = ref(false)
 const isMobile = ref(false)
 const option = 'menubar=no, status=no, toolbar=no'
 
-store.dispatch('saveToken', localStorage.getItem('token'));
-
 const gameOpen = () => {
   if (!isMobile.value) drawer.value = true
 }
@@ -76,11 +74,15 @@ const detectMobile = () => {
   }
 };
 
-onMounted(() => {
-  isMobile.value = detectMobile();
+window.checkLogin = () => {
+  store.dispatch('saveToken', localStorage.getItem('token'));
   if (isLoggedIn.value) {
     router.push({ name:'lobbyMain' })
     }
+}
+
+onMounted(() => {
+  isMobile.value = detectMobile();
 })
 </script>
 
@@ -114,6 +116,7 @@ onMounted(() => {
 
 #login_button_group {
   width: 380px;
+  animation: fadein 1.55s;
 }
 
 .login_button {
