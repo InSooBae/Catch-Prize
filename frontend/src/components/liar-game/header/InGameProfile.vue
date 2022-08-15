@@ -36,7 +36,8 @@ const props = defineProps({
   padding: 20px;
   display: flex;
   flex-direction: row;
-
+  align-items: center;
+  justify-content: center;
 }
 .status-text{
   color: white;

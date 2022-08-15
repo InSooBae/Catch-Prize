@@ -43,6 +43,6 @@ $hobulhoSocket.on("set-timer", function () {
   /* color: #f2e536; */
   /* color: white; */
   /* color: #7608d3; */
-  color: #00bd9d;
+  color: #f2e536;
 }
 </style>
