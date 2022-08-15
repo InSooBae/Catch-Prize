@@ -30,13 +30,12 @@ const notice = {
           commit('SET_NOTICE', res.data)
         })
     },
-    createNotice({ commit, getters }, notice) {
+    createNotice({ getters }, notice) {
       createNotice(getters.authHeader, notice)
         .then(res => {
-          commit('SET_NOTICE', res.data)
           router.push({
             name: 'noticeDetail',
-            params: { noticeId: getters.notice }
+            params: { noticeId: res.data }
           })
         })
     },
