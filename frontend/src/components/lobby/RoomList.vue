@@ -1,6 +1,6 @@
 <template>
   <ul class="d-flex flex-wrap room-list">
-    <li v-for="room in roomsList" >
+    <li v-for="room in rooms" >
       <RoomItem :room="room" />
     </li>
   </ul>
@@ -13,11 +13,12 @@ import { computed, onMounted } from 'vue';
 
 const store = useStore()
 
-const roomsList = computed(() => store.getters.roomsList)
 store.dispatch('fetchRooms')
+const rooms = computed(() => store.getters.rooms)
 
 onMounted(() => {
   store.commit('SET_ISWAIT', false)
+
 })
 
 </script>

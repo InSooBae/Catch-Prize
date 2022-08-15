@@ -3,24 +3,12 @@
     <div
       v-if="
         $clientstate.gamestate === 'declare' &&
-        $clientstate.attackerId === $clientstate.myid
-      "
+        $clientstate.attackerId === $clientstate.myid"
     >
       <AttackCardDeclare />
     </div>
     <div v-else class="players-container">
-      <div class="left-grid">
-        <div class="left-grid1"><Player :player="playersList[0]" /></div>
-        <div class="left-grid2">
-          <Player :player="playersList[1]" />
-        </div>
-        <div class="left-grid3"><Player :player="playersList[2]" /></div>
-      </div>
-      <div class="right-grid">
-        <div class="right-grid1"><Player :player="playersList[3]" /></div>
-        <div class="right-grid2"><Player :player="playersList[4]" /></div>
-        <div class="right-grid3"><Player :player="playersList[5]" /></div>
-      </div>
+      <Player v-for="player in playersList" class="player-container" :player="player" />
     </div>
   </transition>
   <DefendJudge
@@ -32,17 +20,23 @@
 </template>
 
 <script setup>
-import Player from "./Player.vue";
 import AttackCardDeclare from "../select/AttackCardDeclare.vue";
 import DefendJudge from "../select/DefendJudge.vue";
-
 import { reactive, toRefs, inject, ref } from "vue";
+import Player from "./Player.vue";
+import { useStore } from 'vuex';
 
+const store = useStore()
+const mainStreamManager = () => store.commit('SET_MAINSTREAM')
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
 const $dataBox = inject("$dataBox");
 
-// 받아올 데이터
+// Large Screen에서 띄워줄 mainStreamManager 선정
+const updateMainVideoStreamManager = (stream) => {
+  if (mainStreamManager === stream) return;
+  mainStreamManager(stream)
+}
 const players = reactive({
   playersList: [
     {
@@ -83,6 +77,7 @@ const players = reactive({
     },
   ],
 });
+
 const { playersList } = toRefs(players);
 //위의 players를 세팅하는 함수
 function whichData(roomid) {
@@ -138,54 +133,31 @@ $hobulhoSocket.on("players-refresh", function () {
 });
 </script>
 
-<style>
+<style scoped>
 .players-container {
-  /* border: 1px solid white; */
-  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
-  height: 87%;
-}
-.left-grid {
-  width: 50%;
+  align-content: center;
+  width: 100%;
   height: 100%;
-  padding-right: 10px;
 }
-.right-grid {
-  width: 50%;
-  height: 100%;
-  padding-right: 10px;
+.player-container {
+  margin: 0.5% 1%;
+  min-height: 200px;
+  max-height: 26vh;
+  background-color: rgba(15, 30, 51, 0.5);
+  border-radius: 30px;
+  flex-grow: 0;
+  min-width: 400px;
+  width: 47%;
+  
 }
-.left-grid1 {
-  height: 27vh;
-  margin-bottom: 5px;
-}
-.left-grid2 {
-  height: 27vh;
-  margin-bottom: 5px;
-}
-.left-grid3 {
-  height: 27vh;
-}
-.right-grid1 {
-  height: 27vh;
-  margin-bottom: 5px;
-}
-.right-grid2 {
-  height: 27vh;
-  margin-bottom: 5px;
-}
-.right-grid3 {
-  height: 27vh;
-}
-.slide-fade-enter-active {
+/* .slide-fade-enter-active {
   transition: all 0.8s ease;
 }
-
 .slide-fade-enter-from {
   transform: translateX(100px);
   opacity: 0;
-}
+} */
 </style>
