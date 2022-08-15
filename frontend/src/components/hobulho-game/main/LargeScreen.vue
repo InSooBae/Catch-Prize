@@ -14,8 +14,8 @@ export default {
 </script>
 
 <style>
-.large-face-cam{
+/* .large-face-cam{
   width: 100%;
   height: 100%;
-}
+} */
 </style>

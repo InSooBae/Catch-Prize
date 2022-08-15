@@ -157,31 +157,30 @@ const { myHandcardsList } = toRefs(Hand);
 .mycards-container {
   position: relative;
   display: flex;
-  /* flex-wrap: wrap; */
   flex-direction: column;
-  /* align-items: center; */
-  /* justify-content: center; */
+  margin-right: 10%;
+
 }
 .mycards-wrapper {
   display: flex;
   margin-left: 0.5vw;
   align-items: center;
   margin-bottom: 10px;
+  margin-right: 140px;
   height: 30vh;
-  width: 20vw;
+  width: 200px;
 }
 .mycards-wrapper div {
-  width: 10%;
+  width: 12%;
   height: 90%;
 }
 .mycards-wrapper img {
-  height: 100%;
-  /* width: 100%; */
+  width: 150px;
 }
 .mycards-wrapper img:hover {
   transition: all ease 0.7s 0s;
-  transform: scale(1.4) translateX(1.4vw) translateY(-2vw);
-  z-index: 1;
+  transform: scale(1.4) translateX(1.4vw) translateY(-70px);
+  z-index: 2;
 }
 .text {
   display: flex;

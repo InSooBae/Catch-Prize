@@ -118,7 +118,7 @@ const props = defineProps({
 .game-guide {
   color: white;
   font-family: "Galmuri9";
-  font-size: 10px;
+  font-size: 18px;
   width: 100%;
 }
 

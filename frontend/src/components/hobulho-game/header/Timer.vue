@@ -38,7 +38,7 @@ $hobulhoSocket.on("set-timer", function () {
 
 <style scoped>
 .countdown-timer-values {
-  font-size: 40px;
+  font-size: 38px;
   font-family: "Galmuri9";
   /* color: #f2e536; */
   /* color: white; */

@@ -1,17 +1,8 @@
 <template>
   <div class="game-status-home">
-    <div
-      v-for="(guide, i) in statuseList.filter(
-        (c) => c.name === $clientstate.gamestate
-      )"
-      :key="i"
-      class="guide"
-    >
-      <Guide :guide="guide" />
-    </div>
-    <div class="timer">
-      <Timer />
-    </div>
+    <Guide v-for="(guide, i) in statuseList.filter((c) => c.name === $clientstate.gamestate)" 
+    :key="i" class="guide" :guide="guide" />
+    <Timer class="timer" />
   </div>
 </template>
 
@@ -61,26 +52,26 @@ const { statuseList } = toRefs(guides);
 <style scoped>
 .game-status-home {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  padding-left: 20px;
-  padding-right: 20px;
   /* border: 1px solid white; */
   background-color: #1b2130;
   border-radius: 20px;
   height: 100%;
+  
 }
 
 .timer {
-  width: 5%;
+  height: 70%;
   position: absolute;
-  right: 5%;
+  right: 0px;
+  padding-right:20px;
+  
 }
 .guide {
-  width: 60%;
+  height: 70%;
   position: absolute;
-  left: 10%;
+  left: 0px;
+  padding-left:30px;
+  padding-top: 12px;
+
 }
 </style>
