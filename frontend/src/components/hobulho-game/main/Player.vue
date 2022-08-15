@@ -68,12 +68,31 @@ const props = defineProps({
 const nicknameRef = ref(null);
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
+const $dataBox = inject("$dataBox");
+//databox에서 어떤 데이터인지 찾기
+function whichData(roomid) {
+  for (let t = 0; t < $dataBox.length; t++) {
+    if ($dataBox[t].controlstate.roomId === roomid) {
+      return t;
+    }
+  }
+}
 
 //공격할사람 클릭하면 함수 실행
 function attackTo() {
+  let roomnum = whichData($clientstate.roomid);
+
   if ($clientstate.gamestate === "attack") {
     const defender = nicknameRef.value.textContent;
-    $hobulhoSocket.emit("player-click", $clientstate.roomid, defender);
+    if (defender != $clientstate.myid) {
+      for (let t = 0; t < 6; t++) {
+        if ($dataBox[roomnum].players[t].playerId === defender) {
+          if ($dataBox[roomnum].players[t].isAlive === true) {
+            $hobulhoSocket.emit("player-click", $clientstate.roomid, defender);
+          }
+        }
+      }
+    }
   }
 }
 </script>

@@ -219,7 +219,6 @@ hobulhoSocket.on("data-refresh", function (data) {
     }
   }
   if (clientstate.declaredcard === "cake") {
-    console.log("aaaaaaaa");
     clientstate.cardname = "오이케이크";
   }
   if (clientstate.declaredcard === "durian") {
