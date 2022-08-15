@@ -7,7 +7,7 @@ import { logout, getCurrentUser, findAllFriends, acceptFriend, addFriend, delete
 const user = {
   state: {
     token: sessionStorage.getItem('token') || '',
-    currentUser: {},
+    currentUser: { 'username': '', 'profileImage': 9, },
     friendsList: { 'pending': {}, 'online': {}, 'offline': {} },
     isAdmin: false,
     authError: null,
@@ -51,6 +51,7 @@ const user = {
       if (getters.isLoggedIn) {
         getCurrentUser(getters.authHeader)
           .then(res => {
+            res.data['profileImage'] = res.data.username.substr(-1).charCodeAt() % 20
             commit('SET_CURRENT_USER', res.data)
             const role = jwt_decode(getters.token).role
             commit('SET_IS_ADMIN', role)

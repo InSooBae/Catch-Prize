@@ -184,9 +184,6 @@ onBeforeUnmount(() => {
   /* border */
 
 }
-
-
-
 .wait-container .person-container video{
   margin-bottom: 1rem;
   margin-right: 0.3rem;
@@ -196,7 +193,7 @@ onBeforeUnmount(() => {
   margin-bottom: 10px;
   padding: 10px;
   height: calc(100% - 90px);
-  background-color: #0F1E33;
+  background-color: var(--main-bg-color);
   border-radius: 10px;
 }
 
