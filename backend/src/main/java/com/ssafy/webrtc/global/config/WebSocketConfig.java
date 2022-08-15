@@ -1,6 +1,6 @@
 package com.ssafy.webrtc.global.config;
 
-import com.ssafy.webrtc.domain.game.stomp.handler.StompHandler;
+import com.ssafy.webrtc.domain.game.stomp.interceptor.StompInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -14,7 +14,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final StompHandler stompHandler;
+    private final StompInterceptor stompHandler;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {

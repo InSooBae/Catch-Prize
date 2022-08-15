@@ -30,6 +30,4 @@ public interface GameSessionService {
 
     GameState getGameSessionState(String roomId);
 
-    JsonNode postStartToGameServer(GameSession gameSession);
-
 }

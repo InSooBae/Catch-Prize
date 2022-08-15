@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 public class WebrtcApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WebrtcApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WebrtcApplication.class, args);
+    }
 
 }
