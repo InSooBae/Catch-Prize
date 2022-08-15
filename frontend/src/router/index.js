@@ -46,15 +46,28 @@ const router = createRouter({
       ],
     },
     {
-      path: '/game/:roomid',
-      name: 'game',
-      component: () => import('../views/GameView.vue'),
+      path: '/Hobulho/:roomid',
+      name: 'Hobulho',
+      component: () => import('../views/HobulhoView.vue'),
       beforeEnter: () => checkAuth(store.getters.isLoggedIn),
       children: [
         {
           path: ':myid',
-          name: 'gameplayroom',
+          name: 'hobulhoplayroom',
           component: () => import('../components/hobulho-game/HobulhoGame.vue')
+        }
+      ]
+    },
+    {
+      path: '/Liar/:roomid',
+      name: 'Liar',
+      component: () => import('../views/LiarView.vue'),
+      beforeEnter: () => checkAuth(store.getters.isLoggedIn),
+      children: [
+        {
+          path: ':myid',
+          name: 'liarplayroom',
+          component: () => import('../components/liar-game/LiarGame.vue')
         }
       ]
     },
