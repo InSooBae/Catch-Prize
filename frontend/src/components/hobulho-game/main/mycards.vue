@@ -179,7 +179,7 @@ const { myHandcardsList } = toRefs(Hand);
 }
 .mycards-wrapper img:hover {
   transition: all ease 0.7s 0s;
-  transform: scale(1.4) translateX(1.4vw) translateY(-70px);
+  transform: scale(1.4) translateX(1vw) translateY(-70px);
   z-index: 2;
 }
 .text {
