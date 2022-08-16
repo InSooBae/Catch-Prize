@@ -272,24 +272,45 @@ function checkDeath(roomnum, player) {
   for (let t = 0; t < 6; t++) {
     if (player === statebox[roomnum].players[t].playerId) {
       if (
-        statebox[roomnum].players[t].cards.board.cake >= 2 ||
-        statebox[roomnum].players[t].cards.board.durian >= 2 ||
-        statebox[roomnum].players[t].cards.board.eggplant >= 2 ||
-        statebox[roomnum].players[t].cards.board.insect >= 2 ||
-        statebox[roomnum].players[t].cards.board.mint >= 2 ||
-        statebox[roomnum].players[t].cards.board.pizza >= 2
+        statebox[roomnum].players[t].cards.board.cake >= 3 ||
+        statebox[roomnum].players[t].cards.board.durian >= 3 ||
+        statebox[roomnum].players[t].cards.board.eggplant >= 3 ||
+        statebox[roomnum].players[t].cards.board.insect >= 3 ||
+        statebox[roomnum].players[t].cards.board.mint >= 3 ||
+        statebox[roomnum].players[t].cards.board.pizza >= 3
       ) {
         statebox[roomnum].players[t].isAlive = false;
         statebox[roomnum].controlstate.deathplayer = player;
-        setTimeout(() => {
-          statebox[roomnum].controlstate.gamestate = "death";
-        }, 3000);
+        statebox[roomnum].controlstate.gamestate = "death";
         if (player === statebox[roomnum].attackstate.attackerId) {
           statebox[roomnum].attackstate.attackerId =
             statebox[roomnum].attackstate.defenderId;
         } else if (player === statebox[roomnum].attackstate.defenderId) {
           statebox[roomnum].attackstate.attackerId =
             statebox[roomnum].attackstate.attackerId;
+        }
+        return 1;
+      }
+    }
+  }
+  return 0;
+}
+function noCardDeath(roomnum, player) {
+  for (let t = 0; t < 6; t++) {
+    if (player === statebox[roomnum].players[t].playerId) {
+      if (statebox[roomnum].players[t].cards.remain === 0) {
+        statebox[roomnum].players[t].isAlive = false;
+        statebox[roomnum].controlstate.deathplayer = player;
+        statebox[roomnum].controlstate.gamestate = "no-card-death";
+        if (
+          statebox[roomnum].attackstate.attackerId ===
+          statebox[roomnum].attackstate.defenderId
+        ) {
+          statebox[roomnum].attackstate.attackerId =
+            statebox[roomnum].attackstate.lastattackerId;
+        } else {
+          statebox[roomnum].attackstate.attackerId =
+            statebox[roomnum].attackstate.defenderId;
         }
         return 1;
       }
@@ -322,7 +343,7 @@ function checkwin(roomnum) {
 //playerslist = ["player1","player2","player3","player4","player5","player6",]
 const roomid1 = "room1";
 const playerslist1 = [
-  "player11",
+  "김도연",
   "player21",
   "player31",
   "player41",
@@ -357,6 +378,7 @@ function stateBoxPush(roomid, playerslist) {
     },
     attackstate: {
       attackerId: "",
+      lastattackerId: "",
       defenderId: "",
       selectedcard: "",
       declaredcard: "",
@@ -515,6 +537,7 @@ function stateBoxPush(roomid, playerslist) {
   }
   statebox.push(state);
 }
+
 stateBoxPush(roomid1, playerslist1);
 // console.log(statebox);
 stateBoxPush(roomid2, playerslist2);
@@ -553,6 +576,10 @@ app.get("/", function (req, res) {
 
 //connection event handler
 io.on("connection", function (socket) {
+  socket.on("waiting-room-data", function (roomid, playerid) {
+    console(roomid + playerid);
+  });
+
   //서버연결되면 loading 보냄
   socket.on("server-get-roomid", function (roomid) {
     let roomnum = whichRoom(roomid);
@@ -570,13 +597,15 @@ io.on("connection", function (socket) {
       statebox[roomnum].controlstate.gamestate = "start";
 
     //state 보내기
-    socket.emit("data-refresh", statebox[roomnum]);
-    //카드 세팅 Mycards.vue
-    socket.emit("hobulho-start-card");
-    socket.emit("players-profile-setting");
-    //데이터 뿌리기 HobulhoGame.vue
-    //첫공격  PlayersHome.vue
-    socket.emit("first-attack");
+    setTimeout(() => {
+      socket.emit("data-refresh", statebox[roomnum]);
+      //카드 세팅 Mycards.vue
+      socket.emit("hobulho-start-card");
+      socket.emit("players-profile-setting");
+      //데이터 뿌리기 HobulhoGame.vue
+      //첫공격  PlayersHome.vue
+      socket.emit("first-attack");
+    }, 2000);
   });
 
   socket.on("select-ready-req", function (roomid) {
@@ -590,7 +619,6 @@ io.on("connection", function (socket) {
     socket.emit("data-refresh", statebox[roomnum]);
     //내차례가 아니면 gamestate = turn
     socket.emit("whose-turn");
-    socket.emit("set-timer");
   });
 
   socket.on("card-click", function (roomid, cardname, playerid) {
@@ -617,7 +645,7 @@ io.on("connection", function (socket) {
     io.emit("players-refresh");
     // 클라이언트에게 메시지를 전송한다
     io.emit("whose-attack");
-    socket.emit("set-timer");
+    io.emit("set-timer");
   });
 
   //공격할 플레이어를 클릭했을때
@@ -629,7 +657,7 @@ io.on("connection", function (socket) {
     //데이터 뿌리기
     io.emit("data-refresh", statebox[roomnum]);
     io.emit("whose-declare");
-    socket.emit("set-timer");
+    io.emit("set-timer");
   });
 
   //뭐라고 할지 클릭했을때
@@ -643,7 +671,7 @@ io.on("connection", function (socket) {
     //데이터 뿌리기
     io.emit("data-refresh", statebox[roomnum]);
     io.emit("whose-judge");
-    socket.emit("set-timer");
+    io.emit("set-timer");
   });
 
   //방어자가 judge 선택
@@ -668,15 +696,49 @@ io.on("connection", function (socket) {
         } else {
           setTimeout(() => {
             io.emit("whose-turn");
+            io.emit("set-timer");
           }, 6000);
+          // if (noCardDeath(roomnum, statebox[roomnum].attackstate.attackerId)) {
+          //   //카드가 없어서 죽었을때
+          //   setTimeout(() => {
+          //     io.emit("data-refresh", statebox[roomnum]);
+          //     io.emit("players-refresh");
+          //   }, 9000);
+          //   setTimeout(() => {
+          //     io.emit("whose-turn");
+          //     io.emit("set-timer");
+          //   }, 12000);
+          // }
         }
         //죽지 않았을 경우
       } else {
         statebox[roomnum].attackstate.attackerId =
           statebox[roomnum].attackstate.attackerId;
-        setTimeout(() => {
-          io.emit("whose-turn");
-        }, 3000);
+        if (noCardDeath(roomnum, statebox[roomnum].attackstate.attackerId)) {
+          //카드가 없어서 죽었을때
+          setTimeout(() => {
+            io.emit("data-refresh", statebox[roomnum]);
+            io.emit("players-refresh");
+          }, 3000);
+          if (checkwin(roomnum)) {
+            setTimeout(() => {
+              statebox[roomnum].controlstate.gamestate = "win";
+              io.emit("data-refresh", statebox[roomnum]);
+            }, 6000);
+          } else {
+            setTimeout(() => {
+              io.emit("whose-turn");
+              io.emit("set-timer");
+            }, 6000);
+          }
+        } else {
+          setTimeout(() => {
+            io.emit("data-refresh", statebox[roomnum]);
+            io.emit("players-refresh");
+            io.emit("whose-turn");
+            io.emit("set-timer");
+          }, 3000);
+        }
       }
       //방어 실패
     } else {
@@ -697,26 +759,62 @@ io.on("connection", function (socket) {
         } else {
           setTimeout(() => {
             io.emit("whose-turn");
+            io.emit("set-timer");
           }, 6000);
+          // if (noCardDeath(roomnum, statebox[roomnum].attackstate.attackerId)) {
+          //   //카드가 없어서 죽었을때
+          //   setTimeout(() => {
+          //     io.emit("data-refresh", statebox[roomnum]);
+          //     io.emit("players-refresh");
+          //   }, 9000);
+          //   setTimeout(() => {
+          //     io.emit("whose-turn");
+          //     io.emit("set-timer");
+          //   }, 12000);
+          // }
         }
         //죽지 않았을 경우
       } else {
+        statebox[roomnum].attackstate.lastattackerId =
+          statebox[roomnum].attackstate.attackerId;
         statebox[roomnum].attackstate.attackerId =
           statebox[roomnum].attackstate.defenderId;
-        setTimeout(() => {
-          io.emit("whose-turn");
-        }, 3000);
+        if (noCardDeath(roomnum, statebox[roomnum].attackstate.attackerId)) {
+          //카드가 없어서 죽었을때
+          setTimeout(() => {
+            io.emit("data-refresh", statebox[roomnum]);
+            io.emit("players-refresh");
+          }, 3000);
+          if (checkwin(roomnum)) {
+            setTimeout(() => {
+              statebox[roomnum].controlstate.gamestate = "win";
+              io.emit("data-refresh", statebox[roomnum]);
+            }, 6000);
+          } else {
+            setTimeout(() => {
+              io.emit("whose-turn");
+              io.emit("set-timer");
+            }, 6000);
+          }
+        } else {
+          setTimeout(() => {
+            io.emit("data-refresh", statebox[roomnum]);
+            io.emit("players-refresh");
+            io.emit("whose-turn");
+            io.emit("set-timer");
+          }, 3000);
+        }
       }
     }
     //플레이어창 새로고침
     //다음턴
-    io.emit("data-refresh", statebox[roomnum]);
-    io.emit("players-refresh");
+    // io.emit("data-refresh", statebox[roomnum]);
+    // io.emit("players-refresh");
   });
 });
 
 const SERVER_PORT = parseInt(process.env.ROOM_SV_PORT);
 
-server.listen(8080, function () {
+server.listen(8081, function () {
   console.log("socket io server listening on port server");
 });

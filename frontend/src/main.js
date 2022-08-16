@@ -17,9 +17,10 @@ import "./assets/main.css";
 // // }
 // );
 import io from "socket.io-client";
-const hobulhoSocket = io("http://localhost:8080", {
+const hobulhoSocket = io("http://localhost:8081", {
   transports: ["websocket"],
 });
+
 const app = createApp(App);
 const clientstate = reactive({
   myid: "",
@@ -219,7 +220,6 @@ hobulhoSocket.on("data-refresh", function (data) {
     }
   }
   if (clientstate.declaredcard === "cake") {
-    console.log("aaaaaaaa");
     clientstate.cardname = "오이케이크";
   }
   if (clientstate.declaredcard === "durian") {
