@@ -214,15 +214,36 @@ public class FriendService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUserDetails userDetails = (CustomUserDetails) principal;
 
-        UUID myId = ((CustomUserDetails) principal).getId();
+        UUID myId = userDetails.getId();
 
-        Optional<Member> toMember = memberRepository.findByNickname(friendNickname);
+        Optional<Member> toMemberOptional = memberRepository.findByNickname(friendNickname);
 
-        Optional<Friend> fromMeOptional = friendRepository.findDuplicatePending(myId, toMember.get().getId());
-        Optional<Friend> toMeOptional = friendRepository.findDuplicatePending(toMember.get().getId(), myId);
+        Member toMember;
 
-        fromMeOptional.ifPresent(friendRepository::delete);
-        toMeOptional.ifPresent(friendRepository::delete);
+        if (toMemberOptional.isPresent()) {
+            toMember = toMemberOptional.get();
+            Optional<Friend> fromMeOptional = friendRepository.findDuplicatePending(myId, toMember.getId());
+            Optional<Friend> toMeOptional = friendRepository.findDuplicatePending(toMember.getId(), myId);
+
+
+            if (fromMeOptional.isPresent()) {
+                Friend fromMe = fromMeOptional.get();
+                fromMe.deleteFriend();
+
+                send(toMember.getId(), fromMe);
+                friendRepository.delete(fromMe);
+            }
+
+            if (toMeOptional.isPresent()) {
+                Friend toMe = toMeOptional.get();
+                toMe.deleteFriend();
+
+                send(myId, toMe);
+                friendRepository.delete(toMe);
+            }
+        }
+
+
 
         return 1L;
 
