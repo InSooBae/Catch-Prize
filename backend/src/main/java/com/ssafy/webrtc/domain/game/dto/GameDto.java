@@ -1,5 +1,6 @@
-package com.ssafy.webrtc.domain.game;
+package com.ssafy.webrtc.domain.game.dto;
 
+import com.ssafy.webrtc.domain.game.entity.Game;
 import lombok.*;
 
 @Builder

@@ -1,14 +1,13 @@
 package com.ssafy.webrtc.domain.membergame;
 
-import com.ssafy.webrtc.domain.game.Game;
-import com.ssafy.webrtc.domain.game.GameRepository;
+import com.ssafy.webrtc.domain.game.entity.Game;
+import com.ssafy.webrtc.domain.game.repository.GameRepository;
 import com.ssafy.webrtc.domain.member.MemberRepository;
 import com.ssafy.webrtc.domain.member.entity.Member;
 import com.ssafy.webrtc.domain.membergame.entity.MemberGame;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
