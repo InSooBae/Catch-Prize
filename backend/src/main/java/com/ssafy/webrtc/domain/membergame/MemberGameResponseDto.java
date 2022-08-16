@@ -1,7 +1,5 @@
 package com.ssafy.webrtc.domain.membergame;
 
-import com.ssafy.webrtc.domain.game.Game;
-import com.ssafy.webrtc.domain.member.entity.Member;
 import com.ssafy.webrtc.domain.membergame.entity.MatchResultType;
 import com.ssafy.webrtc.domain.membergame.entity.MemberGame;
 import lombok.*;

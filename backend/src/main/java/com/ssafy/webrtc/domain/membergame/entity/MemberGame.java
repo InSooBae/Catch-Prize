@@ -1,6 +1,6 @@
 package com.ssafy.webrtc.domain.membergame.entity;
 
-import com.ssafy.webrtc.domain.game.Game;
+import com.ssafy.webrtc.domain.game.entity.Game;
 import com.ssafy.webrtc.domain.member.entity.Member;
 import com.ssafy.webrtc.domain.model.BaseTimeEntity;
 import lombok.AccessLevel;
