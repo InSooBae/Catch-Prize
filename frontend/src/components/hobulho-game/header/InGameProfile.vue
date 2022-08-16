@@ -7,11 +7,7 @@
         <div class="mypoint">mypoint : {{IngameMyProfile.point}}</div>
       </div>
     </div>
-    <div class="right-container">
-      <img src="../assets/loginButton.png" alt="아이탬">
-      <img src="../assets/loginButton.png" alt="아이탬">
-      <img src="../assets/loginButton.png" alt="아이탬">
-    </div>
+
   </div>
 </template>
 
@@ -23,30 +19,29 @@ const props = defineProps({
 
 <style scoped>
 .ingame-profile{
-  
-  height: 100%;
-  width: 100%;
-  display: flex;
+  height: 70px;
+  display: relative;
+  justify-content: space-evenly;
+  align-items: center;
   background-color: #1B2130;
   border-radius: 20px;
+  width: 500px;
+  width: 100%;
 }
 .left-container{
-  height: 100%;
+  height: 50px;
   border: none;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   flex-direction: row;
 
 }
 .status-text{
   color: white;
+  
   display: flex;
   flex-direction: column;
   margin-left: 10px;
 }
-.right-container{
-  height: 100%;
-  display: flex;
-  padding: 25px;
-}
+
 </style>

@@ -1,18 +1,11 @@
 <template>
-  <div class="header-home">
-    <div
-      v-for="(IngameMyProfile, i) in profilesList.filter(
-        (c) => c.name === $clientstate.myid
-      )"
-      :key="i"
-      class="ingame-profile-a"
-    >
-      <InGameProfile :IngameMyProfile="IngameMyProfile" />
-    </div>
-    <div class="status-home">
-      <StatusHome />
-    </div>
-  </div>
+    <el-container class="el-headerhome-container">
+      <el-aside  width="470px">
+      <InGameProfile class="ingame-profile" v-for="(IngameMyProfile, i) in profilesList.filter((c) => c.name === $clientstate.myid)"
+      :key="i" :IngameMyProfile="IngameMyProfile" />
+      </el-aside>
+      <el-main><StatusHome class="status-home" /></el-main>
+    </el-container>
 </template>
 
 <script setup>
@@ -63,24 +56,18 @@ const { profilesList } = toRefs(profiles);
 </script>
 
 <style scoped>
-.ingame-profile-a {
-  height: 100%;
-  width: 30%;
-  min-width: 350px;
+.el-main {
+  padding: 0px;
+  min-width: 400px;
 }
-
-.header-home {
-  position: relative;
-  display: flex;
-  height: 75px;
-  margin-top: 20px;
-  width: 100%;
+.el-aside .ingame-profile{
+  padding: 0px;
+  height: 70px;
 }
 .status-home {
-  position: relative;
-  /* right: 0px; */
-  height: 100%;
-  width: 70%;
   margin-left: 20px;
+}
+.el-headerhome-container{
+  height: 70px;
 }
 </style>

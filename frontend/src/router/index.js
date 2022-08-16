@@ -35,11 +35,11 @@ const router = createRouter({
           name: 'lobbyMain',
           components: {
             default: () => import('../components/lobby/RoomList.vue'),
-            notice: () => import('../components/lobby/LobbyNotice.vue'),
+            notice: () => import('../components/lobby/Modal/LobbyNotice.vue'),
           }
         },
         {
-          path: ':roomid',
+          path: ':roomId',
           name: 'gameroom',
           component: () => import('../components/lobby/WaitingRoom.vue'),
         },

@@ -1,32 +1,67 @@
-import axios from "axios";
-import { API_BASE_URL } from "../../constants";
+import router from '../../router';
+import { fetchRooms, createRoom, removeUser } from "../../util/api";
 
 const room = {
   state: {
-    roomsList: [],
+    rooms: [],
+    room: {},
+    ov: {},
+    sessionId: sessionStorage.getItem('sessionId') || '',
+    gameinfo: {roomName: 'newroom', roomType:'HOBULHO', maxParticipants: 6},
     isWait: false,
   },
-  mutations: {
-    SET_ROOMS: (state, roomsList) => state.roomsList = roomsList,
-    SET_ISWAIT: (state, isWait) => state.isWait = isWait
-  },  
+
   getters: {
-    roomsList: state => state.roomsList,
+    rooms: state => state.rooms,
+    room: state => state.room,
+    ov: state => state.ov,
+    sessionId: state => state.sessionId,
+    gameinfo: state => state.gameinfo,
     isWait: state => state.isWait
   },
+
+  mutations: {
+    SET_ROOMS: (state, rooms) => state.rooms = rooms,
+    SET_ROOM: (state, room) => state.room = room,
+    SET_OV: (state, ov) => state.ov = ov,
+    SET_SESSIONID: (state, sessionId) => state.sessionId = sessionId,
+    SET_GAMEINFO: (state, gameinfo) => state.gameinfo = gameinfo,
+    SET_ISWAIT: (state, isWait) => state.isWait = isWait,
+  },  
+
   actions: {
-    fetchRooms({commit}) {
-      commit('SET_ROOMS', [
-        { name: 'GameRoom1ddddddddddddddddd', isPlaying: false, type: 'Poker', maxParti: 6, nowParti: 4},
-        { name: 'GameRoom2', isPlaying: true, type: 'Soccer', maxParti: 6, nowParti: 6},
-        { name: 'GameRoom3', isPlaying: false, type: 'Game', maxParti: 6, nowParti: 2},
-        { name: 'GameRoom4', isPlaying: true, type: 'Poker', maxParti: 6, nowParti: 6},
-        { name: 'GameRoom5', isPlaying: false, type: 'Poker', maxParti: 6, nowParti: 4},
-        { name: 'GameRoom6', isPlaying: true, type: 'Poker', maxParti: 6, nowParti: 6},
-        { name: 'GameRoom7', isPlaying: true, type: 'Poker', maxParti: 6, nowParti: 6},
-        { name: 'GameRoom8', isPlaying: false, type: 'Poker', maxParti: 6, nowParti: 3},
-      ])
+    fetchRooms({ commit, getters }) {
+      fetchRooms(getters.authHeader)
+      .then(res => {
+        console.log(res)
+        commit('SET_ROOMS', res.data)
+      })
     },
+
+    createRoom({ commit, getters }, gameinfo) {
+      createRoom(getters.authHeader, gameinfo)
+        .then(res => {
+          commit('SET_ROOM', res.data)
+          sessionStorage.setItem('roomId', res.data.roomId)
+          sessionStorage.setItem('sessionId', 'ses_' + res.data.roomId)
+          router.push({
+            name: 'gameroom',
+            params: { roomId: res.data.roomId }
+          })
+        })
+    },
+
+    removeUser({ getters }, {roomId, ovdata}) {
+      console.log(roomId, ovdata)
+      console.log('22')
+      removeUser(getters.authHeader, roomId, ovdata)
+      .then(res => {
+        sessionStorage.setItem('ovdata','')
+        sessionStorage.setItem('roomId','')
+        sessionStorage.setItem('sessionId','')
+      })
+    }
+
   }
 };
 

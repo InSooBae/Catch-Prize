@@ -128,5 +128,43 @@ async function createSession(headers, sessionId) {
   }
 }
 
+async function fetchRooms(headers) {
+  try {
+    const res = await api.get('/gamesession', { headers })
+    return res
+  } catch (err) {
+    console.log(err)
+  }
+}
 
-export {findNoticeByPgno, createNotice, findNoticeById, updateNotice, deleteNotice, createSession, createToken}
+async function fetchRoomById(headers, roomId) {
+  try {
+    const res = await api.post(`/gamesession/${roomId}`, { data: roomId }, { headers })
+    return res
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+async function createRoom(headers, data) {
+  try {
+    const res = await api.post('/gamesession', data, { headers })
+    return res
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+
+async function removeUser(headers, roomId, ovdata) {
+  try {
+    console.log(headers)
+    const res = await api.delete(`/gamesession/${roomId}`, { data: ovdata, headers: headers } )
+    return res
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export { findNoticeByPgno, createNotice, findNoticeById, updateNotice, deleteNotice, 
+        createSession, createToken, fetchRooms, fetchRoomById, createRoom, removeUser }

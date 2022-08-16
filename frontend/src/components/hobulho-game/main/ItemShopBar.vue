@@ -1,31 +1,31 @@
 <template>
   <div class="itemshop-container">
     <div>
-      <img src="../assets/loginButton.png" alt="" />
+      <el-button @click="sendFilter('abc', 'Rotation')"></el-button>
     </div>
     <div>
-      <img src="../assets/loginButton.png" alt="" />
+      <el-button @click="sendFilter('abc', 'Pitch')"></el-button>
     </div>
     <div>
-      <img src="../assets/loginButton.png" alt="" />
+      <el-button @click="sendFilter('abc', 'Chroma')"></el-button>
     </div>
     <div>
-      <img src="../assets/loginButton.png" alt="" />
+      <el-button @click="sendFilter('abc', 'Rotation')"></el-button>
     </div>
     <div>
-      <img src="../assets/loginButton.png" alt="" />
+      <el-button @click="sendFilter('abc', 'Rotation')"></el-button>
     </div>
     <div>
-      <img src="../assets/loginButton.png" alt="" />
+      <el-button @click="sendFilter('abc', 'Rotation')"></el-button>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: "itemshop",
-  components: {},
-};
+<script setup>
+import { useStore } from 'vuex';
+
+const store = useStore()
+const sendFilter = () => store.dispatch('sendFilter')
 </script>
 
 <style>

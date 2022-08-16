@@ -13,6 +13,12 @@
   --main-bg-color: rgba(15, 30, 51, 0.5);
 }
 
+.lobby-layout .el-main,
+.lobby-layout .el-aside,
+.lobby-layout .el-header {
+  animation: fadein 1s ease-out;
+}
+
 .lobby-layout .el-aside {
   /* layout */
   padding: 0 40px 40px 40px;
@@ -87,6 +93,13 @@
   border-radius: 10px;
 }
 
+.lobby-layout .side-logo-image {
+  filter: drop-shadow(0 0 5px #7608d3);
+  animation-name: logo-blink-effect;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
 #sidebar {
   /* layout */
   margin-bottom: 10px;
@@ -97,6 +110,11 @@
   /* font */
   /* border */
   border-radius: 10px;
+}
+
+#sidebar .el-avatar {
+  --el-avatar-bg-color : transparent;
+  border: 1px solid #00bd9d;
 }
 
 .sidebar-profile {
@@ -230,7 +248,26 @@
   border: none;
   border-radius: 10px;
   /* animation */
-  transition: all 0.4s ease;
+  transition: invert 0.3s ease;
+}
+
+.lobby-layout .start-button,
+.lobby-layout .profile-update-button {
+  background: linear-gradient(40deg, rgb(0, 170, 141), rgb(0, 201, 167));
+}
+
+.lobby-layout .exit-button {
+  background: linear-gradient(40deg, rgb(104, 4, 185), rgb(130, 15, 224));
+}
+
+.lobby-layout .start-button:hover,
+.lobby-layout .profile-update-button:hover {
+  filter: brightness(1.2);
+}
+
+.lobby-layout .start-button:active,
+.lobby-layout .profile-update-button:active {
+  filter: brightness(0.8);
 }
 
 .add-friend-container {
@@ -283,13 +320,9 @@
   text-align: center;
 }
 
-.notice-modal td.el-table__cell>.cell {
+.notice-modal td.text-center>.cell {
   font-size: 1.2rem;
   text-align: center;
-}
-
-.notice-modal td.el-table_1_column_2>.cell {
-  text-align: left;
 }
 
 .notice-modal .el-dialog__header {
@@ -362,26 +395,161 @@
   font-weight: bold;
 }
 
+.detail-modal .el-divider {
+  margin-top: 0.5rem;
+}
+
 .detail-modal .el-dialog__body {
-  padding: 90px 100px;
+  padding: 60px 100px;
+  height: calc(100% - 30px);
 }
 
 .detail-modal .detail-content {
-  margin-top: 20px;
+  height: calc(100% - 90px);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .start-modal {
-  width: 500px;
+  width: 537px;
   --el-text-color-primary: whitesmoke;
 }
 
+.start-modal .el-dialog__header {
+  width: 527px;
+  position: absolute;
+  z-index: 2;
+}
+
 .start-modal .el-dialog__body {
-  padding: 20px;
+  padding: 0px;
 }
 
 .start-modal .el-select {
   width: 100%;
+}
+
+.start-modal .el-carousel {
+  border-radius: 10px;
+}
+
+.start-modal .hobulho-poker {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-image: url(gameImage/hobulho.png);
+  background-size: cover;
+  background-position: 46% 50%;
+}
+
+.start-modal .el-carousel__arrow {
+  top: 175px;
+  --el-carousel-arrow-hover-background: rgba(242, 229, 59, 0.23);
+}
+
+.start-modal .start-container {
+  position:absolute;
+  bottom: 0;
+  padding: 15px;
+  width: 100%;
+}
+
+.start-modal .start-container .start-button {
+  font-size: 20px;
+}
+
+.start-modal .start-container .el-input__inner {
+  height: 45px;
+  font-size: 1.2rem;
+}
+
+.start-modal .start-container .el-input__wrapper {
+  margin-bottom: 10px;
+  background-color: rgba(38, 44, 58, 0.8);
+}
+
+.start-modal .gameInfo {
+  display: flex;
+  justify-content: space-between;
+  position:absolute; 
+  top: 285px;
+  padding: 0 35px 0 25px;
+  width: 100%;
+}
+
+.start-modal .infoImage {
+  width: 34px;
+  cursor: pointer;
+  filter: brightness(0.8)
+}
+
+.start-modal .infoImage:hover {
+  filter: brightness(1);
+}
+
+.start-modal .infoImage:active {
+  filter: brightness(0.6);
+}
+
+.start-modal .count-container {
+  display: flex;
+  align-items: center;
+  padding: 2px 5px;
+  margin-right: 15px;
+  border-radius: 5px;
+  font-size: 19px;
+  color: whitesmoke;
+  filter: brightness(0.8)
+}
+
+.start-modal .count-container .countImage {
+  width: 30px;
+  margin-right: 5px;
+}
+
+
+.start-modal .carousel-game-title {
+  text-align: center; 
+  font-size:30px; 
+  color: whitesmoke; 
+  line-height: 350px;
+}
+
+.start-modal .carousel-coming-soon {
+  display: flex;
+  padding-left: 120px;
+  text-align: center; 
+  font-size: 22px; 
+  color: whitesmoke;
+  opacity: 0.5;
+  line-height: 350px;
+}
+
+.start-modal .carousel-coming-soon .point-typing {
+  width: 4ch;
+  animation: typing 3s steps(4) infinite;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.el-dialog.info-modal {
+  /* layout */
+  /* BOX */
+  /* background */
+  background-color: rgb(38, 44, 58, 0.93);
+  /* font */
+  font-family: "PressStart2P", "Galmuri9";
+  --el-text-color-regular: whitesmoke;
+  --el-dialog-content-font-size: 1.2rem;
+  /* border */
+  border-radius: 10px;
+  --el-dialog-margin-top: calc(40vh - 180px);
+}
+
+.info-modal .el-dialog__body { 
+  padding: 10px;
+}
+
+.info-modal .el-dialog__title {
+  color: whitesmoke
 }
 
 .lobby-layout .el-dialog {
@@ -558,7 +726,7 @@
   /* background */
   /* font */
   font-family: "PressStart2P", "Galmuri9";
-  font-size: medium;
+  font-size: 0.9rem;
   --el-color-black: whitesmoke;
   /* border */
   border: none;

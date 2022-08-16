@@ -1,14 +1,12 @@
 <template>
-  <div class="hobulho-container">
-    <header class="header-container">
-      <HeaderHome />
-    </header>
-    <body class="main-container">
-      <div class="left-home"><LeftHome /></div>
-      <div class="right-home">
-        <RightHome />
-      </div>
-    </body>
+  <div >
+    <el-container class="el-header-container">
+      <el-header height="100px"><HeaderHome/></el-header>
+    </el-container>
+      <el-container class="el-body-container">
+        <el-aside class="game-aside-container" width="470px"><LeftHome/></el-aside>
+        <el-main class="game-main-container" ><RightHome/></el-main>
+    </el-container>
   </div>
 </template>
 
@@ -94,33 +92,25 @@ $hobulhoSocket.on("whose-judge", function () {
   }
 });
 </script>
+<style scoped>
 
-<style>
-.hobulho-container {
+.el-header-container {
+  height: 100px;
+}
+.el-body-container {
+  height: 90%;
+}
+.el-main {
+  padding: 0px;
+}
+.el-aside {
+  padding: 0px;
   margin-left: 20px;
-  margin-right: 20px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
 }
-.header-container {
-  height: 100%;
-  width: 100%;
-  margin-bottom: 20px;
-}
-.main-container {
-  height: calc(100vh - 100px);
-  display: flex;
-  flex-direction: row;
-}
-.left-home {
-  width: 30%;
-  min-width: 350px;
-  min-height: 600px;
-}
-.right-home {
-  width: 70%;
-  margin-left: 20px;
-  min-height: 600px;
+.el-header {
+  height: 100px;
+  padding-top: 20px;
+  padding-bottom: 1%;
 }
 </style>
+

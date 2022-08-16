@@ -1,9 +1,8 @@
 <template>
-  <div
-    :class="[
-      player.isAlive === true ? 'player-container' : 'player-container-death',
-    ]"
-  >
+  <!-- <div
+    :class="[player.isAlive === true ? 'player-container' : 'player-container-death',]"
+  > -->
+  <div class="game-player-container">
     <div class="status-container">
       <img src="../assets/image15.png" alt="" />
       <div class="player-text">
@@ -11,11 +10,10 @@
           v-on:click="attackTo"
           ref="nicknameRef"
           class="nickname-else"
-          :class="{ nickname: $clientstate.gamestate === 'attack' }"
-        >
+          :class="{ nickname: $clientstate.gamestate === 'attack' }">
           {{ player.name }}
         </div>
-        <div class="remain-card">remain : {{ player.remain }}</div>
+        <div class="remain-card">남은카드: {{ player.remain }}</div>
       </div>
     </div>
     <div class="card-field">
@@ -56,7 +54,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>    
 </template>
 
 <script setup>
@@ -98,7 +96,18 @@ function attackTo() {
 </script>
 
 <style scoped>
-.player-container {
+.game-player-container{
+  padding: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0px;
+}
+.game-player-container-death{
+  opacity: 0.3;
+}
+/* .player-container {
   width: 100%;
   height: 100%;
   margin: 5px;
@@ -109,7 +118,6 @@ function attackTo() {
 }
 .player-container-death {
   width: 100%;
-  /* width: 100%; */
   height: 100%;
   margin: 5px;
   padding-top: 20px;
@@ -117,13 +125,15 @@ function attackTo() {
   background-color: #1b2130;
   border-radius: 20px;
   opacity: 0.3;
-}
+} */
 .status-container {
-  margin-left: 30px;
-  padding-bottom: 10px;
-  height: 40%;
+  height: 45%;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+}
+.status-container img{
+  height: 90%;
 }
 .card {
   margin: 5px;
@@ -133,19 +143,16 @@ function attackTo() {
   align-items: center;
 }
 .card-field {
-  height: 10vh;
-  width: 30vw;
-  /* margin-left: 30px; */
+  height: 50%;
+  width: 80%;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  /* border: 1px solid white; */
   margin-left: 1vw;
   margin-right: 1vw;
 }
 .card-img {
-  width: 100%;
-  height: 100%;
+  height: 80%;
 }
 .card img {
   border-radius: 10%;
@@ -167,6 +174,7 @@ function attackTo() {
 }
 
 .nickname-else {
+  font-size: 18px;
   color: #00bd9d;
 }
 
