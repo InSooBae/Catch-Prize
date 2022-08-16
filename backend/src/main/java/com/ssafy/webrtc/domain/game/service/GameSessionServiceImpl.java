@@ -24,15 +24,6 @@ import com.ssafy.webrtc.global.util.UrlUtils;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -190,9 +181,18 @@ public class GameSessionServiceImpl implements GameSessionService {
         String serverData = "{\"serverData\": \"" + nickname + "\"}";
 
         // Build connectionProperties object with the serverData and the role
-        ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(ConnectionType.WEBRTC).data(serverData).role(role).build();
+        ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
+                .type(ConnectionType.WEBRTC)
+                .data(serverData)
+                .role(role)
+                .kurentoOptions(
+                        new KurentoOptions.Builder()
+                                .allowedFilters(new String[]{"GStreamerFilter", "FaceOverlayFilter"})
+                                .build())
+                .build();
 
         try {
+
             // ex> wss://localhost:4443?sessionId=ses_Ogize1yQIj&token=tok_A1c0pNsLJFwVJTeb
             String token = gameSession.getSession().createConnection(connectionProperties).getToken();
 
