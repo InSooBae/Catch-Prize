@@ -34,6 +34,7 @@ public class GameController {
     }
 
 
+
     // 게임 아이디로 게임 정보 조회
 //    @GetMapping("/{gameId}")
 //    public ResponseEntity<GameDto> findGameById(@PathVariable("gameId") Long gameId) {

@@ -1,6 +1,7 @@
 package com.ssafy.webrtc.domain.member.entity;
 
 import com.fasterxml.uuid.Generators;
+import com.ssafy.webrtc.domain.game.enums.GameState;
 import com.ssafy.webrtc.domain.model.BaseTimeEntity;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -47,6 +48,8 @@ public class Member extends BaseTimeEntity implements Persistable<UUID> {
     private String refreshToken;
 
     private boolean online;
+
+    private String roomId;
 
     @Builder
     private Member(String nickname, String token, JoinPathType joinPath, RoleType role) {

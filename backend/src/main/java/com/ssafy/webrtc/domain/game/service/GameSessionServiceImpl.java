@@ -3,6 +3,9 @@ package com.ssafy.webrtc.domain.game.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.webrtc.domain.friend.Friend;
+import com.ssafy.webrtc.domain.friend.FriendService;
+import com.ssafy.webrtc.domain.friend.repository.FriendRepository;
 import com.ssafy.webrtc.domain.game.dao.GameSessionDao;
 import com.ssafy.webrtc.domain.game.dto.GameSessionJoinResponseDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionRequestDto;
@@ -11,6 +14,9 @@ import com.ssafy.webrtc.domain.game.entity.GameSession;
 import com.ssafy.webrtc.domain.game.entity.Player;
 import com.ssafy.webrtc.domain.game.enums.GameState;
 import com.ssafy.webrtc.domain.game.repository.GameSessionRedisRepository;
+import com.ssafy.webrtc.domain.member.MemberRepository;
+import com.ssafy.webrtc.domain.member.MemberService;
+import com.ssafy.webrtc.domain.member.entity.Member;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
 import com.ssafy.webrtc.global.util.UrlUtils;
 import io.openvidu.java.client.*;
@@ -29,29 +35,32 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class GameSessionServiceImpl implements GameSessionService {
 
     public static final int MAX_PLAYER_COUNT = 6;
+
     private final GameSessionRedisRepository gameSessionRedisRepository;
 
+    private final FriendService friendService;
+
+    private final MemberRepository memberRepository;
+
+    private final FriendRepository friendRepository;
+
     private final OpenVidu openVidu;
-
-    private final ObjectMapper objectMapper;
-
 
     @Override
     public GameSession makeSession(CustomUserDetails user, GameSessionRequestDto gameSessionRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
@@ -163,6 +172,21 @@ public class GameSessionServiceImpl implements GameSessionService {
             }
             update(gameSession);
 
+            Optional<Member> optionalMember = memberRepository.findByNickname(nickname);
+
+            if (optionalMember.isPresent()) {
+                Member member = optionalMember.get();
+
+                member.setRoomId(gameSession.getRoomId());
+                memberRepository.save(member);
+
+                List<Friend> allFriendsFromMe = friendRepository.findAllFriendsFromMe(member.getId());
+
+                allFriendsFromMe.forEach(friend -> {
+                    friendService.send(friend.getToMember().getId(), friend);
+                });
+            }
+
             return GameSessionJoinResponseDto.builder().userName(nickname).token(token).build();
         } catch (OpenViduJavaClientException e1) {
             // If internal error generate an error message and return it to client
@@ -200,6 +224,21 @@ public class GameSessionServiceImpl implements GameSessionService {
             update(gameSession);
         }
 
+        Optional<Member> optionalMember = memberRepository.findByNickname(userName);
+
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+
+            member.setRoomId(null);
+            memberRepository.save(member);
+
+            List<Friend> allFriendsFromMe = friendRepository.findAllFriendsFromMe(member.getId());
+
+            allFriendsFromMe.forEach(friend -> {
+                friendService.send(friend.getToMember().getId(), friend);
+            });
+        }
+
 
         return gameSession;
     }
@@ -233,6 +272,22 @@ public class GameSessionServiceImpl implements GameSessionService {
         validateCanJoin(gameSession);
 
         return gameSession.getState();
+    }
+
+    @Override
+    public GameSession startSession(GameSession gameSession) {
+        gameSession.setState(GameState.STARTED);
+        update(gameSession);
+
+        return gameSession;
+    }
+
+    @Override
+    public GameSession endSession(GameSession gameSession) {
+        gameSession.setState(GameState.WAIT);
+        update(gameSession);
+
+        return gameSession;
     }
 
 //    @Override

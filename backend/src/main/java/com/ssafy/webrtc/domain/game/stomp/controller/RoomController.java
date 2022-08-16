@@ -49,10 +49,29 @@ public class RoomController {
         // 방장이 시작했는지 확인
         GameSession gameSession = gameSessionService.findById(roomId);
 
+        // 이미 시작했거나 방장이 아닌 다른 사람이 호출한거면
         if (gameSession.getState() == GameState.STARTED || !userNameFromJwt.equals(gameSession.getHostName())) {
             return;
         }
 
-        // 게임 시작 (게임 서버에 데이터 보내기)
+        // 게임 시작
+
+        simpMessagingTemplate.convertAndSend("/sub/" + roomId, gameSessionService.startSession(gameSession));
+    }
+
+    @MessageMapping("/{roomId}/end")
+    public void endGame(@DestinationVariable String roomId, @Header("Authorization") String token) {
+        String userNameFromJwt = jwtTokenProvider.getUserNameFromJwt(token);
+
+        // 방장이 시작했는지 확인
+        GameSession gameSession = gameSessionService.findById(roomId);
+
+        // 이미 시작했거나 방장이 아닌 다른 사람이 호출한거면
+        if (gameSession.getState() == GameState.WAIT || !userNameFromJwt.equals(gameSession.getHostName())) {
+            return;
+        }
+
+        simpMessagingTemplate.convertAndSend("/sub/" + roomId, gameSessionService.endSession(gameSession));
+
     }
 }

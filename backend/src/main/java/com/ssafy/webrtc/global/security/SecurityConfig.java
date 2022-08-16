@@ -34,7 +34,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().antMatchers("/assets/**","/v3/api-docs",
                 "/swagger-ui.html",
-                "/swagger-ui/**");
+                "/swagger-ui/**","/ws-stomp/**");
     }
 
 
@@ -62,7 +62,7 @@ public class SecurityConfig {
                 .permitAll()
                 .antMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**","/swagger-resources/**")
                 .permitAll()
-                .antMatchers("/login/**","/auth/**", "/oauth2/**", "/room-stomp/**")
+                .antMatchers("/login/**","/auth/**", "/oauth2/**", "/ws-stomp/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

@@ -30,4 +30,7 @@ public interface GameSessionService {
 
     GameState getGameSessionState(String roomId);
 
+    GameSession startSession(GameSession gameSession);
+
+    GameSession endSession(GameSession gameSession);
 }
