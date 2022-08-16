@@ -103,5 +103,4 @@ public class GameSessionController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-
 }
