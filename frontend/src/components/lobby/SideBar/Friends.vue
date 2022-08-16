@@ -1,6 +1,6 @@
 <template>
   <el-collapse class="friends-list" v-model="activeNames">
-    <el-collapse-item name="pending">
+    <el-collapse-item v-if="!_.isEmpty(friendsList.pending)" class="pending" name="pending">
       <template #title>
         <span style="margin: 0 0.25rem 0 2px;">대기</span>
         <span>중</span>
@@ -9,9 +9,13 @@
         <li v-for="friend in friendsList.pending" :key="friend.id" class="d-flex p-1 friends-item">
           <el-avatar shape="circle" class="me-1" :size="28" :src="getProfileImage(friend.friendNickname)" />
           <div class="friends-name">{{ friend.friendNickname }}</div>
-          <el-button color="#262C3A" type="info" class="friends-button" @click="acceptFriend(friend.friendNickname)">
-            <img class="accept-icon" src="@/assets/icons/add_plus.svg" alt="+">
-          </el-button>
+            <el-popconfirm title="Are you sure?" @confirm="acceptFriend(friend.friendNickname)">
+              <template #reference>
+                <el-button color="#262C3A" type="info" class="friends-button">
+                  <img class="accept-icon" src="@/assets/icons/add_plus.svg" alt="+">
+                </el-button>
+              </template>
+            </el-popconfirm>
         </li>
       </ul>
     </el-collapse-item>
@@ -23,9 +27,19 @@
         <li v-for="friend in friendsList.online" :key="friend.id" class="d-flex p-1 friends-item">
           <el-avatar shape="circle" class="me-1 avatar" :size="28" :src="getProfileImage(friend.friendNickname)" />
           <div class="friends-name" @click="getProfileImage(friend.friendNickname)">{{ friend.friendNickname }}</div>
-          <el-button color="#262C3A" type="info" class="friends-button" @click="deleteFriend(friend.friendNickname)">
-            <img class="delete-icon" src="@/assets/icons/close_delete.svg" alt="x">
-          </el-button>
+          <el-popover popper-class="friend-pop" placement="bottom-end" :width="100" trigger="click" effect= "dark" :show-arrow=false :hide-after=0>
+            <el-button color="#262C3A" type="info" @click="deleteFriend(friend.friendNickname)">
+              삭제하기
+            </el-button>
+            <el-button color="#262C3A" type="info" @click="joinFriend(friend.friendNickname)">
+              입장하기
+            </el-button>
+            <template #reference>
+              <el-button color="#262C3A" type="info" class="friends-button">
+                <img class="delete-icon" src="@/assets/icons/close_delete.svg" alt="x">
+              </el-button>
+            </template>
+          </el-popover>
         </li>
       </ul>
     </el-collapse-item>
@@ -49,6 +63,8 @@
 <script setup>
 import { useStore } from 'vuex'
 import { ref, computed } from 'vue'
+import * as _ from 'lodash'
+
 
 import src0 from '@/assets/profileIcons/0.svg'
 import src1 from '@/assets/profileIcons/1.svg'
@@ -102,6 +118,7 @@ const friendsList = computed(() => store.getters.friendsList)
 
 const acceptFriend = (friendNickname) => store.dispatch('acceptFriend', friendNickname)
 const deleteFriend = (friendNickname) => store.dispatch('deleteFriend', friendNickname)
+const joinFriend = (friendNickname) => console.log('join ' + friendNickname)
 const getProfileImage = (friendNickname) => numToImage[friendNickname.substr(-1).charCodeAt() % 20]
 
 store.dispatch('subscribeFriends')

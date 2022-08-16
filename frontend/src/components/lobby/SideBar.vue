@@ -28,7 +28,7 @@
       <SetProfile />
     </el-tab-pane>
   </el-tabs>
-  <transition name="fade" mode="out-in">
+  <transition name="invert" mode="out-in">
     <div v-if="isWait" key="exit-button">
       <ExitGame />
     </div>
@@ -45,7 +45,7 @@
         </h4>
       </div>
     </template>
-    <MakeRoom />
+    <MakeRoom @startVisible="() => startVisible = false"/>
   </el-dialog>
 </template>
 

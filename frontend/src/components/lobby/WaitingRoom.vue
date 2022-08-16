@@ -15,8 +15,7 @@
     <el-col :xs="24" :lg="9" style="height: calc(100vh - 125px);">
       <div class="chat-container">
         <div class="chat-view">
-          <div>
-          </div>
+          {{ roomMessages }}
         </div>
         <div>
           <el-input v-model="chatdata" placeholder="대화를 입력하세요.">
@@ -53,7 +52,7 @@ const store = useStore()
 const chatdata = ref('')
 const roomId = route.params.roomId
 const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-
+const roomMessages = computed(() => store.getters.roomMessages)
 
 // const joinGame = (roomId, token) => {
 //   ws.send(`/pub/${roomId}/join`,token, {})
@@ -86,8 +85,8 @@ const cam = reactive({
 
 
 const joinSession = () => {
-  console.log(token)
-  console.log('ws connect')
+  // console.log(token)
+  // console.log('ws connect')
   
 	cam.OV = new OpenVidu();
   // session을 사용할 수 있게함
@@ -111,7 +110,7 @@ const joinSession = () => {
   // ovdata.token을 이용해서 session에 연결할 수 있음
   getToken(roomId).then(ovdata => {
 
-  console.log(cam.myUserName)
+  // console.log(cam.myUserName)
   cam.session.connect(ovdata.token)
     .then(() => {
       store.commit('SET_OV', ovdata)

@@ -46,6 +46,7 @@ import { useStore } from 'vuex';
 import info from "@/assets/icons/info.svg";
 import group from "@/assets/icons/group.svg"
 
+const emit  = defineEmits(['startVisible',])
 const store = useStore()
 const infoVisible = ref(false)
 
@@ -66,9 +67,8 @@ const nextGame = (index) => {
 }
 
 const makeRoom = () => {
-  const createRoom = () => store.dispatch('createRoom', gameinfo.value)
-  createRoom()
-  // startVisible.value = false
+  store.dispatch('createRoom', gameinfo.value)
+  emit('startVisible')
 }
 
 onMounted(() => {

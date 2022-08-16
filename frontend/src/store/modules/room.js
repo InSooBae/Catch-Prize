@@ -6,7 +6,7 @@ const room = {
   state: {
     rooms: [],
     room: {},
-    roomMessage: [],
+    roomMessages: [],
     ov: {},
     sessionId: sessionStorage.getItem('sessionId') || '',
     gameinfo: {roomName: 'newroom', roomType:'HOBULHO', maxParticipants: 6},
@@ -16,7 +16,7 @@ const room = {
   getters: {
     rooms: state => state.rooms,
     room: state => state.room,
-    roomMessage: state => state.roomMessage,
+    roomMessages: state => state.roomMessages,
     ov: state => state.ov,
     sessionId: state => state.sessionId,
     gameinfo: state => state.gameinfo,
@@ -26,7 +26,7 @@ const room = {
   mutations: {
     SET_ROOMS: (state, rooms) => state.rooms = rooms,
     SET_ROOM: (state, room) => state.room = room,
-    SET_ROOM_MESSAGE: (state, roomMessage) => state.roomMessage,
+    SET_ROOM_MESSAGES: (state, roomMessages) => state.roomMessages = roomMessages,
     SET_OV: (state, ov) => state.ov = ov,
     SET_SESSIONID: (state, sessionId) => state.sessionId = sessionId,
     SET_GAMEINFO: (state, gameinfo) => state.gameinfo = gameinfo,
@@ -91,13 +91,15 @@ const room = {
         eventSource = getters.eventSource;
       }
       eventSource.addEventListener("sse-room", function (event) {
-        console.log(event)
-        // if (event.data[0] === '{') {
-
-        // }
-        // event.data.forEach(element => {
-
-        // });
+        
+        if (event.data[0] === '{') {
+          const data = JSON.parse(event.data);
+          if (data.state == 'WAIT') {
+            commit('SET_ROOM_MESSAGES', Object.keys(data.playerMap))
+          } else {
+            commit('SET_ROOM_MESSAGES', 'START')
+          }
+        }
       })
       commit('SET_EVENT_SOURCE', eventSource)
     },

@@ -54,7 +54,6 @@ const user = {
           .then(res => {
             res.data['profileImage'] = res.data.username.substr(-1).charCodeAt() % 20
             commit('SET_CURRENT_USER', res.data)
-            console.log(jwt_decode(getters.token))
             const role = jwt_decode(getters.token).role
             commit('SET_IS_ADMIN', role)
           })
