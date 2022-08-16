@@ -38,6 +38,7 @@
 </template>
 
 <script setup>
+
 import { ElMessage } from 'element-plus'
 import { reactive, ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRoute } from 'vue-router';
@@ -46,10 +47,44 @@ import { OpenVidu } from 'openvidu-browser';
 import UserVideo from '../webrtc/UserVideo.vue';
 import { fetchRoomById } from '../../util/api';
 
+// ----
+
+import SockJS from 'sockjs-client'
+import Stomp from 'webstomp-client';
+
+const sock = new SockJS('https://localhost:8080/room-stomp')
+const ws = Stomp.over(sock)
+
+ws.connect({}, function() {
+  console.log('진짜 진짜 ')
+})
+
+
+
+console.log(SockJS)
+
 const route = useRoute()
 const store = useStore()
 const chatdata = ref('')
 const roomId = route.params.roomId
+const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+
+
+console.log(sock)
+console.log(ws)
+
+// const joinGame = (roomId, token) => {
+//   ws.send(`/pub/${roomId}/join`,token, {})
+// }
+
+// const getName = (roomId) => {
+//     ws.subscribe("/sub/" + roomId, (res) => {
+//     console.log(res)
+//   })
+// }
+
+
+
 
 
 const cam = reactive({
@@ -66,7 +101,12 @@ const cam = reactive({
 //   store.dispatch('closeSubscribe')
 // }
 
+
+
 const joinSession = () => {
+  console.log(token)
+  console.log('ws connect')
+  
 	cam.OV = new OpenVidu();
   // session을 사용할 수 있게함
 	cam.session = cam.OV.initSession();
@@ -88,6 +128,7 @@ const joinSession = () => {
   // getToken에서 ovdata를 반환
   // ovdata.token을 이용해서 session에 연결할 수 있음
   getToken(roomId).then(ovdata => {
+
   console.log(cam.myUserName)
   cam.session.connect(ovdata.token)
     .then(() => {

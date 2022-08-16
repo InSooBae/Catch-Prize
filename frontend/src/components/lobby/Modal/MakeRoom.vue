@@ -33,7 +33,7 @@
       </div>
     </el-carousel-item>
     <div class="start-container">
-      <el-input placeholder="방 제목을 입력하세요." v-model="gameinfo.roomname" />
+      <el-input placeholder="방 제목을 입력하세요." v-model="gameinfo.roomName" />
       <el-button color="#00bd9d" type="info" class="start-button" @click="makeRoom">Make Room</el-button>
     </div>
   </el-carousel>
@@ -41,31 +41,34 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 import info from "@/assets/icons/info.svg";
 import group from "@/assets/icons/group.svg"
 
-const router = useRouter()
-
+const store = useStore()
 const infoVisible = ref(false)
 
 const gameinfo = ref({
-  roomname: '',
-  gametype: 0,
-  gamesize: '',
+  maxParticipants: 6,
+  roomName: '',
+  roomType: 'HOBULHO',
 })
 
-const nextGame = (gametype) => {
-  gameinfo.value.gametype = gametype
+const indexToType = {
+  0: 'HOBULHO',
+  1: 'LIAR',
+  2: 'COMINGSOON',
+}
+
+const nextGame = (index) => {
+  gameinfo.value.gametype = indexToType[index]
 }
 
 const makeRoom = () => {
-  router.push({ name: 'gameroom', params: { gameid: gameinfo.roomname } })
-  gameinfo.value.roomname = ''
-  gameinfo.value.gametype = ''
-  gameinfo.value.gamesize = ''
-  startVisible.value = false
+  const createRoom = () => store.dispatch('createRoom', gameinfo.value)
+  createRoom()
+  // startVisible.value = false
 }
 
 onMounted(() => {

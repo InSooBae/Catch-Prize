@@ -33,7 +33,6 @@ const room = {
     fetchRooms({ commit, getters }) {
       fetchRooms(getters.authHeader)
       .then(res => {
-        console.log(res)
         commit('SET_ROOMS', res.data)
       })
     },
@@ -41,6 +40,7 @@ const room = {
     createRoom({ commit, getters }, gameinfo) {
       createRoom(getters.authHeader, gameinfo)
         .then(res => {
+          console.log(res)
           commit('SET_ROOM', res.data)
           sessionStorage.setItem('roomId', res.data.roomId)
           sessionStorage.setItem('sessionId', 'ses_' + res.data.roomId)
