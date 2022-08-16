@@ -1,6 +1,7 @@
 package com.ssafy.webrtc.domain.game.dto;
 
 import com.ssafy.webrtc.domain.game.entity.GameSession;
+import com.ssafy.webrtc.domain.game.enums.RoomType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,6 +13,7 @@ public class GameSessionResponseDto {
     private String hostName;
     private int maxParticipants;
     private int participantsCnt;
+    private RoomType roomType;
 //    private RoomType roomType;
 
     public static GameSessionResponseDto of(GameSession gameSession) {
@@ -19,7 +21,7 @@ public class GameSessionResponseDto {
                 .builder()
                 .roomId(gameSession.getRoomId())
                 .roomName(gameSession.getRoomName())
-//                .roomType(gameSession.getRoomType())
+                .roomType(gameSession.getRoomType())
                 .hostName(gameSession.getHostName())
                 .maxParticipants(gameSession.getMaxParticipants())
                 .participantsCnt(gameSession.getPlayerMap().size())

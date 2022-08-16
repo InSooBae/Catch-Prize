@@ -218,7 +218,7 @@ public class GameSessionServiceImpl implements GameSessionService {
                 memberRepository.save(member);
 
                 gameSession.getPlayerMap().forEach((s, fPlayer) -> {
-                    if (!user.getId().equals(fPlayer.getId())) send(fPlayer.getId(), gameSession);
+                    send(fPlayer.getId(), gameSession);
                 });
                 List<Friend> allFriendsFromMe = friendRepository.findAllFriendsFromMe(member.getId());
 
