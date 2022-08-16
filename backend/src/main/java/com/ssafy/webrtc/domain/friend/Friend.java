@@ -9,8 +9,6 @@ import javax.persistence.*;
 @Table(name = "friend")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-// FIXME: 우선 Setter 열어두고 개발 추후 생성자로 변경 예정
-@Setter
 public class Friend {
 
     @Id
@@ -47,6 +45,11 @@ public class Friend {
     public void allowFriend() {
         this.pending = false;
         this.isFriend = true;
+    }
+
+    public void deleteFriend() {
+        this.pending = false;
+        this.isFriend = false;
     }
 
 
