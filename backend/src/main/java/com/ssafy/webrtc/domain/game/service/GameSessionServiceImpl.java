@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.webrtc.domain.friend.Friend;
+import com.ssafy.webrtc.domain.friend.FriendResponseDto;
 import com.ssafy.webrtc.domain.friend.FriendService;
+import com.ssafy.webrtc.domain.friend.repository.EmitterRepository;
 import com.ssafy.webrtc.domain.friend.repository.FriendRepository;
 import com.ssafy.webrtc.domain.game.dao.GameSessionDao;
 import com.ssafy.webrtc.domain.game.dto.GameSessionJoinResponseDto;
@@ -37,6 +39,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -50,6 +53,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class GameSessionServiceImpl implements GameSessionService {
 
+    private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
+
+
     public static final int MAX_PLAYER_COUNT = 6;
 
     private final GameSessionRedisRepository gameSessionRedisRepository;
@@ -61,6 +67,35 @@ public class GameSessionServiceImpl implements GameSessionService {
     private final FriendRepository friendRepository;
 
     private final OpenVidu openVidu;
+
+    private final EmitterRepository emitterRepository;
+
+    private void sendToClient(SseEmitter emitter, String id, Object data) {
+
+        try {
+            emitter.send(SseEmitter.event()
+                    .id(id)
+                    .name("sse-room")
+                    .data(data));
+        } catch (IOException exception) {
+            emitterRepository.deleteById(id);
+//            throw new RuntimeException("연결 오류!");
+        }
+    }
+
+    public void send(UUID userId, GameSession gameSession) {
+        String id = String.valueOf(userId);
+
+        log.info("GameSession Service send - id = {}", id);
+        Map<String, SseEmitter> sseEmitters = emitterRepository.findAllStartWithById(id);
+        sseEmitters.forEach(
+                (key, emitter) -> {
+
+                    emitterRepository.saveEventCache(key, gameSession);
+                    sendToClient(emitter, key, gameSession);
+                }
+        );
+    }
 
     @Override
     public GameSession makeSession(CustomUserDetails user, GameSessionRequestDto gameSessionRequestDto) throws OpenViduJavaClientException, OpenViduHttpException {
@@ -141,7 +176,9 @@ public class GameSessionServiceImpl implements GameSessionService {
 
 
     @Override
-    public GameSessionJoinResponseDto addUser(String roomId, String nickname) {
+    public GameSessionJoinResponseDto addUser(String roomId, CustomUserDetails user) {
+
+        String nickname = user.getUsername();
 
         GameSession gameSession = findById(roomId);
 
@@ -159,11 +196,11 @@ public class GameSessionServiceImpl implements GameSessionService {
             // ex> wss://localhost:4443?sessionId=ses_Ogize1yQIj&token=tok_A1c0pNsLJFwVJTeb
             String token = gameSession.getSession().createConnection(connectionProperties).getToken();
 
-            // ex> tok_A1c0pNsLJFwVJTeb
-            String userId = UrlUtils.getUrlQueryParam(token, "token").orElseThrow(() -> new EmptyResultDataAccessException(1)).substring(4);
+//            // ex> tok_A1c0pNsLJFwVJTeb
+//            String userId = UrlUtils.getUrlQueryParam(token, "token").orElseThrow(() -> new EmptyResultDataAccessException(1)).substring(4);
 
 
-            Player player = Player.of(nickname, token, role);
+            Player player = Player.of(user.getId(), nickname, token, role);
 
             gameSession.getPlayerMap().put(nickname, player);
 
@@ -180,6 +217,9 @@ public class GameSessionServiceImpl implements GameSessionService {
                 member.setRoomId(gameSession.getRoomId());
                 memberRepository.save(member);
 
+                gameSession.getPlayerMap().forEach((s, fPlayer) -> {
+                    if (!user.getId().equals(fPlayer.getId())) send(fPlayer.getId(), gameSession);
+                });
                 List<Friend> allFriendsFromMe = friendRepository.findAllFriendsFromMe(member.getId());
 
                 allFriendsFromMe.forEach(friend -> {
@@ -229,6 +269,9 @@ public class GameSessionServiceImpl implements GameSessionService {
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
 
+            gameSession.getPlayerMap().forEach((s, player) -> {
+                if (player.getId() != member.getId()) send(player.getId(),gameSession);
+            });
             member.setRoomId(null);
             memberRepository.save(member);
 
@@ -279,6 +322,10 @@ public class GameSessionServiceImpl implements GameSessionService {
         gameSession.setState(GameState.STARTED);
         update(gameSession);
 
+        gameSession.getPlayerMap().forEach((s, player) -> {
+            send(player.getId(), gameSession);
+        });
+
         return gameSession;
     }
 
@@ -286,6 +333,10 @@ public class GameSessionServiceImpl implements GameSessionService {
     public GameSession endSession(GameSession gameSession) {
         gameSession.setState(GameState.WAIT);
         update(gameSession);
+
+        gameSession.getPlayerMap().forEach((s, player) -> {
+            send(player.getId(), gameSession);
+        });
 
         return gameSession;
     }

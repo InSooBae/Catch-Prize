@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -20,6 +21,7 @@ import java.util.List;
 @Builder
 public class Player implements Serializable {
 
+    private final UUID id;
 
     @Id
     private final String nickname;
@@ -28,9 +30,10 @@ public class Player implements Serializable {
 
     private final OpenViduRole openViduRole;
 
-    public static Player of(String nickname, String token, OpenViduRole openViduRole) {
+    public static Player of(UUID id, String nickname, String token, OpenViduRole openViduRole) {
         return Player
                 .builder()
+                .id(id)
                 .nickname(nickname)
                 .token(token)
                 .openViduRole(openViduRole)

@@ -79,29 +79,29 @@ public class GameSessionController {
     public ResponseEntity<GameSessionJoinResponseDto> enterSession(
             @ApiIgnore @AuthenticationPrincipal CustomUserDetails user,
             @PathVariable("roomId") String roomId) {
-        GameSessionJoinResponseDto gameSessionJoinResponseDto = gameSessionService.addUser(roomId, user.getUsername());
+        GameSessionJoinResponseDto gameSessionJoinResponseDto = gameSessionService.addUser(roomId, user);
 
         return new ResponseEntity<GameSessionJoinResponseDto>(gameSessionJoinResponseDto, HttpStatus.OK);
     }
 
 //    @ApiOperation(value = "방 생성", notes = "<strong>RoomName, maxPlayer ...</strong>를 통해 방을 생성한다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "401", description = "인증 실패"),
-            @ApiResponse(responseCode = "404", description = "사용자 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-    })
-    @DeleteMapping("/{roomId}")
-    public ResponseEntity<?> leaveSession(@PathVariable("roomId") String roomId, @RequestBody GameSessionLeaveRequestDto gameSessionLeaveRequestDto) {
-        String token = gameSessionLeaveRequestDto.getToken();
-        if (!token.startsWith("wss://") || UrlUtils.getUrlQueryParam(token, "session").isEmpty()
-                || UrlUtils.getUrlQueryParam(token, "token").isEmpty()) {
-            throw new RuntimeException("잘못된 형식의 토큰입니다. - reqeusted token : " + token);
-        }
-        gameSessionService.removeUser(roomId, gameSessionLeaveRequestDto.getUserName());
-
-        return new ResponseEntity<>(true, HttpStatus.OK);
-    }
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "200", description = "성공"),
+//            @ApiResponse(responseCode = "401", description = "인증 실패"),
+//            @ApiResponse(responseCode = "404", description = "사용자 없음"),
+//            @ApiResponse(responseCode = "500", description = "서버 오류")
+//    })
+//    @DeleteMapping("/{roomId}")
+//    public ResponseEntity<?> leaveSession(@PathVariable("roomId") String roomId, @RequestBody GameSessionLeaveRequestDto gameSessionLeaveRequestDto) {
+//        String token = gameSessionLeaveRequestDto.getToken();
+//        if (!token.startsWith("wss://") || UrlUtils.getUrlQueryParam(token, "session").isEmpty()
+//                || UrlUtils.getUrlQueryParam(token, "token").isEmpty()) {
+//            throw new RuntimeException("잘못된 형식의 토큰입니다. - reqeusted token : " + token);
+//        }
+//        gameSessionService.removeUser(roomId, gameSessionLeaveRequestDto.getUserName());
+//
+//        return new ResponseEntity<>(true, HttpStatus.OK);
+//    }
 
 
 }

@@ -20,7 +20,7 @@ public interface GameSessionService {
 
     void removeSession(GameSession gameSession);
 
-    GameSessionJoinResponseDto addUser(String roomId, String nickname);
+    GameSessionJoinResponseDto addUser(String roomId, CustomUserDetails user);
 
     GameSession removeUser(String roomId, String userName);
 
