@@ -3,6 +3,7 @@ import { API_BASE_URL } from "../../constants";
 import jwt_decode from "jwt-decode";
 import router from "../../router";
 import { logout, getCurrentUser, findAllFriends, acceptFriend, addFriend, deleteFriend } from "../../util/api";
+import * as _ from "lodash"
 
 const user = {
   state: {
@@ -53,6 +54,7 @@ const user = {
           .then(res => {
             res.data['profileImage'] = res.data.username.substr(-1).charCodeAt() % 20
             commit('SET_CURRENT_USER', res.data)
+            console.log(jwt_decode(getters.token))
             const role = jwt_decode(getters.token).role
             commit('SET_IS_ADMIN', role)
           })
@@ -77,7 +79,12 @@ const user = {
     },
     subscribeFriends({ commit, getters }, method) {
       console.log("변동 알림 보내기");
-      const eventSource = new EventSourcePolyfill(`${API_BASE_URL}/friend/subscribe`, { headers: getters.authHeader });
+      let eventSource = {};
+      if (_.isEmpty(getters.eventSource)) {
+        eventSource = new EventSourcePolyfill(`${API_BASE_URL}/friend/subscribe`, { headers: getters.authHeader });
+      } else {
+        eventSource = getters.eventSource;
+      }
       eventSource.addEventListener("sse", function (event) {
         console.log(event.data)
         if (event.data[0] === '{') {
