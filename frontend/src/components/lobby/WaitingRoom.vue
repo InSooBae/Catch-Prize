@@ -15,9 +15,7 @@
     <el-col :xs="24" :lg="9" style="height: calc(100vh - 125px);">
       <div class="chat-container">
         <div class="chat-view">
-          <div v-for="person in 10" :key="person">
-            <p>황태희 바보</p>
-            <p>바보가 맞다</p>
+          <div>
           </div>
         </div>
         <div>
@@ -49,19 +47,6 @@ import { fetchRoomById } from '../../util/api';
 
 // ----
 
-import SockJS from 'sockjs-client'
-import Stomp from 'webstomp-client';
-
-const sock = new SockJS('https://localhost:8080/room-stomp')
-const ws = Stomp.over(sock)
-
-ws.connect({}, function() {
-  console.log('진짜 진짜 ')
-})
-
-
-
-console.log(SockJS)
 
 const route = useRoute()
 const store = useStore()
@@ -69,9 +54,6 @@ const chatdata = ref('')
 const roomId = route.params.roomId
 const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
 
-
-console.log(sock)
-console.log(ws)
 
 // const joinGame = (roomId, token) => {
 //   ws.send(`/pub/${roomId}/join`,token, {})
