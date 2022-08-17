@@ -196,6 +196,7 @@ const clientstate = reactive({
 const dataBox = reactive([]);
 
 hobulhoSocket.on("data-refresh", function (data) {
+  console.log(data);
   if (dataBox.length === 0) {
     dataBox.push(data);
   }
