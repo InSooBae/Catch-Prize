@@ -576,6 +576,13 @@ app.get("/", function (req, res) {
 
 //connection event handler
 io.on("connection", function (socket) {
+  //아이탬 사용 요청
+  socket.on("use-item-for-me", function (roomid, myid, item) {
+    // let roomnum = whichRoom(roomid)
+
+    //아이탬 사용 페이지로 이동
+    io.emit("to-player", roomid, myid, item);
+  });
   //서버연결되면 loading 보냄
   socket.on("server-get-roomid", function (roomid) {
     let roomnum = whichRoom(roomid);

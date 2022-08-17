@@ -1,11 +1,13 @@
 <template>
-  <div >
+  <div>
     <el-container class="el-header-container">
-      <el-header height="100px"><HeaderHome/></el-header>
+      <el-header height="100px"><HeaderHome /></el-header>
     </el-container>
-      <el-container class="el-body-container">
-        <el-aside class="game-aside-container" width="470px"><LeftHome/></el-aside>
-        <el-main class="game-main-container" ><RightHome/></el-main>
+    <el-container class="el-body-container">
+      <el-aside class="game-aside-container" width="470px"
+        ><LeftHome
+      /></el-aside>
+      <el-main class="game-main-container"><RightHome /></el-main>
     </el-container>
   </div>
 </template>
@@ -49,6 +51,14 @@ const gameStart = () => {
     }, 3000);
   }
 };
+
+$hobulhoSocket.on("to-player", function (roomid, myid, item) {
+  //VideoRotate, PitchVoice, Chroma
+  console.log(roomid);
+  console.log(myid);
+  console.log(item);
+});
+
 $hobulhoSocket.on("game-start-ready", function () {
   if ($clientstate.roomid != "") {
     gameStart();
@@ -57,7 +67,7 @@ $hobulhoSocket.on("game-start-ready", function () {
 
 $hobulhoSocket.on("whose-turn", function () {
   let boxnum = whichData($clientstate.roomid);
-  
+
   if ($dataBox[boxnum].attackstate.attackerId === $clientstate.myid) {
     $clientstate.gamestate = "select";
   } else {
@@ -93,7 +103,6 @@ $hobulhoSocket.on("whose-judge", function () {
 });
 </script>
 <style scoped>
-
 .el-header-container {
   height: 100px;
 }
@@ -113,4 +122,3 @@ $hobulhoSocket.on("whose-judge", function () {
   padding-bottom: 1%;
 }
 </style>
-

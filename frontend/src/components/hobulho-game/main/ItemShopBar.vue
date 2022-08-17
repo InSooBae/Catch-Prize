@@ -22,45 +22,47 @@
 </template>
 
 <script setup>
-import { useStore, inject } from "vuex";
-const $hobulhoSocket = inject("$hobulhosocket");
+import { useStore } from "vuex";
+import { inject } from "vue";
+const $hobulhoSocket = inject("$hobulhoSocket");
+const $clientstate = inject("$clientstate");
 
 //화면 뒤집기
 //나한테 적용
 function VideoRotationItem() {
-  sendFilter("abc", "Rotation");
+  //아이탬 버튼을 누르면 서버에다가 player에서 함수 실행
+  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "VideoRotate");
+  // sendFilter("abc", "Rotation");
 }
 //음성 변조
 //나한테 적용
 function PitchChangeItem() {
-  sendFilter("abc", "Pitch");
+  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "PitchVoice");
+  // sendFilter("abc", "Pitch");
 }
 //화면 변조
 //나한테 적용
 function VideoControlItem() {
-  sendFilter("abc", "Chroma");
+  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "Chroma");
+  // sendFilter("abc", "Chroma");
 }
 //감정분석
 //사용할 사람 고르기
 function FaceEmotionItem() {
   //룸아이디랑 사용할 사람 닉네임 보내기
   //감정분석후 전체에 뿌려줌
-  $hobulhoSocket.emit("use-face-api-item", roomid, playerid);
-  sendFilter("abc", "Rotation");
+  $hobulhoSocket.emit("use-item", roomid, myid, "Emotion");
 }
 //음소거
 //사용할 사람 고르기
 function MuteItem() {
   //룸아이디랑 음소거 할 사람을 보냄
-  $hobulhoSocket.emit("use-mute-item", roomid, playerid);
-  sendFilter("abc", "Rotation");
+  $hobulhoSocket.emit("use-item", roomid, myid, "Mute");
 }
-//화면 뒤덮기
+//회색 화면
 //사용할 사람 고르기
 function VideoFillItem() {
-  
-  $hobulhoSocket.emit("use-videofill-item", roomid, playerid);
-  sendFilter("abc", "Rotation");
+  $hobulhoSocket.emit("use-item", roomid, myid, "GrayVideo");
 }
 
 const store = useStore();

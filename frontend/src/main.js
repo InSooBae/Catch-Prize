@@ -31,6 +31,7 @@ const clientstate = reactive({
   defenderId: "",
   declaredcard: "",
   cardname: "",
+  largeScreen: "",
 });
 // const attackstate = reactive({
 //   attackerId: "",
