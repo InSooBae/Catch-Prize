@@ -1,5 +1,5 @@
 import router from '../../router';
-import { fetchRooms, createRoom, removeUser, fetchRoomById } from "../../util/api";
+import { fetchRooms, createRoom, removeUser, fetchRoomById, startGame } from "../../util/api";
 import * as _ from "lodash"
 import jwt_decode from "jwt-decode";
 
@@ -13,6 +13,7 @@ const room = {
     gameinfo: {roomName: '', roomType:'HOBULHO', maxParticipants: 6},
     isWait: false,
     roomData: {},
+    isHost: false,
   },
 
   getters: {
@@ -24,6 +25,7 @@ const room = {
     gameinfo: state => state.gameinfo,
     isWait: state => state.isWait,
     roomData: state => state.roomData,
+    isHost: state => state.isHost,
   },
 
   mutations: {
@@ -34,18 +36,22 @@ const room = {
     SET_SESSIONID: (state, sessionId) => state.sessionId = sessionId,
     SET_GAMEINFO: (state, gameinfo) => state.gameinfo = gameinfo,
     SET_ISWAIT: (state, isWait) => state.isWait = isWait,
-    SET_ROOM_DATA: (state, roomData) => state.roomData = roomData
+    SET_ROOM_DATA: (state, roomData) => state.roomData = roomData,
+    SET_IS_HOST: (state, isHost) => state.isHost = isHost,
   },  
 
   actions: {
     fetchRooms({ commit, getters }) {
       fetchRooms(getters.authHeader)
       .then(res => {
-        commit('SET_ROOMS', res.data)
+        if (res.status != 500){
+          commit('SET_ROOMS', res.data)
+        }
       })
     },
 
     createRoom({ commit, getters, dispatch }, gameinfo) {
+      console.log('게임 생성')
       createRoom(getters.authHeader, gameinfo)
         .then(res => {
           console.log(res.data)
@@ -53,6 +59,7 @@ const room = {
           dispatch('subscribeRoom')
           sessionStorage.setItem('roomId', res.data.roomId)
           sessionStorage.setItem('sessionId', 'ses_' + res.data.roomId)
+          commit('SET_IS_HOST', true)
           router.push({
             name: 'gameroom',
             params: { roomId: res.data.roomId }
@@ -67,6 +74,7 @@ const room = {
         commit('SET_ROOM', res.data)
         dispatch('subscribeRoom')
         sessionStorage.setItem('roomData', res.data)
+        commit('SET_IS_HOST', false)
         router.push({
           name: 'gameroom',
           params: { roomId: roomId }
@@ -84,6 +92,11 @@ const room = {
       })
     },
 
+    startGame({ getters }, roomId) {
+      startGame(getters.authHeader, roomId)
+      .then(res => console.log(res.data))
+    },
+
     subscribeRoom({ commit, getters }, method) {
       console.log("방 변동 알림 보내기");
       let eventSource = {};
@@ -98,12 +111,10 @@ const room = {
           const data = JSON.parse(event.data);
           if (data.state == 'WAIT') {
             commit('SET_ROOM_MESSAGES', Object.keys(data.playerMap))
-
+          } else {
             const username = jwt_decode(getters.token).username
             let isHost = false
-
-            if (getters.roomMessages.length >= 2){
-              alert("게임 시작")
+              console.log('게임시작')
               if (username == data.hostName) {
                 isHost = true
                 router.push({
@@ -118,23 +129,6 @@ const room = {
                   query : { myid: username, isHost: isHost }
                 })
               }
-              
-            }
-          } else {
-            // const username = jwt_decode(getters.token).username
-            // if (username == data.hostName) {
-            //   if (getters.roomMessages.length >= 2){
-            //     const $hobulhoSocket = inject("$hobulhosocket");
-            //     const gameData = {
-            //       roomid: data.roomId,
-            //       users: getters.roomMessages
-            //     }
-            //     $hobulhoSocket.emit("start-data-set", gameData)
-            //   }}
-            //   router.push({
-            //     name: 'gameplayroom',
-            //     params: { roomid: data.roomId, myid: username }
-            // })
           }
         }
       })
