@@ -17,9 +17,7 @@ const $hobulhoSocket = inject("$hobulhoSocket");
 const username = jwt_decode(sessionStorage.getItem("token")).username;
 const $clientstate = inject("$clientstate");
 $clientstate.myid = username;
-// const dataSocket = io("http://localhost:8081/dataSocket", {
-//   transports: ["websocket"],
-// });
+
 
 if (route.query.isHost) {
   const gameData = {
