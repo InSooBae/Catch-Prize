@@ -165,5 +165,14 @@ async function removeUser(headers, roomId, data) {
   }
 }
 
+async function startGame(headers, roomId) {
+  try {
+    const res = await api.get('/gamesession/start/' + roomId, { headers: headers })
+    return res
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 export { findNoticeByPgno, createNotice, findNoticeById, updateNotice, deleteNotice, 
-        createSession, createToken, fetchRooms, fetchRoomById, createRoom, removeUser }
+        createSession, createToken, fetchRooms, fetchRoomById, createRoom, removeUser, startGame }
