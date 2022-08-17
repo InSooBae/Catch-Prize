@@ -1,22 +1,16 @@
 <template>
   <div class="itemshop-container">
     <div>
-      <el-button @click="VideoRotationItem()">화면 뒤집기</el-button>
+      <el-button class="itembutton" color="#00bd9d"  @click="VideoRotationItem()">뒤 집 기</el-button>
     </div>
     <div>
-      <el-button @click="PitchChangeItem()">음성 변조</el-button>
+      <el-button class="itembutton" color="#00bd9d" @click="PitchChangeItem()">음성변조</el-button>
     </div>
     <div>
-      <el-button @click="VideoControlItem()">화면 변조</el-button>
+      <el-button class="itembutton" color="#00bd9d" @click="VideoControlItem()">CROMA</el-button>
     </div>
     <div>
-      <el-button @click="FaceEmotionItem()">감정 분석</el-button>
-    </div>
-    <div>
-      <el-button @click="MuteItem()">음소거</el-button>
-    </div>
-    <div>
-      <el-button @click="VideoFillItem()">화면 뒤덮기</el-button>
+      <el-button class="itembutton" color="#00bd9d" @click="GrayItem()">GRAY</el-button>
     </div>
   </div>
 </template>
@@ -31,21 +25,22 @@ const $clientstate = inject("$clientstate");
 //나한테 적용
 function VideoRotationItem() {
   //아이탬 버튼을 누르면 서버에다가 player에서 함수 실행
-  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "VideoRotate");
-  // sendFilter("abc", "Rotation");
+  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "videoRotate");
 }
 //음성 변조
 //나한테 적용
 function PitchChangeItem() {
-  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "PitchVoice");
-  // sendFilter("abc", "Pitch");
+  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "pitchVoice");
 }
 //화면 변조
 //나한테 적용
 function VideoControlItem() {
-  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "Chroma");
-  // sendFilter("abc", "Chroma");
+  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "chroma");
 }
+function GrayItem() {
+  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "gray");
+}
+
 //감정분석
 //사용할 사람 고르기
 function FaceEmotionItem() {
@@ -72,9 +67,10 @@ const sendFilter = () => store.dispatch("sendFilter");
 <style scoped>
 .itemshop-container {
   display: flex;
-  flex-direction: row;
-  width: 100%;
+  justify-content:space-around;
+  width: 450px;
   height: 100%;
+
 }
 .itemshop-container div {
   width: 16%;
@@ -82,5 +78,8 @@ const sendFilter = () => store.dispatch("sendFilter");
 .itemshop-container img {
   width: 60%;
   height: 60%;
+}
+.itembutton{
+  color: white;
 }
 </style>

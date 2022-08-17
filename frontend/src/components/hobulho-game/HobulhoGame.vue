@@ -5,20 +5,25 @@
     </el-container>
       <el-container class="el-body-container">
         <el-aside class="game-aside-container" width="470px"><LeftHome/></el-aside>
-        <el-main class="game-main-container" ><RightHome :publisher="cam.publisher" :subscriber="cam.subscribers"/></el-main>
+        <el-main class="game-main-container" ><RightHome :publisher="cam.publisher" :subscribers="cam.subscribers"/></el-main>
     </el-container>
   </div>
 </template>
 
 <script setup>
-import { reactive, inject, onBeforeUnmount, computed } from "vue";
+import { reactive, ref, inject, onBeforeUnmount, computed } from "vue";
 import { useRoute } from "vue-router";
+import { useStore } from 'vuex';
+import { ElMessage } from 'element-plus'
+import { fetchRoomById } from '../../util/api';
+import { OpenVidu } from 'openvidu-browser';
 import HeaderHome from "./header/HeaderHome.vue";
 import LeftHome from "./main/LeftHome.vue";
 import RightHome from "./main/PlayersHome.vue";
 
 // 기본 값
 const route = useRoute();
+const store = useStore()
 const myid = route.params.myid;
 const roomid = route.params.roomid;
 const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}`}
@@ -51,12 +56,7 @@ const gameStart = () => {
   }
 };
 
-$hobulhoSocket.on("to-player", function (roomid, myid, item) {
-  //VideoRotate, PitchVoice, Chroma
-  console.log(roomid);
-  console.log(myid);
-  console.log(item);
-});
+
 
 $hobulhoSocket.on("game-start-ready", function () {
   if ($clientstate.roomid != "") {
@@ -206,25 +206,41 @@ joinSession()
 
 // beforeunmount
 onBeforeUnmount(() => {
-  leaveSession()
+  // leaveSession()
 })
 
-
+$hobulhoSocket.on("to-player", function (roomid, myid, item) {
+  if(item == "videoRotate"){
+    videoRotate()
+  }
+  if(item == "pitchVoice"){
+    pitchVoice()
+  }
+  if(item == "chroma"){
+    chroma()
+  }
+  if(item == "gray"){
+    gray()
+  }
+});
 // Filter
-
 //화면 뒤집기
-const videoRotate = (manager) => {
+const videoRotate = (publisher) => {
   manager.stream.applyFilter("GStreamerFilter", { "command": "videoflip method=vertical-flip" })
 }
 
 // 크로마
-const chroma = (manager) => {
+const chroma = (publisher) => {
   manager.stream.applyFilter("GStreamerFilter", { "command": 'chromahold target-r=0 target-g=0 target-b=255 tolerance=90' })
 }
 
 // 목소리 변조
-const pitchVoice = (manager) => {
+const pitchVoice = (publisher) => {
   manager.stream.applyFilter("GStreamerFilter", { "command": 'chromahold target-r=0 target-g=0 target-b=255 tolerance=90' })
+}
+
+const gray = (publisher) => {
+  manager.stream.applyFilter("GStreamerFilter", { "command": "videobalance saturation=0.0" })
 }
 
 

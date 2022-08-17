@@ -3,8 +3,7 @@
     <div
       v-if="
         $clientstate.gamestate === 'declare' &&
-        $clientstate.attackerId === $clientstate.myid"
-    >
+        $clientstate.attackerId === $clientstate.myid">
       <AttackCardDeclare />
     </div>
     <div v-else class="players-container">
@@ -53,20 +52,21 @@ import { reactive, toRefs, inject } from "vue";
 import Player from "./Player.vue";
 
 const props = defineProps({
-  publisher,
-  subscribers,
+  publisher: Object,
+  subscribers: Array,
 })
 
 // 이걸로 publisher랑 subscrbers를 합쳐보려고 했는데
-const playercams = subcribers.push(publisher)
+const playerCams = []
+playerCams.push({...props.subscribers})
+playerCams.push(props.publisher)
 
 // Stream에서 데이터 꺼내기
 const getConnectionData = () => {
     const { connection } = this.streamManager.stream;
     return JSON.parse(connection.data.substring(0, connection.data.indexOf('%/%')));
-  }
+}
 
-// 
 const clientData = () => {
   const { clientData } = this.getConnectionData();
   return clientData;
@@ -85,36 +85,42 @@ const players = reactive({
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
+      streamManager: undefined,
     },
     {
       name: "player2",
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
+      streamManager: undefined,
     },
     {
       name: "player3",
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
+      streamManager: undefined,
     },
     {
       name: "player4",
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
+      streamManager: undefined,
     },
     {
       name: "player5",
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
+      streamManager: undefined,
     },
     {
       name: "player6",
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
+      streamManager: undefined,
     },
   ],
 });
@@ -128,26 +134,34 @@ function whichData(roomid) {
     }
   }
 }
+
+
 function playersSetting() {
   for (let t = 0; t < 6; t++) {
-    players.playersList[t].name =
-      $dataBox[whichData($clientstate.roomid)].players[t].playerId;
-    players.playersList[t].isAlive =
-      $dataBox[whichData($clientstate.roomid)].players[t].isAlive;
-    players.playersList[t].remain =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.remain;
-    players.playersList[t].fieldlist[0] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.cake;
-    players.playersList[t].fieldlist[1] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.durian;
-    players.playersList[t].fieldlist[2] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.eggplant;
-    players.playersList[t].fieldlist[3] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.insect;
-    players.playersList[t].fieldlist[4] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.mint;
-    players.playersList[t].fieldlist[5] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.pizza;
+    for (let playerCam in playerCams) {
+      if(playerCam.getConnectionData().clientData.myname == $dataBox[whichData($clientstate.roomid)].players[t].playerId){
+        players.playersList[t].streamManager = playerCam
+      }
+      console.log(playerCam.getConnectionData().clientData)
+      players.playersList[t].name =
+        $dataBox[whichData($clientstate.roomid)].players[t].playerId;
+      players.playersList[t].isAlive =
+        $dataBox[whichData($clientstate.roomid)].players[t].isAlive;
+      players.playersList[t].remain =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.remain;
+      players.playersList[t].fieldlist[0] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.cake;
+      players.playersList[t].fieldlist[1] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.durian;
+      players.playersList[t].fieldlist[2] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.eggplant;
+      players.playersList[t].fieldlist[3] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.insect;
+      players.playersList[t].fieldlist[4] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.mint;
+      players.playersList[t].fieldlist[5] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.pizza;
+      }
   }
 }
 

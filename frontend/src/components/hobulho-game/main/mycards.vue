@@ -1,6 +1,6 @@
 <template>
   <div class="mycards-container">
-    <div class="text">
+    <div class="card-text">
       <div class="current-player-text">{{ $clientstate.myid }}&nbsp;</div>
       <div>님의 카드입니다.</div>
     </div>
@@ -182,8 +182,9 @@ const { myHandcardsList } = toRefs(Hand);
   transform: scale(1.4) translateX(1vw) translateY(-70px);
   z-index: 2;
 }
-.text {
+.card-text {
   display: flex;
+  width: 470px;
   justify-content: center;
   margin-bottom: 10px;
   margin-top: 10px;

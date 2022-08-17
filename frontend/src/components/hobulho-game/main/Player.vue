@@ -4,7 +4,8 @@
   > -->
   <div class="game-player-container">
     <div class="status-container">
-      <img v-on:click="videoClick()" src="../assets/image15.png" alt="" />
+      <!-- <img v-on:click="videoClick()" src="../assets/image15.png" alt="" /> -->
+      <UserVideo :stream-manager="player.streamManager"></UserVideo>
       <div class="player-text">
         <div
           v-on:click="attackTo"

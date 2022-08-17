@@ -35,9 +35,8 @@
 </template>
 
 <script setup>
-
 import { ElMessage } from 'element-plus'
-import { reactive, ref, onMounted, onBeforeUnmount, computed } from 'vue';
+import { ref, reactive,  onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { OpenVidu } from 'openvidu-browser';
@@ -167,9 +166,8 @@ onMounted(() => {
 
 // beforeunmount
 onBeforeUnmount(() => {
-  leaveSession()
+  // leaveSession()
 })
-
 
 </script>
 
