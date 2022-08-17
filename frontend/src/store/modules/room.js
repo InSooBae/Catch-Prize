@@ -82,6 +82,9 @@ const room = {
         sessionStorage.setItem('ovdata','')
         sessionStorage.setItem('roomId','')
         sessionStorage.setItem('sessionId','')
+        router.push({
+          name: 'lobbyMain',
+        })
       })
     },
 

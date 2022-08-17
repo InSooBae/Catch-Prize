@@ -17,7 +17,7 @@ import "./assets/main.css";
 // // }
 // );
 import io from "socket.io-client";
-const hobulhoSocket = io("http://localhost:8081", {
+const hobulhoSocket = io("https://ov.catch-prize.com", {
   transports: ["websocket"],
 });
 const app = createApp(App);

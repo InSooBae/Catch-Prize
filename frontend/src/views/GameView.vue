@@ -1,7 +1,6 @@
 <template>
   <StarBackground />
   <Game />
-  <button @click="getData">sdsdsd</button>
 </template>
 
 <script setup>

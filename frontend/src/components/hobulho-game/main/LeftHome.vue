@@ -1,6 +1,6 @@
 <template>
   <div class="left-container">
-    <div class="large-face-cam-wrapper"><LargeScreen /></div>
+    <div class="large-face-cam-wrapper" :publisher="publisher" :subscribers="subscribers"><LargeScreen /></div>
     <div class="mycard-list"><MyHandCards /></div>
     <div class="item-shop"><ItemShop /></div>
   </div>
@@ -17,6 +17,8 @@ export default {
     ItemShop,
     LargeScreen,
     MyHandCards,
+    publisher,
+    subscribers,
   },
 };
 </script>

@@ -4,7 +4,7 @@
       <el-header height="100px"><HeaderHome /></el-header>
     </el-container>
       <el-container class="el-body-container">
-        <el-aside class="game-aside-container" width="470px"><LeftHome/></el-aside>
+        <el-aside class="game-aside-container" width="470px"><LeftHome :publisher="cam.publisher" :subscribers="cam.subscribers"/></el-aside>
         <el-main class="game-main-container" ><RightHome :publisher="cam.publisher" :subscribers="cam.subscribers"/></el-main>
     </el-container>
   </div>

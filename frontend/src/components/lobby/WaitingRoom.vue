@@ -18,17 +18,17 @@
           {{ roomMessages }}
         </div>
         <div>
-          <el-input v-model="chatdata" placeholder="대화를 입력하세요.">
+          <!-- <el-input v-model="chatdata" placeholder="대화를 입력하세요.">
             <template #suffix>
               <el-button color="#7608d3" type="info" class="add-button" @click="startVisible = true">
                 <img src="@/assets/icons/person_add.svg" alt="add_friends">
               </el-button>
             </template>
-          </el-input>
+          </el-input> -->
         </div>  
       </div>
       <div class>
-        <el-button color="#7608d3" type="info" id="start-ready-button" ></el-button>
+        <el-button color="#7608d3" type="info" id="start-ready-button" @click="leaveSession()" >Exit</el-button>
       </div>
     </el-col>
   </el-row>
@@ -160,7 +160,7 @@ joinSession()
 
 onMounted(() => {
   const startReady = document.getElementById('start-ready-button');
-  startReady.innerText = 'Ready!'
+  // startReady.innerText = 'Ready!'
   store.commit('SET_ISWAIT', true)
 })
 
