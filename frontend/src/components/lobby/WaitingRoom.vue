@@ -15,8 +15,7 @@
     <el-col :xs="24" :lg="9" style="height: calc(100vh - 125px);">
       <div class="chat-container">
         <div class="chat-view">
-          <div>
-          </div>
+          {{ roomMessages }}
         </div>
         <div>
           <el-input v-model="chatdata" placeholder="대화를 입력하세요.">
@@ -52,7 +51,7 @@ const store = useStore()
 const chatdata = ref('')
 const roomId = route.params.roomId
 const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
-
+const roomMessages = computed(() => store.getters.roomMessages)
 
 const cam = reactive({
 	OV: undefined,
@@ -69,8 +68,8 @@ const cam = reactive({
 // }
 
 const joinSession = () => {
-  console.log(token)
-  console.log('ws connect')
+  // console.log(token)
+  // console.log('ws connect')
   
 	cam.OV = new OpenVidu();
   // session을 사용할 수 있게함
@@ -127,10 +126,10 @@ const joinSession = () => {
 
 // 세션 퇴장
 const leaveSession = () => {
-  const roomId = sessionStorage.getItem('roomId')
   const ovdata = JSON.parse(sessionStorage.getItem('ovdata'))
   // 서버에 유저 삭제 요청
-  store.dispatch('removeUser', { roomId, ovdata})
+  console.log(ovdata)
+  store.dispatch('removeUser', { roomId, ovdata })
   .then(
     ElMessage({
       type: 'message',

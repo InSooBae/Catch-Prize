@@ -57,18 +57,20 @@ const props = defineProps({
   subscribers,
 })
 
-// getConnectionData.then((res => {
-// })
+// 이걸로 publisher랑 subscrbers를 합쳐보려고 했는데
+const playercams = subcribers.push(publisher)
 
+// Stream에서 데이터 꺼내기
 const getConnectionData = () => {
     const { connection } = this.streamManager.stream;
     return JSON.parse(connection.data.substring(0, connection.data.indexOf('%/%')));
   }
 
+// 
 const clientData = () => {
-    const { clientData } = this.getConnectionData();
-    return clientData;
-  }
+  const { clientData } = this.getConnectionData();
+  return clientData;
+}
 
 // 게임
 const $clientstate = inject("$clientstate");

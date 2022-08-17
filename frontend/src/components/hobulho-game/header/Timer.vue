@@ -40,9 +40,10 @@ $hobulhoSocket.on("set-timer", function () {
 .countdown-timer-values {
   font-size: 38px;
   font-family: "Galmuri9";
-  /* color: #f2e536; */
+  color: #f2e536;
   /* color: white; */
   /* color: #7608d3; */
-  color: #00bd9d;
+  /* color: #00bd9d; */
+  /* color: #7608d3; */
 }
 </style>
