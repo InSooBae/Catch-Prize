@@ -86,7 +86,7 @@ const room = {
       });
     },
 
-    subscribeRoom({ commit, getters }, method) {
+    subscribeRoom({ commit, getters }) {
       console.log("방 변동 알림 보내기");
       let eventSource = {};
       if (_.isEmpty(getters.eventSource)) {
@@ -101,22 +101,19 @@ const room = {
         if (event.data[0] === "{") {
           console.log(event.data);
           const data = JSON.parse(event.data);
-          if (data.state == "WAIT") {
-            commit("SET_ROOM_MESSAGES", Object.keys(data.playerMap));
-
-            const username = jwt_decode(getters.token).username;
-            let isHost = false;
-
-            if (getters.roomMessages.length >= 2) {
-              if (username == data.hostName) {
+          if (data.state == 'WAIT') {
+            commit('SET_ROOM_MESSAGES', Object.keys(data.playerMap))
+          } else {
+            const username = jwt_decode(getters.token).username
+              console.log('게임시작')
+              if (getters.isHost) {
                 // alert("게임 시작");
-                isHost = true;
                 router.push({
                   name: "game",
                   params: { roomid: data.roomId },
                   query: {
                     myid: username,
-                    isHost: isHost,
+                    isHost: getters.isHost,
                     users: getters.roomMessages,
                   },
                 });
@@ -124,25 +121,9 @@ const room = {
                 router.push({
                   name: "game",
                   params: { roomid: data.roomId },
-                  query: { myid: username, isHost: isHost },
+                  query: { myid: username, isHost: getters.isHost },
                 });
               }
-            }
-          } else {
-            // const username = jwt_decode(getters.token).username
-            // if (username == data.hostName) {
-            //   if (getters.roomMessages.length >= 2){
-            //     const $hobulhoSocket = inject("$hobulhosocket");
-            //     const gameData = {
-            //       roomid: data.roomId,
-            //       users: getters.roomMessages
-            //     }
-            //     $hobulhoSocket.emit("start-data-set", gameData)
-            //   }}
-            //   router.push({
-            //     name: 'gameplayroom',
-            //     params: { roomid: data.roomId, myid: username }
-            // })
           }
         }
       });
