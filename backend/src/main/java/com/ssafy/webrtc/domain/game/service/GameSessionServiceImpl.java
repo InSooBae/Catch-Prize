@@ -178,12 +178,12 @@ public class GameSessionServiceImpl implements GameSessionService {
 
         OpenViduRole role = OpenViduRole.PUBLISHER;
 
-        String serverData = "{\"serverData\": \"" + nickname + "\"}";
+        String clientAndServerData = "CLIENT_SIDE_DATA%/%SERVER_SIDE_DATA";
 
         // Build connectionProperties object with the serverData and the role
         ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
                 .type(ConnectionType.WEBRTC)
-                .data(serverData)
+                .data(clientAndServerData)
                 .role(role)
                 .kurentoOptions(
                         new KurentoOptions.Builder()
@@ -281,7 +281,6 @@ public class GameSessionServiceImpl implements GameSessionService {
                 friendService.send(friend.getToMember().getId(), friend);
             });
         }
-
 
         return gameSession;
     }
