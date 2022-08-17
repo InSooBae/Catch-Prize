@@ -9,8 +9,8 @@ const room = {
     room: {},
     roomMessages: [],
     ov: {},
-    sessionId: sessionStorage.getItem('sessionId') || '',
-    gameinfo: {roomName: '', roomType:'HOBULHO', maxParticipants: 6},
+    sessionId: sessionStorage.getItem("sessionId") || "",
+    gameinfo: { roomName: "", roomType: "HOBULHO", maxParticipants: 6 },
     isWait: false,
     roomData: {},
     isHost: false,
@@ -101,13 +101,16 @@ const room = {
       console.log("방 변동 알림 보내기");
       let eventSource = {};
       if (_.isEmpty(getters.eventSource)) {
-        eventSource = new EventSourcePolyfill(`${API_BASE_URL}/friend/subscribe`, { headers: getters.authHeader });
+        eventSource = new EventSourcePolyfill(
+          `${API_BASE_URL}/friend/subscribe`,
+          { headers: getters.authHeader }
+        );
       } else {
         eventSource = getters.eventSource;
       }
       eventSource.addEventListener("sse-room", function (event) {
-        if (event.data[0] === '{') {
-          console.log(event.data)
+        if (event.data[0] === "{") {
+          console.log(event.data);
           const data = JSON.parse(event.data);
           if (data.state == 'WAIT') {
             commit('SET_ROOM_MESSAGES', Object.keys(data.playerMap))
@@ -116,25 +119,30 @@ const room = {
             let isHost = false
               console.log('게임시작')
               if (username == data.hostName) {
-                isHost = true
+                // alert("게임 시작");
+                isHost = true;
                 router.push({
-                  name: 'game',
+                  name: "game",
                   params: { roomid: data.roomId },
-                  query : { myid: username, isHost: isHost, users: getters.roomMessages }
-                })
+                  query: {
+                    myid: username,
+                    isHost: isHost,
+                    users: getters.roomMessages,
+                  },
+                });
               } else {
                 router.push({
-                  name: 'game',
+                  name: "game",
                   params: { roomid: data.roomId },
-                  query : { myid: username, isHost: isHost }
-                })
+                  query: { myid: username, isHost: isHost },
+                });
               }
           }
         }
-      })
-      commit('SET_EVENT_SOURCE', eventSource)
+      });
+      commit("SET_EVENT_SOURCE", eventSource);
     },
-  }
+  },
 };
 
 export default room;

@@ -532,15 +532,27 @@ function stateBoxPush(roomid, playerslist) {
     ],
   };
   state.controlstate.roomId = roomid;
-  for (let t = 0; t < 6; t++) {
+  console.log(roomid);
+  console.log(playerslist);
+
+  for (let t = 0; t < playerslist?.length; t++) {
     state.players[t].playerId = playerslist[t];
   }
-  statebox.push(state);
+
+  let cnt = 0;
+  for (let t = 0; t < statebox.length; t++) {
+    if (statebox[t].controlstate.roomId === "roomid") {
+      cnt++;
+    }
+  }
+  if (cnt === 0) {
+    statebox.push(state);
+  }
 }
 
-stateBoxPush(roomid1, playerslist1);
+// stateBoxPush(roomid1, playerslist1);
 // console.log(statebox);
-stateBoxPush(roomid2, playerslist2);
+// stateBoxPush(roomid2, playerslist2);
 
 //승자가 있는 방의 데이터는 삭제
 function stateBoxDelete() {
@@ -573,9 +585,31 @@ app.get("/", function (req, res) {
 });
 
 // var io = io.of("/io");
+// const datasocket = io.of("/dataSocket");
+// datasocket.on("connection", function (socket) {
+//   socket.on("start-data-set", function (data) {
+//     console.log(data);
+//     console.log("582");
+//     stateBoxPush(data.roomid, data.users);
+//   });
+// });
 
 //connection event handler
 io.on("connection", function (socket) {
+  console.log("qqwe11");
+  //스타트 데이터
+  socket.on("start-data-set", function (data) {
+    console.log(data);
+    //   console.log("582");
+    // let roomid = data.roomid
+    // let list = [];
+    // for (let t = 0; t < data.users.length; t++) {
+    //   list.push(data.users[t]);
+    // }
+    // console.log(list);
+    stateBoxPush(data.roomid, data.users);
+    io.emit("start-data-ready");
+  });
   //아이탬 사용 요청
   socket.on("use-item-for-me", function (roomid, myid, item) {
     // let roomnum = whichRoom(roomid)
@@ -588,9 +622,10 @@ io.on("connection", function (socket) {
     let roomnum = whichRoom(roomid);
     cardshuffle(roomnum);
     statebox[roomnum].controlstate.gamestate = "loading";
-    socket.emit("data-refresh", statebox[roomnum]);
+    console.log(statebox[roomnum].players);
+    io.emit("data-refresh", statebox[roomnum]);
     //게임 시작 hobulhoGame.vue
-    socket.emit("game-start-ready");
+    io.emit("game-start-ready");
   });
 
   //게임 시작 요청이 들어오면
@@ -601,13 +636,13 @@ io.on("connection", function (socket) {
 
     //state 보내기
     setTimeout(() => {
-      socket.emit("data-refresh", statebox[roomnum]);
+      io.emit("data-refresh", statebox[roomnum]);
       //카드 세팅 Mycards.vue
-      socket.emit("hobulho-start-card");
-      socket.emit("players-profile-setting");
+      io.emit("hobulho-start-card");
+      io.emit("players-profile-setting");
       //데이터 뿌리기 HobulhoGame.vue
       //첫공격  PlayersHome.vue
-      socket.emit("first-attack");
+      io.emit("first-attack");
     }, 2000);
   });
 
@@ -619,9 +654,9 @@ io.on("connection", function (socket) {
     //state 보내기
 
     // io.emit("attackdata-refresh", statebox[roomnum].attackstate);
-    socket.emit("data-refresh", statebox[roomnum]);
+    io.emit("data-refresh", statebox[roomnum]);
     //내차례가 아니면 gamestate = turn
-    socket.emit("whose-turn");
+    io.emit("whose-turn");
   });
 
   socket.on("card-click", function (roomid, cardname, playerid) {
