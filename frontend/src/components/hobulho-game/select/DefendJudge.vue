@@ -46,26 +46,20 @@ function defendJudge(answer) {
   /* backgournd */
   /* font */
   /* etc */
-  background-color: rgba(23, 29, 43, 0.8);
-  border: 7px;
-  border-style: solid;
-  border-color: #2572cc;
+  background-color: rgb(0, 51, 255);
   color: white;
 }
 .true-btn:hover {
-  background-color: #2572cc;
+  background-color: #757BF6;
   color: white;
-  font-size: 1rem;
+  font-size: 1.3rem;
   /* border-radius: 30%; */
 }
 .false-btn {
   /* layout */
   /* box */
-  border: 7px;
-  border-style: solid;
-  border-color: #f24822;
   /* backgournd */
-  background-color: rgba(23, 29, 43, 0.8);
+  background-color: #ff0000;
   /* font */
   color: white;
   /* etc */
@@ -73,13 +67,13 @@ function defendJudge(answer) {
 .false-btn:hover {
   color: white;
   background-color: #f24822;
-  font-size: 1rem;
+  font-size: 1.3rem;
 }
 .btn {
   /* layout */
   display: inline-block;
   /* box */
-  border-radius: 2em;
+  border-radius: 1000000px;
   height: 13em;
   width: 13em;
   margin: 70px;

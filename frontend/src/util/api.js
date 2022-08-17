@@ -130,7 +130,7 @@ async function createSession(headers, sessionId) {
 
 async function fetchRooms(headers) {
   try {
-    const res = await api.get('/gamesession', { headers })
+    const res = await api.get('/gamesession', { headers: headers })
     return res
   } catch (err) {
     console.log(err)
@@ -156,10 +156,9 @@ async function createRoom(headers, data) {
 }
 
 
-async function removeUser(headers, roomId, ovdata) {
+async function removeUser(headers, roomId, data) {
   try {
-    console.log(headers)
-    const res = await api.delete(`/gamesession/${roomId}`, { data: ovdata, headers: headers } )
+    const res = await api.delete(`/gamesession/${roomId}`, { data: data, headers: headers } )
     return res
   } catch (err) {
     console.log(err)

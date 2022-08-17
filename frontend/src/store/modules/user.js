@@ -3,6 +3,7 @@ import { API_BASE_URL } from "../../constants";
 import jwt_decode from "jwt-decode";
 import router from "../../router";
 import { logout, getCurrentUser, findAllFriends, acceptFriend, addFriend, deleteFriend } from "../../util/api";
+import * as _ from "lodash"
 
 const user = {
   state: {
@@ -77,7 +78,12 @@ const user = {
     },
     subscribeFriends({ commit, getters }, method) {
       console.log("변동 알림 보내기");
-      const eventSource = new EventSourcePolyfill(`${API_BASE_URL}/friend/subscribe`, { headers: getters.authHeader });
+      let eventSource = {};
+      if (_.isEmpty(getters.eventSource)) {
+        eventSource = new EventSourcePolyfill(`${API_BASE_URL}/friend/subscribe`, { headers: getters.authHeader });
+      } else {
+        eventSource = getters.eventSource;
+      }
       eventSource.addEventListener("sse", function (event) {
         console.log(event.data)
         if (event.data[0] === '{') {
@@ -125,18 +131,21 @@ const updateFriend = (friend, friendsList) => {
   if (friend.friend) {
     if (friend.online) {
       friendsList.online[friend.id] = {
-        'friendNickname': friend.friendNickname
+        'friendNickname': friend.friendNickname,
+        'roomId' : friend.roomId
       }
     }
     else {
       friendsList.offline[friend.id] = {
-        'friendNickname': friend.friendNickname
+        'friendNickname': friend.friendNickname,
+        'roomId' : friend.roomId
       }
     }
   }
   else if (friend.pending) {
     friendsList.pending[friend.id] = {
-      'friendNickname': friend.friendNickname
+      'friendNickname': friend.friendNickname,
+      'roomId' : friend.roomId
     }
   }
 }
