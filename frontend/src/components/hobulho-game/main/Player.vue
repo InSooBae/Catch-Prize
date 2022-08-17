@@ -4,13 +4,14 @@
   > -->
   <div class="game-player-container">
     <div class="status-container">
-      <img src="../assets/image15.png" alt="" />
+      <img v-on:click="videoClick()" src="../assets/image15.png" alt="" />
       <div class="player-text">
         <div
           v-on:click="attackTo"
           ref="nicknameRef"
           class="nickname-else"
-          :class="{ nickname: $clientstate.gamestate === 'attack' }">
+          :class="{ nickname: $clientstate.gamestate === 'attack' }"
+        >
           {{ player.name }}
         </div>
         <div class="remain-card">남은카드: {{ player.remain }}</div>
@@ -54,7 +55,7 @@
         </div>
       </div>
     </div>
-  </div>    
+  </div>
 </template>
 
 <script setup>
@@ -66,18 +67,44 @@ const props = defineProps({
 const nicknameRef = ref(null);
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
+const $dataBox = inject("$dataBox");
+//databox에서 어떤 데이터인지 찾기
+function whichData(roomid) {
+  for (let t = 0; t < $dataBox.length; t++) {
+    if ($dataBox[t].controlstate.roomId === roomid) {
+      return t;
+    }
+  }
+}
+
+//플레이어에서 클릭한 요청을 받아서 그사람 아이디받아서 라지스크린으로 보내주면 될거같다
 
 //공격할사람 클릭하면 함수 실행
 function attackTo() {
+  let roomnum = whichData($clientstate.roomid);
+
   if ($clientstate.gamestate === "attack") {
     const defender = nicknameRef.value.textContent;
-    $hobulhoSocket.emit("player-click", $clientstate.roomid, defender);
+    if (defender != $clientstate.myid) {
+      for (let t = 0; t < 6; t++) {
+        if ($dataBox[roomnum].players[t].playerId === defender) {
+          if ($dataBox[roomnum].players[t].isAlive === true) {
+            $hobulhoSocket.emit("player-click", $clientstate.roomid, defender);
+          }
+        }
+      }
+    }
   }
+}
+
+function videoClick() {
+  $clientstate.largeScreen = props.player.name;
+  // console.log($clientstate.largeScreen);
 }
 </script>
 
 <style scoped>
-.game-player-container{
+.game-player-container {
   padding: 2%;
   display: flex;
   flex-direction: column;
@@ -85,7 +112,7 @@ function attackTo() {
   justify-content: center;
   margin-right: 0px;
 }
-.game-player-container-death{
+.game-player-container-death {
   opacity: 0.3;
 }
 /* .player-container {
@@ -113,7 +140,7 @@ function attackTo() {
   flex-direction: row;
   justify-content: space-between;
 }
-.status-container img{
+.status-container img {
   height: 90%;
 }
 .card {
