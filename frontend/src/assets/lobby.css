@@ -113,7 +113,7 @@
 }
 
 #sidebar .el-avatar {
-  --el-avatar-bg-color : transparent;
+  --el-avatar-bg-color: transparent;
   border: 1px solid #00bd9d;
 }
 
@@ -132,7 +132,7 @@
 }
 
 .profile-box {
-  width: 60%
+  width: 60%;
 }
 
 .sidebar-profile .profile-nickname {
@@ -344,7 +344,7 @@
 .notice-modal .el-dialog__body {
   padding-left: 80px;
   padding-right: 80px;
-  height: calc(100% -100px);
+  height: calc(100% - 100px);
 }
 
 .notice-modal .el-table {
@@ -604,6 +604,10 @@
   padding-bottom: 10px;
 }
 
+.friends-list .pending {
+  animation: fadein 2s ease;
+}
+
 .friends-item {
   /* layout */
   /* BOX */
@@ -652,6 +656,33 @@
 .friends-button:hover .accept-icon, 
 .friends-button:hover .delete-icon {
   opacity: 0.8;
+}
+
+.friend-pop.el-popper.is-dark {
+  transition: opacity 0.2s ease;
+  top: -11px!important;
+  min-width: 120px;
+  transform: translateY(100px);
+  --el-popover-padding: 0px;
+  background: linear-gradient(60deg, rgba(50, 57, 73, 0.9), rgb(64, 72, 88));
+}
+
+.friend-pop .el-button {
+  border: none;
+  width: 100%;
+  --el-button-text-color: whitesmoke;
+  --el-button-bg-color: transparent!important;
+  --el-button-active-color: var(--el-color-info-dark-2);
+  --el-button-hover-text-color: var(--el-color-white);
+  --el-button-hover-link-text-color: var(--el-color-info-light-5);
+  --el-button-hover-bg-color: var(--el-color-info-light-3);
+  --el-button-hover-border-color: var(--el-color-info-light-3);
+  --el-button-active-bg-color: var(--el-color-info-dark-2);
+  --el-button-active-border-color: var(--el-color-info-dark-2);
+}
+
+.friend-pop .el-button+.el-button {
+  margin: 0;
 }
 
 .lobby-layout .el-tab-pane {
@@ -810,12 +841,12 @@
   opacity: 0;
 }
 
-.fade-enter-active,
-.fade-leave-active {
+.invert-enter-active,
+.invert-leave-active {
   transition: all 0.2s ease-out 0.05s;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.invert-enter-from,
+.invert-leave-to {
   filter: invert(0.5);
 }

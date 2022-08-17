@@ -36,7 +36,7 @@ $hobulhoSocket.emit("server-get-roomid", $clientstate.roomid);
 
 function whichData(roomid) {
   for (let t = 0; t < $dataBox.length; t++) {
-    if ($dataBox[t].controlstate.roomId === roomid) {
+    if ($dataBox[t].controlstate.roomid === roomid) {
       return t;
     }
   }

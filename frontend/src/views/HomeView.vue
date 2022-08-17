@@ -10,7 +10,8 @@
         <p class="text-white text-animation" style="letter-spacing:-5px;">H</p>
         <p class="text-white text-animation me-3">!</p>
         <p class="text-green text-animation">P</p>
-        <p class="text-yello text-animation blink" id="catch-prize-r" @click="drawer=true" style="letter-spacing:-5px; cursor: pointer;">
+        <p class="text-yello text-animation blink" id="catch-prize-r" @click="drawer = true"
+          style="letter-spacing:-5px; cursor: pointer;">
           R</p>
         <p class="text-green text-animation">I</p>
         <p class="text-green text-animation">Z</p>
@@ -71,8 +72,8 @@ window.checkLogin = () => {
   store.dispatch('saveToken', localStorage.getItem('token'));
   localStorage.setItem('token', '')
   if (isLoggedIn.value) {
-    router.push({ name:'lobbyMain' })
-    }
+    router.push({ name: 'lobbyMain' })
+  }
 }
 
 onMounted(() => {
@@ -83,11 +84,18 @@ onMounted(() => {
     document.getElementById('catch_prize').style.margin = '10px 0';
     document.getElementById('catch-prize-r').style.cursor = '';
   }
-  store.dispatch('logout')
-  window.addEventListener('beforeunload', (event) => {
+  if (isLoggedIn.value) {
+    router.push({ name: 'lobbyMain' })
+  } else {
     store.dispatch('logout')
+  }
+  window.addEventListener('unload', (event) => {
+    if (isLoggedIn.value) {
+      router.push({ name: 'lobbyMain' })
+    } else {
+      store.dispatch('logout')
+    }
   });
-
 })
 </script>
 
