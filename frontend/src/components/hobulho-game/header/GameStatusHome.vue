@@ -1,7 +1,13 @@
 <template>
   <div class="game-status-home">
-    <Guide v-for="(guide, i) in statuseList.filter((c) => c.name === $clientstate.gamestate)" 
-    :key="i" class="guide" :guide="guide" />
+    <Guide
+      v-for="(guide, i) in statuseList.filter(
+        (c) => c.name === $clientstate.gamestate
+      )"
+      :key="i"
+      class="guide"
+      :guide="guide"
+    />
     <Timer class="timer" />
   </div>
 </template>
@@ -44,6 +50,7 @@ const guides = reactive({
       name: "declare-turn",
       guideText: `$clientstate.defenderId + ' 님이 지목 당했습니다.'`,
     },
+    { name: "no-card-death", guideText: "" },
   ],
 });
 const { statuseList } = toRefs(guides);
@@ -56,22 +63,22 @@ const { statuseList } = toRefs(guides);
   background-color: #1b2130;
   border-radius: 20px;
   height: 100%;
-  
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
 }
 
 .timer {
   height: 70%;
   position: absolute;
   right: 0px;
-  padding-right:20px;
-  
+  padding-right: 20px;
 }
 .guide {
   height: 70%;
   position: absolute;
   left: 0px;
-  padding-left:30px;
-  padding-top: 12px;
-
+  padding-left: 30px;
+  padding-top: 17px;
 }
 </style>
