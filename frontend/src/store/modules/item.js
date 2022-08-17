@@ -39,11 +39,6 @@ const item = {
           filter.type = 'GStreamerFilter';
           filter.options = { "command": "pitch pitch=20" };
           break;
-        // 테두리
-        case 'Videobox':
-          filter.type = 'GStreamerFilter';
-          filter.options = { "command": "videobox fill=black top=-30 bottom=-30 left=-30 right=-30" };
-          break;
         // 화면 색 왜곡
         case 'Chroma':
           filter.type = 'GStreamerFilter';
@@ -52,6 +47,7 @@ const item = {
       }
       commit('SET_FILTER', filter)
     },
+    
     sendFilter({ commit, getters }, recipent, type) {
       console.log('send Filter !')
       if ( getters.isitem === true ) { 

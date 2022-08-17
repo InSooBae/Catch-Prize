@@ -42,10 +42,9 @@ import { reactive, ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { OpenVidu } from 'openvidu-browser';
-import UserVideo from '../webrtc/UserVideo.vue';
 import { fetchRoomById } from '../../util/api';
-
-// ----
+import UserVideo from '../webrtc/UserVideo.vue';
+import jwt_decode from "jwt-decode";
 
 
 const route = useRoute()
@@ -55,26 +54,12 @@ const roomId = route.params.roomId
 const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
 
 
-// const joinGame = (roomId, token) => {
-//   ws.send(`/pub/${roomId}/join`,token, {})
-// }
-
-// const getName = (roomId) => {
-//     ws.subscribe("/sub/" + roomId, (res) => {
-//     console.log(res)
-//   })
-// }
-
-
-
-
-
 const cam = reactive({
 	OV: undefined,
 	session: undefined,
 	mainStreamManager: undefined,
-	publisher: undefined,
-	subscribers: [],
+	publisher: undefined, // me
+	subscribers: [], // others
 	mySessionId: computed(() => store.state.room.sessionId),
 	myUserName: computed(() => store.state.user.currentUser.username),
 })
@@ -82,8 +67,6 @@ const cam = reactive({
 // const unSub = () => {
 //   store.dispatch('closeSubscribe')
 // }
-
-
 
 const joinSession = () => {
   console.log(token)
@@ -110,9 +93,9 @@ const joinSession = () => {
   // getToken에서 ovdata를 반환
   // ovdata.token을 이용해서 session에 연결할 수 있음
   getToken(roomId).then(ovdata => {
-
-  console.log(cam.myUserName)
-  cam.session.connect(ovdata.token)
+  // token 이용 username 받아옴
+  const myname = jwt_decode(sessionStorage.getItem('token')).username
+  cam.session.connect(ovdata.token, { clientData: { myname }})
     .then(() => {
       store.commit('SET_OV', ovdata)
       sessionStorage.setItem('ovdata', JSON.stringify(ovdata))
@@ -128,7 +111,9 @@ const joinSession = () => {
         mirror: false       	// Whether to mirror your local video or not
       });
       cam.mainStreamManager = publisher;
+
       cam.publisher = publisher;
+      cam.publisher.subscribeToRemote();
       // --- Publish your stream ---
       cam.session.publish(cam.publisher);
     })

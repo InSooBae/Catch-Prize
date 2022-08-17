@@ -5,7 +5,7 @@
     </el-container>
       <el-container class="el-body-container">
         <el-aside class="game-aside-container" width="470px"><LeftHome/></el-aside>
-        <el-main class="game-main-container" ><RightHome/></el-main>
+        <el-main class="game-main-container" ><RightHome :publisher="cam.publisher" :subscriber="cam.subscribers"/></el-main>
     </el-container>
   </div>
 </template>
@@ -17,17 +17,16 @@ import HeaderHome from "./header/HeaderHome.vue";
 import LeftHome from "./main/LeftHome.vue";
 import RightHome from "./main/PlayersHome.vue";
 
-
-const $clientstate = inject("$clientstate");
-const $hobulhoSocket = inject("$hobulhoSocket");
-const $dataBox = inject("$dataBox");
-
+// 기본 값
 const route = useRoute();
 const myid = route.params.myid;
 const roomid = route.params.roomid;
+const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}`}
 
-const roomId = sessionStorage.getItem('roomId')
-const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+// 게임변수
+const $clientstate = inject("$clientstate");
+const $hobulhoSocket = inject("$hobulhoSocket");
+const $dataBox = inject("$dataBox");
 
 $clientstate.myid = myid;
 $clientstate.roomid = roomid;
@@ -96,6 +95,8 @@ $hobulhoSocket.on("whose-judge", function () {
 });
 
 
+// Openvidu //
+
 const cam = reactive({
 	OV: undefined,
 	session: undefined,
@@ -130,10 +131,10 @@ const joinSession = () => {
 
   // getToken에서 ovdata를 반환
   // ovdata.token을 이용해서 session에 연결할 수 있음
-  getToken(roomId).then(ovdata => {
+  getToken(roomid).then(ovdata => {
 
   console.log(cam.myUserName)
-  cam.session.connect(ovdata.token)
+  cam.session.connect(ovdata.token, { serverData: 'myname' })
     .then(() => {
       store.commit('SET_OV', ovdata)
       sessionStorage.setItem('ovdata', JSON.stringify(ovdata))
@@ -163,10 +164,10 @@ const joinSession = () => {
 
 // 세션 퇴장
 const leaveSession = () => {
-  const roomId = sessionStorage.getItem('roomId')
+  const roomid = sessionStorage.getItem('roomid')
   const ovdata = JSON.parse(sessionStorage.getItem('ovdata'))
   // 서버에 유저 삭제 요청
-  store.dispatch('removeUser', { roomId, ovdata})
+  store.dispatch('removeUser', { roomid, ovdata})
   .then(
     ElMessage({
       type: 'message',
@@ -183,10 +184,10 @@ const leaveSession = () => {
     window.removeEventListener('beforeunload',leaveSession);
 }
 
-// roomId를 이용해서 ovtoken, userId 가져오는 요청 보내기
-const getToken = (roomId) => {
+// roomid를 이용해서 ovtoken, userId 가져오는 요청 보내기
+const getToken = (roomid) => {
   return new Promise((resolve, reject) => {
-    fetchRoomById({ Authorization: `Bearer ${sessionStorage.getItem('token')}` }, roomId)
+    fetchRoomById({ Authorization: `Bearer ${sessionStorage.getItem('token')}` }, roomid)
     .then(response => {
       resolve(response.data)
       })
@@ -200,6 +201,39 @@ joinSession()
 onBeforeUnmount(() => {
   leaveSession()
 })
+
+
+// Filter
+
+//화면 뒤집기
+const videoRotate = (manager) => {
+  manager.stream.applyFilter("GStreamerFilter", { "command": "videoflip method=vertical-flip" })
+}
+
+// 크로마
+const chroma = (manager) => {
+  manager.stream.applyFilter("GStreamerFilter", { "command": 'chromahold target-r=0 target-g=0 target-b=255 tolerance=90' })
+}
+
+// 목소리 변조
+const pitchVoice = (manager) => {
+  manager.stream.applyFilter("GStreamerFilter", { "command": 'chromahold target-r=0 target-g=0 target-b=255 tolerance=90' })
+}
+
+
+
+const clickFilter = (me) => {
+  me.subscribeToRemote(true);
+  me.stream.applyFilter("GStreamerFilter", { "command": "videoflip method=vertical-flip" })
+    .then(() => {
+    console.log("Video filltered!");
+    setTimeout(() => me.stream.removeFilter(), 20000)
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+}
+
 </script>
 <style scoped>
 

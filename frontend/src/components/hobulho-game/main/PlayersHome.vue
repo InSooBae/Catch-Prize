@@ -18,25 +18,64 @@
     "
   />
 </template>
+<!-- <script>
+export default {
+	name: 'UserVideo',
 
+	components: {
+		OvVideo,
+	},
+
+	props: {
+		publisher: Object,
+    subscribers: Object,
+	},
+
+	computed: {
+		clientData () {
+			const { clientData } = this.getConnectionData();
+			return clientData;
+		},
+	},
+
+	methods: {
+		getConnectionData () {
+			const { connection } = this.streamManager.stream;
+			return JSON.parse(connection.data);
+		},
+	},
+};
+</script> -->
 <script setup>
 import AttackCardDeclare from "../select/AttackCardDeclare.vue";
 import DefendJudge from "../select/DefendJudge.vue";
-import { reactive, toRefs, inject, ref } from "vue";
+import { reactive, toRefs, inject } from "vue";
 import Player from "./Player.vue";
-import { useStore } from 'vuex';
 
-const store = useStore()
-const mainStreamManager = () => store.commit('SET_MAINSTREAM')
+const props = defineProps({
+  publisher,
+  subscribers,
+})
+
+// getConnectionData.then((res => {
+// })
+
+const getConnectionData = () => {
+    const { connection } = this.streamManager.stream;
+    return JSON.parse(connection.data.substring(0, connection.data.indexOf('%/%')));
+  }
+
+const clientData = () => {
+    const { clientData } = this.getConnectionData();
+    return clientData;
+  }
+
+// 게임
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
 const $dataBox = inject("$dataBox");
 
-// Large Screen에서 띄워줄 mainStreamManager 선정
-const updateMainVideoStreamManager = (stream) => {
-  if (mainStreamManager === stream) return;
-  mainStreamManager(stream)
-}
+
 const players = reactive({
   playersList: [
     {

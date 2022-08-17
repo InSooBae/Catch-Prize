@@ -58,11 +58,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject } from "vue";
+import { ref, inject } from "vue";
 
 const props = defineProps({
   player: Object,
+  publisher,
+  subscribers,
 });
+
+
 const nicknameRef = ref(null);
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
