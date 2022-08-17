@@ -89,7 +89,7 @@
     <v-typical
       v-else-if="$clientstate.gamestate === 'loading'"
       class="blink"
-      :steps="[guide.guideText, 1000]"
+      :steps="['플레이어 착석중...', 1000, '딜러가 카드를 섞는중...', 2000]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
@@ -97,6 +97,16 @@
       v-else-if="$clientstate.gamestate === 'declare-turn'"
       class="blink"
       :steps="[$clientstate.defenderId + ' 님이 지목 당했습니다.', 1000]"
+      :loop="1"
+      :wrapper="'h1'"
+    ></v-typical>
+    <v-typical
+      v-else-if="$clientstate.gamestate === 'no-card-death'"
+      class="blink"
+      :steps="[
+        $clientstate.deathplayer + ' 님이 남은 카드가 없어 죽었습니다...',
+        1000,
+      ]"
       :loop="1"
       :wrapper="'h1'"
     ></v-typical>
