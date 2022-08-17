@@ -131,18 +131,21 @@ const updateFriend = (friend, friendsList) => {
   if (friend.friend) {
     if (friend.online) {
       friendsList.online[friend.id] = {
-        'friendNickname': friend.friendNickname
+        'friendNickname': friend.friendNickname,
+        'roomId' : friend.roomId
       }
     }
     else {
       friendsList.offline[friend.id] = {
-        'friendNickname': friend.friendNickname
+        'friendNickname': friend.friendNickname,
+        'roomId' : friend.roomId
       }
     }
   }
   else if (friend.pending) {
     friendsList.pending[friend.id] = {
-      'friendNickname': friend.friendNickname
+      'friendNickname': friend.friendNickname,
+      'roomId' : friend.roomId
     }
   }
 }

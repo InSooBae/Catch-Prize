@@ -141,10 +141,10 @@ const joinSession = () => {
 
 // 세션 퇴장
 const leaveSession = () => {
-  const roomId = sessionStorage.getItem('roomId')
   const ovdata = JSON.parse(sessionStorage.getItem('ovdata'))
   // 서버에 유저 삭제 요청
-  store.dispatch('removeUser', { roomId, ovdata})
+  console.log(ovdata)
+  store.dispatch('removeUser', { roomId, ovdata })
   .then(
     ElMessage({
       type: 'message',

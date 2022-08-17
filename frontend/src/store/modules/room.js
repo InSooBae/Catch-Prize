@@ -1,6 +1,8 @@
 import router from '../../router';
 import { fetchRooms, createRoom, removeUser, fetchRoomById } from "../../util/api";
 import * as _ from "lodash"
+import jwt_decode from "jwt-decode";
+import { hobulhoSocket } from '../../main';
 
 const room = {
   state: {
@@ -9,8 +11,9 @@ const room = {
     roomMessages: [],
     ov: {},
     sessionId: sessionStorage.getItem('sessionId') || '',
-    gameinfo: {roomName: 'newroom', roomType:'HOBULHO', maxParticipants: 6},
+    gameinfo: {roomName: '', roomType:'HOBULHO', maxParticipants: 6},
     isWait: false,
+    roomData: {},
   },
 
   getters: {
@@ -20,7 +23,8 @@ const room = {
     ov: state => state.ov,
     sessionId: state => state.sessionId,
     gameinfo: state => state.gameinfo,
-    isWait: state => state.isWait
+    isWait: state => state.isWait,
+    roomData: state => state.roomData,
   },
 
   mutations: {
@@ -31,6 +35,7 @@ const room = {
     SET_SESSIONID: (state, sessionId) => state.sessionId = sessionId,
     SET_GAMEINFO: (state, gameinfo) => state.gameinfo = gameinfo,
     SET_ISWAIT: (state, isWait) => state.isWait = isWait,
+    SET_ROOM_DATA: (state, roomData) => state.roomData = roomData
   },  
 
   actions: {
@@ -44,7 +49,7 @@ const room = {
     createRoom({ commit, getters, dispatch }, gameinfo) {
       createRoom(getters.authHeader, gameinfo)
         .then(res => {
-          console.log(res)
+          console.log(res.data)
           commit('SET_ROOM', res.data)
           dispatch('subscribeRoom')
           sessionStorage.setItem('roomId', res.data.roomId)
@@ -62,20 +67,18 @@ const room = {
         console.log(res)
         commit('SET_ROOM', res.data)
         dispatch('subscribeRoom')
-        sessionStorage.setItem('roomToken', res.data.token)
+        sessionStorage.setItem('roomData', res.data)
         router.push({
           name: 'gameroom',
           params: { roomId: roomId }
         })
       })
-      
     },
 
-    removeUser({ getters }, {roomId, ovdata}) { 
-      console.log(roomId, ovdata)
-      console.log('22')
-      removeUser(getters.authHeader, roomId, ovdata)
+    removeUser({ getters }, data) {
+      removeUser(getters.authHeader, data.roomId, data.ovdata)
       .then(res => {
+        sessionStorage.setItem('roomData', '')
         sessionStorage.setItem('ovdata','')
         sessionStorage.setItem('roomId','')
         sessionStorage.setItem('sessionId','')
@@ -91,13 +94,48 @@ const room = {
         eventSource = getters.eventSource;
       }
       eventSource.addEventListener("sse-room", function (event) {
-        
         if (event.data[0] === '{') {
+          console.log(event.data)
           const data = JSON.parse(event.data);
           if (data.state == 'WAIT') {
             commit('SET_ROOM_MESSAGES', Object.keys(data.playerMap))
+
+            const username = jwt_decode(getters.token).username
+            let isHost = false
+
+            if (getters.roomMessages.length >= 2){
+              alert("게임 시작")
+              if (username == data.hostName) {
+                isHost = true
+                router.push({
+                  name: 'game',
+                  params: { roomid: data.roomId },
+                  query : { myid: username, isHost: isHost, users: getters.roomMessages }
+                })
+              } else {
+                router.push({
+                  name: 'game',
+                  params: { roomid: data.roomId },
+                  query : { myid: username, isHost: isHost }
+                })
+              }
+              
+            }
           } else {
-            commit('SET_ROOM_MESSAGES', 'START')
+            // const username = jwt_decode(getters.token).username
+            // if (username == data.hostName) {
+            //   if (getters.roomMessages.length >= 2){
+            //     const $hobulhoSocket = inject("$hobulhosocket");
+            //     const gameData = {
+            //       roomid: data.roomId,
+            //       users: getters.roomMessages
+            //     }
+            //     $hobulhoSocket.emit("start-data-set", gameData)
+            //   }}
+            //   router.push({
+            //     name: 'gameplayroom',
+            //     params: { roomid: data.roomId, myid: username }
+            // })
           }
         }
       })

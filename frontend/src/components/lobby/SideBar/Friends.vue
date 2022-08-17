@@ -31,7 +31,7 @@
             <el-button color="#262C3A" type="info" @click="deleteFriend(friend.friendNickname)">
               삭제하기
             </el-button>
-            <el-button color="#262C3A" type="info" @click="joinFriend(friend.friendNickname)">
+            <el-button color="#262C3A" type="info" @click="joinFriend(friend.roomId)">
               입장하기
             </el-button>
             <template #reference>
@@ -63,6 +63,7 @@
 <script setup>
 import { useStore } from 'vuex'
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import * as _ from 'lodash'
 
 
@@ -114,11 +115,13 @@ const numToImage = {
 
 const activeNames = ref(['pending', 'online'])
 const friendsList = computed(() => store.getters.friendsList)
+const router = useRouter()
+
 
 
 const acceptFriend = (friendNickname) => store.dispatch('acceptFriend', friendNickname)
 const deleteFriend = (friendNickname) => store.dispatch('deleteFriend', friendNickname)
-const joinFriend = (friendNickname) => console.log('join ' + friendNickname)
+const joinFriend = (roomId) =>   router.push({ name: 'gameroom', params: { roomId: roomId } })
 const getProfileImage = (friendNickname) => numToImage[friendNickname.substr(-1).charCodeAt() % 20]
 
 store.dispatch('subscribeFriends')
