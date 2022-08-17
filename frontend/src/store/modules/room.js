@@ -2,7 +2,6 @@ import router from '../../router';
 import { fetchRooms, createRoom, removeUser, fetchRoomById } from "../../util/api";
 import * as _ from "lodash"
 import jwt_decode from "jwt-decode";
-import { hobulhoSocket } from '../../main';
 
 const room = {
   state: {
