@@ -137,6 +137,7 @@ function videoClick() {
 } */
 .status-container {
   height: 45%;
+  padding-left: 43%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

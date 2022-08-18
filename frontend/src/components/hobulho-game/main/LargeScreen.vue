@@ -1,6 +1,5 @@
 <template>
   <div>
-    <img class="large-face-cam" src="../assets/Person.png" alt="비디오" />
     <p>
       {{ $clientstate.largeScreen }}
     </p>

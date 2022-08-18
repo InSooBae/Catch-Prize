@@ -158,12 +158,12 @@ const { myHandcardsList } = toRefs(Hand);
   position: relative;
   display: flex;
   flex-direction: column;
-  margin-right: 10%;
+
 
 }
 .mycards-wrapper {
   display: flex;
-  margin-left: 0.5vw;
+  margin-left: 70px;
   align-items: center;
   margin-bottom: 10px;
   margin-right: 140px;

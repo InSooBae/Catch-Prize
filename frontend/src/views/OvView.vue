@@ -18,12 +18,16 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue';
+import { reactive, computed, ref, inject, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { OpenVidu } from 'openvidu-browser';
 import { fetchRoomById } from '@/util/api';
 import UserVideo from '@/components/webrtc/UserVideo.vue';
+
+const $clientstate = inject("$clientstate");
+const $hobulhoSocket = inject("$hobulhoSocket");
+const $dataBox = inject("$dataBox");
 
 const route = useRoute()
 const store = useStore()
@@ -90,6 +94,7 @@ const joinSession = () => {
         cam.mainStreamManager = publisher;
         cam.publisher = publisher;
         // --- Publish your stream ---
+        cam.publisher.subscribeToRemote();
         cam.session.publish(cam.publisher);
       })
       .catch(error => {
@@ -106,12 +111,6 @@ const leaveSession = () => {
   // 서버에 유저 삭제 요청
   console.log(ovdata)
   store.dispatch('removeUser', { roomId, ovdata })
-    .then(
-      ElMessage({
-        type: 'message',
-        message: '방에서 퇴장하셨습니다.'
-      })
-    )
   // 초기화 및 이벤트 삭제
   if (cam.session) cam.session.disconnect();
   cam.session = undefined;
@@ -134,6 +133,45 @@ const getToken = (roomId) => {
 }
 
 joinSession()
+
+
+$hobulhoSocket.on("to-player", function (roomid, myid, item) {
+  if(item == "videoRotate"){
+    videoRotate(cam.publisher)
+    setTimeout(cam.publisher,20000)
+  }
+  if(item == "pitchVoice"){
+    pitchVoice(cam.publisher)
+  }
+  if(item == "chroma"){
+    chroma(cam.publisher)
+  }
+  if(item == "gray"){
+    gray(cam.publisher)
+  }
+});
+
+const videoRotate = (manager) => {
+  manager.stream.applyFilter("GStreamerFilter", { "command": "videoflip method=vertical-flip" })
+  setTimeout(() => manager.stream.removeFilter(), 20000)
+}
+
+// 크로마
+const chroma = (manager) => {
+  manager.stream.applyFilter("GStreamerFilter", { "command": 'chromahold target-r=0 target-g=0 target-b=255 tolerance=200' })
+  setTimeout(() => manager.stream.removeFilter(), 20000)
+}
+
+// 목소리 변조
+const pitchVoice = (manager) => {
+  manager.stream.applyFilter("GStreamerFilter", { "command": "pitch pitch=20" })
+  setTimeout(() => manager.stream.removeFilter(), 20000)
+}
+
+const gray = (manager) => {
+  manager.stream.applyFilter("GStreamerFilter", { "command": "videobalance saturation=0.0" })
+  setTimeout(() => manager.stream.removeFilter(), 20000)
+}
 </script>
 
 <style>
@@ -145,6 +183,8 @@ joinSession()
 
 .main-person-container video{
   width: 330px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgb(46, 72, 108);
 }
 
 .people-container {
@@ -162,8 +202,7 @@ joinSession()
   margin: 0.5% 1%;
   padding: 17px 20px 0px 60px;
   height: 100%;
-  min-height: 200px;
-  max-height: 238px;
+  height: 200px;
   flex-grow: 0;
   min-width: 400px;
   width: 47%;
@@ -172,5 +211,7 @@ joinSession()
 
 .person-container div video {
   width: 180px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgb(46, 72, 108);
 }
 </style>

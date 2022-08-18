@@ -3,11 +3,9 @@
       <!-- <div  class="people-container">
         <div class="person-container">
           <user-video :stream-manager="cam.publisher"></user-video>
-          <el-button id="ready-btn" color="#626aef">Ready</el-button>
         </div>
         <div v-for="sub in cam.subscribers" class="person-container">
           <user-video  v-if="sub" :stream-manager="sub"></user-video>
-          <el-button id="ready-btn-ready" color="#626aef">Ready</el-button>
         </div>
       </div> -->
     <el-col :xs="24" :lg="9" style="height: calc(100vh - 125px);">

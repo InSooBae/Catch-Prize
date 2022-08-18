@@ -3,16 +3,15 @@
     <el-avatar shape="circle" class="me-1" :size="45" :src="numToImage[currentUser.profileImage]" />
     <div class="profile-box">
       <p class="profile-nickname">{{ currentUser.username }}</p>
-      <p class="profile-point">MyPoint : <span class="text-yello">{{ currentUser }}</span></p>
-      <p class="profile-email">{{ currentUser }}</p>
     </div>
     <img class="profile-logout" src="@/assets/icons/logout.svg" align="right" alt="logout" @click="logout">
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 import src0 from '@/assets/profileIcons/0.svg'
 import src1 from '@/assets/profileIcons/1.svg'
@@ -59,11 +58,23 @@ const numToImage = {
 }
 
 const store = useStore()
+const router = useRouter()
 const currentUser = computed(() => store.getters.currentUser)
+const isLoggedIn = computed(() => store.getters.isLoggedIn)
 
 store.dispatch('fetchCurrentUser')
 
 const logout = () => {
-  store.dispatch('logout');
+  if (isLoggedIn.value) {
+    store.dispatch('logout');
+  } else {
+    router.push({ name: 'home' })
+  }
 }
+
+onMounted(() => {
+  if (!isLoggedIn.value) {
+    router.push({ name: 'home' })
+  }
+})
 </script>

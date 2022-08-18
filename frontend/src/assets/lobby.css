@@ -133,18 +133,20 @@
 
 .profile-box {
   width: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .sidebar-profile .profile-nickname {
-  padding-top: 0.1rem;
-  display: block;
-  width: 100%;
-  white-space: nowrap;
+  /*padding-top: 0.1rem;*/
+  /*display: block;*/
+  /*width: 100%;*/
+  /*white-space: nowrap;*/
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 0.80rem;
-  color: whitesmoke;
-  line-height: 130%;
+  /*color: whitesmoke;*/
+  /*line-height: 130%;*/
 }
 
 .sidebar-profile .profile-point {
