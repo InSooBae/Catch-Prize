@@ -1,9 +1,9 @@
 <template>
   <RouterView />
-  <div class="main-person-container">
+  <div v-if="!isWait" class="main-person-container">
     <user-video :stream-manager="cam.publisher"></user-video>
   </div>
-  <div class="people-container">
+  <div v-if="isLoad" class="people-container">
     <div class="person-container">
       <user-video :stream-manager="cam.publisher"></user-video>
     </div>
@@ -32,6 +32,8 @@ const $dataBox = inject("$dataBox");
 const route = useRoute()
 const store = useStore()
 const roomId = route.params.roomid
+const isLoad = ref(false)
+const isWait = computed(() => store.getters.isWait)
 
 const cam = reactive({
   OV: undefined,
@@ -96,6 +98,8 @@ const joinSession = () => {
         // --- Publish your stream ---
         cam.publisher.subscribeToRemote();
         cam.session.publish(cam.publisher);
+        setTimeout(() => {isLoad.value = true}, 1000)
+        
       })
       .catch(error => {
         console.log('There was an error connecting to the session:', error.code, error.message);
@@ -179,6 +183,7 @@ const gray = (manager) => {
   position: absolute;
   top: 140px;
   left: 90px;
+  animation: videoFade 2s ease;
 }
 
 .main-person-container video{
@@ -212,6 +217,19 @@ const gray = (manager) => {
 .person-container div video {
   width: 180px;
   border-radius: 5px;
+  background-color: rgb(46, 72, 108);;
   box-shadow: 0 0 10px rgb(46, 72, 108);
+  animation: videoFade 2s ease;
+}
+
+@keyframes videoFade {
+  0%,
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+
 }
 </style>

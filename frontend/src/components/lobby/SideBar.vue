@@ -29,7 +29,7 @@
     </el-tab-pane>
   </el-tabs>
   <transition name="invert" mode="out-in">
-    <div v-if="isWait" key="exit-button">
+    <div v-if="!isWait" key="exit-button">
       <ExitGame />
     </div>
     <div v-else key="start-button">

@@ -51,9 +51,9 @@ const store = useStore()
 const infoVisible = ref(false)
 
 const gameinfo = ref({
-  maxParticipants: 6,
+  maxparticipants: 6,
   roomName: '',
-  roomType: 'HOBULHO',
+  roomtype: 'HOBULHO',
 })
 
 const indexToType = {

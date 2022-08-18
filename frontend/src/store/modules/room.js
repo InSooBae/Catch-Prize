@@ -11,7 +11,7 @@ const room = {
     ov: {},
     sessionId: sessionStorage.getItem("sessionId") || "",
     gameinfo: { roomName: "", roomType: "HOBULHO", maxParticipants: 6 },
-    isWait: false,
+    isWait: true,
     roomData: {},
     isHost: false,
   },
@@ -93,9 +93,9 @@ const room = {
       })
     },
 
-    startGame({ getters }, roomId) {
+    startGame({ getters, commit }, roomId) {
       startGame(getters.authHeader, roomId)
-      .then(res => console.log(res.data))
+      .then(res => {console.log(res)})
     },
 
     subscribeRoom({ commit, getters }) {
