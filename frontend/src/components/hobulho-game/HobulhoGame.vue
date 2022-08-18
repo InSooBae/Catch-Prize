@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <el-container class="el-header-container">
       <el-header height="100px"><HeaderHome /></el-header>
     </el-container>
@@ -7,7 +7,12 @@
         <el-aside class="game-aside-container" width="470px"><LeftHome/></el-aside>
         <el-main class="game-main-container" ><RightHome :publisher="cam.publisher" :subscribers="cam.subscribers"/></el-main>
     </el-container>
-  </div>
+  </div> -->
+  <div>
+  {{ cam.publisher }}
+
+  {{ cam.subscribers }}
+</div>
 </template>
 
 <script setup>
@@ -30,88 +35,87 @@ const roomid = route.params.roomid;
 const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}`}
 
 // 게임변수
-const $clientstate = inject("$clientstate");
-const $hobulhoSocket = inject("$hobulhoSocket");
-const $dataBox = inject("$dataBox");
+// const $clientstate = inject("$clientstate");
+// const $hobulhoSocket = inject("$hobulhoSocket");
+// const $dataBox = inject("$dataBox");
 // const myid = route.params.myid;
 // $clientstate.myid = myid;
-$clientstate.roomid = roomid;
+// $clientstate.roomid = roomid;
 // console.log(myid);
-console.log($clientstate.myid);
 
 //스타트 데이터 준비 완료
-$hobulhoSocket.on("start-data-ready", function () {
+// $hobulhoSocket.on("start-data-ready", function () {
   // console.log("111");
   // console.log(roomid);
-  console.log("111222");
-  $hobulhoSocket.emit("server-get-roomid", $clientstate.roomid);
+  // console.log("111222");
+  // $hobulhoSocket.emit("server-get-roomid", $clientstate.roomid);
   // if (roomid === $clientstate.roomid) {
   //     console.log("222");
   // }
-});
+// });
 
-function whichData(roomid) {
-  for (let t = 0; t < $dataBox.length; t++) {
-    if ($dataBox[t].controlstate.roomid === roomid) {
-      return t;
-    }
-  }
-}
+// function whichData(roomid) {
+//   for (let t = 0; t < $dataBox.length; t++) {
+//     if ($dataBox[t].controlstate.roomid === roomid) {
+//       return t;
+//     }
+//   }
+// }
 
 //현재상태가 loading 일때 게임 시작 요청
-const gameStart = () => {
-  let boxnum = whichData($clientstate.roomid);
-  if ($clientstate.gamestate === "loading") {
-    setTimeout(() => {
-      $hobulhoSocket.emit("hobulho-start-req", $clientstate.roomid);
-    }, 3000);
-  }
-};
+// const gameStart = () => {
+//   let boxnum = whichData($clientstate.roomid);
+//   if ($clientstate.gamestate === "loading") {
+//     setTimeout(() => {
+//       $hobulhoSocket.emit("hobulho-start-req", $clientstate.roomid);
+//     }, 3000);
+//   }
+// };
 
 
 
-$hobulhoSocket.on("game-start-ready", function () {
-  if ($clientstate.roomid != "") {
-    gameStart();
-  }
-});
+// $hobulhoSocket.on("game-start-ready", function () {
+//   if ($clientstate.roomid != "") {
+//     gameStart();
+//   }
+// });
 
-$hobulhoSocket.on("whose-turn", function () {
-  let boxnum = whichData($clientstate.roomid);
+// $hobulhoSocket.on("whose-turn", function () {
+//   let boxnum = whichData($clientstate.roomid);
 
-  if ($clientstate.attackerId === $clientstate.myid) {
-    $clientstate.gamestate = "select";
-  } else {
-    $clientstate.gamestate = "turn";
-  }
-});
-$hobulhoSocket.on("whose-attack", function () {
-  let boxnum = whichData($clientstate.roomid);
+//   if ($clientstate.attackerId === $clientstate.myid) {
+//     $clientstate.gamestate = "select";
+//   } else {
+//     $clientstate.gamestate = "turn";
+//   }
+// });
+// $hobulhoSocket.on("whose-attack", function () {
+//   let boxnum = whichData($clientstate.roomid);
 
-  if ($clientstate.attackerId === $clientstate.myid) {
-    $clientstate.gamestate = "attack";
-  } else {
-    $clientstate.gamestate = "turn";
-  }
-});
-$hobulhoSocket.on("whose-declare", function () {
-  let boxnum = whichData($clientstate.roomid);
+//   if ($clientstate.attackerId === $clientstate.myid) {
+//     $clientstate.gamestate = "attack";
+//   } else {
+//     $clientstate.gamestate = "turn";
+//   }
+// });
+// $hobulhoSocket.on("whose-declare", function () {
+//   let boxnum = whichData($clientstate.roomid);
 
-  if ($clientstate.attackerId === $clientstate.myid) {
-    $clientstate.gamestate = "declare";
-  } else {
-    $clientstate.gamestate = "declare-turn";
-  }
-});
-$hobulhoSocket.on("whose-judge", function () {
-  let boxnum = whichData($clientstate.roomid);
+//   if ($clientstate.attackerId === $clientstate.myid) {
+//     $clientstate.gamestate = "declare";
+//   } else {
+//     $clientstate.gamestate = "declare-turn";
+//   }
+// });
+// $hobulhoSocket.on("whose-judge", function () {
+//   let boxnum = whichData($clientstate.roomid);
 
-  if ($clientstate.defenderId === $clientstate.myid) {
-    $clientstate.gamestate = "judge";
-  } else {
-    $clientstate.gamestate = "judge-turn";
-  }
-});
+//   if ($clientstate.defenderId === $clientstate.myid) {
+//     $clientstate.gamestate = "judge";
+//   } else {
+//     $clientstate.gamestate = "judge-turn";
+//   }
+// });
 
 
 
@@ -138,6 +142,7 @@ const joinSession = () => {
 	cam.session.on('streamCreated', ({ stream }) => {
 		const subscriber = cam.session.subscribe(stream);
 		cam.subscribers.push(subscriber);
+    console.log('subscribers 받아옴')
 	});
 	cam.session.on('streamDestroyed', ({ stream }) => {
 		const index = cam.subscribers.indexOf(stream.streamManager, 0);
@@ -151,10 +156,10 @@ const joinSession = () => {
 
   // getToken에서 ovdata를 반환
   // ovdata.token을 이용해서 session에 연결할 수 있음
-  getToken(roomid).then(ovdata => {
+  getToken().then(ovdata => {
+  // console.log(cam.myUserName)
 
-  console.log(cam.myUserName)
-  cam.session.connect(ovdata.token, { serverData: 'myname' })
+  cam.session.connect(JSON.parse(sessionStorage.getItem('ovdata')).token, { serverData: 'myname' })
     .then(() => {
       store.commit('SET_OV', ovdata)
       sessionStorage.setItem('ovdata', JSON.stringify(ovdata))
@@ -205,15 +210,11 @@ const leaveSession = () => {
 }
 
 // roomid를 이용해서 ovtoken, userId 가져오는 요청 보내기
-const getToken = (roomid) => {
-  return new Promise((resolve, reject) => {
-    fetchRoomById({ Authorization: `Bearer ${sessionStorage.getItem('token')}` }, roomid)
-    .then(response => {
-      resolve(response.data)
-      })
-    .catch(error => reject(error.response))
-    })
-}    
+const getToken = () => {
+  console.log('gettoken 실행')
+  return new Promise(() => {JSON.parse(sessionStorage.getItem('ovdata'))})
+
+  }
 
 joinSession()
 
@@ -222,20 +223,20 @@ onBeforeUnmount(() => {
   // leaveSession()
 })
 
-$hobulhoSocket.on("to-player", function (roomid, myid, item) {
-  if(item == "videoRotate"){
-    videoRotate(publisher)
-  }
-  if(item == "pitchVoice"){
-    pitchVoice()
-  }
-  if(item == "chroma"){
-    chroma()
-  }
-  if(item == "gray"){
-    gray()
-  }
-});
+// $hobulhoSocket.on("to-player", function (roomid, myid, item) {
+//   if(item == "videoRotate"){
+//     videoRotate(publisher)
+//   }
+//   if(item == "pitchVoice"){
+//     pitchVoice()
+//   }
+//   if(item == "chroma"){
+//     chroma()
+//   }
+//   if(item == "gray"){
+//     gray()
+//   }
+// });
 // Filter
 //화면 뒤집기
 const videoRotate = (manager) => {

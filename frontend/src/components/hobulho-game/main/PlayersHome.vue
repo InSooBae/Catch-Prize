@@ -1,5 +1,10 @@
 <template>
-  <transition name="slide-fade">
+<div>
+  {{ publisher }}
+
+  {{ subscribers }}
+</div>
+  <!-- <transition name="slide-fade">
     <div
       v-if="
         $clientstate.gamestate === 'declare' &&
@@ -15,7 +20,7 @@
       $clientstate.gamestate === 'judge' &&
       $clientstate.defenderId === $clientstate.myid
     "
-  />
+  /> -->
 </template>
 
 <script setup>
@@ -34,10 +39,13 @@ const props = defineProps({
 // 이걸로 publisher랑 subscrbers를 합쳐보려고 했는데
 let playerCams = []
 let cams = []
-playerCams.push(...props.subscribers)
-playerCams.push(props.publisher)
+console.log(props.publisher)
+console.log(props.subscribers)
 
-console.log(playerCams)
+// playerCams.push(...props.subscribers)
+
+
+// console.log(playerCams)
 
 
 

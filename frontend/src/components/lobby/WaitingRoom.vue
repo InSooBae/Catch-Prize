@@ -20,7 +20,7 @@
         <div>
           <el-input v-model="chatdata" placeholder="대화를 입력하세요.">
             <template #suffix>
-              <el-button color="#7608d3" type="info" class="add-button" @click="startVisible = true">
+              <el-button color="#7608d3" type="info" class="add-button" @click="startGame">
                 <img src="@/assets/icons/person_add.svg" alt="add_friends">
               </el-button>
             </template>
@@ -52,6 +52,7 @@ const chatdata = ref('')
 const roomId = route.params.roomId
 const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
 const roomMessages = computed(() => store.getters.roomMessages)
+const isHost = computed(() => store.getters.isHost)
 
 // const joinGame = (roomId, token) => {
 //   ws.send(`/pub/${roomId}/join`,token, {})
@@ -63,6 +64,14 @@ const roomMessages = computed(() => store.getters.roomMessages)
 //   })
 // }
 
+const startGame = () => {
+  if (isHost) {
+    console.log('넌 방장이구나')
+    store.dispatch('startGame', roomId)
+  } else {
+    console.log('방장이 아니잖아요')
+  }
+}
 
 
 
