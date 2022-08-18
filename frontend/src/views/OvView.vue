@@ -151,6 +151,12 @@ $hobulhoSocket.on("to-player", function (roomid, myid, item) {
   }
 });
 
+//faceApi
+$hobulhoSocket.on("item-use-to-other", function(roomid, toplayer){
+//toplayer == 사용하기로 선택한 플레이어 닉네임
+
+})
+
 const videoRotate = (manager) => {
   manager.stream.applyFilter("GStreamerFilter", { "command": "videoflip method=vertical-flip" })
   setTimeout(() => manager.stream.removeFilter(), 20000)

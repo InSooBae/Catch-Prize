@@ -32,6 +32,7 @@ const clientstate = reactive({
   declaredcard: "",
   cardname: "",
   largeScreen: "",
+  playerlist: [],
 });
 // const attackstate = reactive({
 //   attackerId: "",
@@ -218,6 +219,9 @@ hobulhoSocket.on("data-refresh", function (data) {
       clientstate.attackerId = dataBox[t].attackstate.attackerId;
       clientstate.defenderId = dataBox[t].attackstate.defenderId;
       clientstate.declaredcard = dataBox[t].attackstate.declaredcard;
+      for (let i = 0; i < 6; i++) {
+        clientstate.playerlist[i] = dataBox[t].players[i].playerId;
+      }
     }
   }
   if (clientstate.declaredcard === "cake") {

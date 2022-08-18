@@ -1,21 +1,38 @@
 <template>
   <div class="itemshop-container">
     <div>
-      <el-button class="itembutton" color="#00bd9d"  @click="VideoRotationItem()">뒤 집 기</el-button>
+      <el-button class="itembutton" color="#00bd9d" @click="VideoRotationItem()"
+        >뒤 집 기</el-button
+      >
     </div>
     <div>
-      <el-button class="itembutton" color="#00bd9d" @click="PitchChangeItem()">음성변조</el-button>
+      <el-button class="itembutton" color="#00bd9d" @click="PitchChangeItem()"
+        >음성변조</el-button
+      >
     </div>
     <div>
-      <el-button class="itembutton" color="#00bd9d" @click="VideoControlItem()">CROMA</el-button>
+      <el-button class="itembutton" color="#00bd9d" @click="VideoControlItem()"
+        >CROMA</el-button
+      >
     </div>
     <div>
-      <el-button class="itembutton" color="#00bd9d" @click="GrayItem()">GRAY</el-button>
+      <el-button class="itembutton" color="#00bd9d" @click="GrayItem()"
+        >GRAY</el-button
+      >
+    </div>
+    <div>
+      <el-button class="itembutton" color="#00bd9d" @click="setModal"
+        >감정분석</el-button
+      >
+      <el-dialog v-model="setMoal">
+        <playerSelect @setModal="() => setModal = false" />
+      </el-dialog>
     </div>
   </div>
 </template>
 
 <script setup>
+import playerSelect from "../modal/ItemPlayerName.vue";
 import { useStore } from "vuex";
 import { inject } from "vue";
 const $hobulhoSocket = inject("$hobulhoSocket");
@@ -25,20 +42,40 @@ const $clientstate = inject("$clientstate");
 //나한테 적용
 function VideoRotationItem() {
   //아이탬 버튼을 누르면 서버에다가 player에서 함수 실행
-  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "videoRotate");
+  $hobulhoSocket.emit(
+    "use-item-for-me",
+    $clientstate.roomid,
+    $clientstate.myid,
+    "videoRotate"
+  );
 }
 //음성 변조
 //나한테 적용
 function PitchChangeItem() {
-  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "pitchVoice");
+  $hobulhoSocket.emit(
+    "use-item-for-me",
+    $clientstate.roomid,
+    $clientstate.myid,
+    "pitchVoice"
+  );
 }
 //화면 변조
 //나한테 적용
 function VideoControlItem() {
-  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "chroma");
+  $hobulhoSocket.emit(
+    "use-item-for-me",
+    $clientstate.roomid,
+    $clientstate.myid,
+    "chroma"
+  );
 }
 function GrayItem() {
-  $hobulhoSocket.emit("use-item-for-me", $clientstate.roomid, $clientstate.myid, "gray");
+  $hobulhoSocket.emit(
+    "use-item-for-me",
+    $clientstate.roomid,
+    $clientstate.myid,
+    "gray"
+  );
 }
 
 //감정분석
@@ -67,19 +104,21 @@ const sendFilter = () => store.dispatch("sendFilter");
 <style scoped>
 .itemshop-container {
   display: flex;
-  justify-content:space-around;
+  justify-content: space-around;
   width: 450px;
   height: 100%;
-
 }
+
 .itemshop-container div {
   width: 16%;
 }
+
 .itemshop-container img {
   width: 60%;
   height: 60%;
 }
-.itembutton{
+
+.itembutton {
   color: white;
 }
 </style>

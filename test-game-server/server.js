@@ -617,6 +617,12 @@ io.on("connection", function (socket) {
     //아이탬 사용 페이지로 이동
     io.emit("to-player", roomid, myid, item);
   });
+  //아이탬 다른 사람에게 사용
+  socket.on("item-use-to-other", function (roomid, toplayer) {
+    //ovview.vue
+    io.emit("item-use-player-select", roomid, toplayer);
+  });
+
   //서버연결되면 loading 보냄
   socket.on("server-get-roomid", function (roomid) {
     let roomnum = whichRoom(roomid);
