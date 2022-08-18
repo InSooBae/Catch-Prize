@@ -112,15 +112,18 @@ const room = {
         if (event.data[0] === "{") {
           console.log(event.data);
           const data = JSON.parse(event.data);
+          const username = jwt_decode(getters.token).username
+          if (username == data.hostName) {
+            commit('SET_IS_HOST', true);
+          } else {
+            commit('SET_IS_HOST', false);
+          }
+
           if (data.state == 'WAIT') {
             commit('SET_ROOM_MESSAGES', Object.keys(data.playerMap))
           } else {
-            const username = jwt_decode(getters.token).username
-            let isHost = false
+            if (getters.isHost) {
               console.log('게임시작')
-              if (username == data.hostName) {
-                // alert("게임 시작");
-                isHost = true;
                 router.push({
                   name: "game",
                   params: { roomid: data.roomId },

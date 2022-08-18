@@ -4,11 +4,9 @@
       <div :gutter="20"  class="people-container">
         <div class="person-container">
           <user-video :stream-manager="cam.publisher"></user-video>
-          <el-button id="ready-btn" color="#626aef">Ready</el-button>
         </div>
         <div v-for="sub in cam.subscribers" class="person-container">
           <user-video  v-if="sub" :stream-manager="sub"></user-video>
-          <el-button id="ready-btn-ready" color="#626aef">Ready</el-button>
         </div>
       </div>
     </el-col>
@@ -28,7 +26,7 @@
         </div>  
       </div>
       <div class>
-        <el-button color="#7608d3" type="info" id="start-ready-button" ></el-button>
+        <el-button v-if="isHost" color="#7608d3" type="info" id="start-ready-button" >GAME START!</el-button>
       </div>
     </el-col>
   </el-row>
@@ -182,12 +180,6 @@ const getToken = (roomId) => {
 }    
 
 joinSession()
-
-onMounted(() => {
-  const startReady = document.getElementById('start-ready-button');
-  startReady.innerText = 'Ready!'
-  store.commit('SET_ISWAIT', true)
-})
 
 // beforeunmount
 onBeforeUnmount(() => {
