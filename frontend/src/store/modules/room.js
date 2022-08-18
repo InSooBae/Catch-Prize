@@ -60,9 +60,10 @@ const room = {
           sessionStorage.setItem('roomId', res.data.roomId)
           sessionStorage.setItem('sessionId', 'ses_' + res.data.roomId)
           commit('SET_IS_HOST', true)
+          console.log(res.data.roomId)
           router.push({
             name: 'gameroom',
-            params: { roomId: res.data.roomId }
+            params: { roomid: res.data.roomId }
           })
         })
     },
@@ -77,7 +78,7 @@ const room = {
         commit('SET_IS_HOST', false)
         router.push({
           name: 'gameroom',
-          params: { roomId: roomId }
+          params: { roomid: roomId }
         })
       })
     },
@@ -97,7 +98,7 @@ const room = {
       .then(res => console.log(res.data))
     },
 
-    subscribeRoom({ commit, getters }, method) {
+    subscribeRoom({ commit, getters }) {
       console.log("방 변동 알림 보내기");
       let eventSource = {};
       if (_.isEmpty(getters.eventSource)) {
@@ -129,7 +130,7 @@ const room = {
                   params: { roomid: data.roomId },
                   query: {
                     myid: username,
-                    isHost: isHost,
+                    isHost: getters.isHost,
                     users: getters.roomMessages,
                   },
                 });
@@ -137,7 +138,7 @@ const room = {
                 router.push({
                   name: "game",
                   params: { roomid: data.roomId },
-                  query: { myid: username, isHost: isHost },
+                  query: { myid: username, isHost: getters.isHost },
                 });
               }
           }

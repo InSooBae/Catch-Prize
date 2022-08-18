@@ -1,22 +1,18 @@
 <template>
   <transition name="slide-fade">
-    <div
-      v-if="
-        $clientstate.gamestate === 'declare' &&
-        $clientstate.attackerId === $clientstate.myid"
-    >
+    <div v-if="
+    $clientstate.gamestate === 'declare' &&
+    $clientstate.attackerId === $clientstate.myid">
       <AttackCardDeclare />
     </div>
     <div v-else class="players-container">
       <Player v-for="player in playersList" class="player-container" :player="player" />
     </div>
-  </transition>
-  <DefendJudge
-    v-if="
-      $clientstate.gamestate === 'judge' &&
-      $clientstate.defenderId === $clientstate.myid
-    "
-  />
+      </transition>
+  <DefendJudge v-if="
+    $clientstate.gamestate === 'judge' &&
+    $clientstate.defenderId === $clientstate.myid
+  " />
 </template>
 
 <script setup>
@@ -24,10 +20,35 @@ import AttackCardDeclare from "../select/AttackCardDeclare.vue";
 import DefendJudge from "../select/DefendJudge.vue";
 import { reactive, toRefs, inject, ref } from "vue";
 import Player from "./Player.vue";
+import UserVideo from '@/components/webrtc/UserVideo.vue';
 import { useStore } from 'vuex';
+import { clone } from "lodash";
 
-const store = useStore()
-const mainStreamManager = () => store.commit('SET_MAINSTREAM')
+const props = defineProps({
+  cam: Object,
+})
+
+// 이걸로 publisher랑 subscrbers를 합쳐보려고 했는데
+
+// playerCams.push(...props.subscribers)
+
+
+// console.log(playerCams)
+
+
+
+// Stream에서 데이터 꺼내기
+const getConnectionData = (streamManager) => {
+  const { connection } = streamManager.stream;
+  return JSON.parse(connection.data.substring(0, connection.data.indexOf('%/%')));
+}
+
+const clientData = (streamManager) => {
+  const { clientData } = this.getConnectionData(streamManager);
+  return clientData;
+}
+
+// 게임
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
 const $dataBox = inject("$dataBox");
@@ -37,6 +58,8 @@ const updateMainVideoStreamManager = (stream) => {
   if (mainStreamManager === stream) return;
   mainStreamManager(stream)
 }
+
+
 const players = reactive({
   playersList: [
     {
@@ -87,28 +110,44 @@ function whichData(roomid) {
     }
   }
 }
+
+// const matchPlayers = () => {
+//   for (let t = 0; t < 6; t++) {
+//     for (let playerCam in playerCams) {
+//       console.log(getConnectionData(playerCam).clientData.myname)
+//       if (clientData(playerCam).clientData.myname == $dataBox[whichData($clientstate.roomid)].players[t].playerId) {
+//         cams.push(playerCam)
+//       }
+//     }
+//   }
+//   console.log(cams)
+// }
+
+// matchPlayers()
+
+
 function playersSetting() {
   for (let t = 0; t < 6; t++) {
-    players.playersList[t].name =
-      $dataBox[whichData($clientstate.roomid)].players[t].playerId;
-    players.playersList[t].isAlive =
-      $dataBox[whichData($clientstate.roomid)].players[t].isAlive;
-    players.playersList[t].remain =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.remain;
-    players.playersList[t].fieldlist[0] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.cake;
-    players.playersList[t].fieldlist[1] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.durian;
-    players.playersList[t].fieldlist[2] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.eggplant;
-    players.playersList[t].fieldlist[3] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.insect;
-    players.playersList[t].fieldlist[4] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.mint;
-    players.playersList[t].fieldlist[5] =
-      $dataBox[whichData($clientstate.roomid)].players[t].cards.board.pizza;
+      players.playersList[t].name =
+        $dataBox[whichData($clientstate.roomid)].players[t].playerId;
+      players.playersList[t].isAlive =
+        $dataBox[whichData($clientstate.roomid)].players[t].isAlive;
+      players.playersList[t].remain =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.remain;
+      players.playersList[t].fieldlist[0] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.cake;
+      players.playersList[t].fieldlist[1] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.durian;
+      players.playersList[t].fieldlist[2] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.eggplant;
+      players.playersList[t].fieldlist[3] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.insect;
+      players.playersList[t].fieldlist[4] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.mint;
+      players.playersList[t].fieldlist[5] =
+        $dataBox[whichData($clientstate.roomid)].players[t].cards.board.pizza;
+    }
   }
-}
 
 //처음 게임이 시작하고 첫 공격자 함수
 function firstattacker() {
@@ -138,21 +177,24 @@ $hobulhoSocket.on("players-refresh", function () {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-content: center;
+  align-content: flex-start;
   width: 100%;
   height: 100%;
 }
+
 .player-container {
   margin: 0.5% 1%;
   min-height: 200px;
   max-height: 26vh;
-  background-color: rgba(15, 30, 51, 0.5);
+  background-color: transparent;
   border-radius: 30px;
   flex-grow: 0;
   min-width: 400px;
   width: 47%;
-  
+  box-shadow: 0 0 20px rgb(23, 42, 68) inset;
+
 }
+
 /* .slide-fade-enter-active {
   transition: all 0.8s ease;
 }
