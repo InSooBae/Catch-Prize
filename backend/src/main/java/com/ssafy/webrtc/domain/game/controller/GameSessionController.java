@@ -6,6 +6,7 @@ import com.ssafy.webrtc.domain.game.dto.GameSessionRequestDto;
 import com.ssafy.webrtc.domain.game.dto.GameSessionResponseDto;
 import com.ssafy.webrtc.domain.game.entity.GameSession;
 import com.ssafy.webrtc.domain.game.enums.GameState;
+import com.ssafy.webrtc.domain.game.enums.RoomType;
 import com.ssafy.webrtc.domain.game.service.GameSessionService;
 import com.ssafy.webrtc.domain.member.MemberRepository;
 import com.ssafy.webrtc.global.security.auth.CustomUserDetails;
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,12 +44,19 @@ public class GameSessionController {
             @ApiResponse(responseCode = "404", description = "사용자 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    @PostMapping("")
+    @GetMapping("/make/test")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<GameSession> makeSession(
             @ApiIgnore @AuthenticationPrincipal CustomUserDetails user,
-            @RequestBody GameSessionRequestDto gameSessionRequestDto)
+//            @RequestBody GameSessionRequestDto gameSessionRequestDto)
+            @Param("roomtype") String roomType, @Param("maxparticipants") Integer maxParticipants, @Param("roomname") String roomName
+    )
             throws OpenViduJavaClientException, OpenViduHttpException {
+        GameSessionRequestDto gameSessionRequestDto = GameSessionRequestDto.builder()
+                .roomName(roomName)
+                .maxParticipants(maxParticipants)
+                .roomType(RoomType.valueOf(roomType))
+                .build();
         return new ResponseEntity<GameSession>(gameSessionService.makeSession(user, gameSessionRequestDto), HttpStatus.CREATED);
     }
 
