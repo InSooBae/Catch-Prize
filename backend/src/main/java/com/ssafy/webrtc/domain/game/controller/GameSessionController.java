@@ -49,12 +49,12 @@ public class GameSessionController {
     public ResponseEntity<GameSession> makeSession(
             @ApiIgnore @AuthenticationPrincipal CustomUserDetails user,
 //            @RequestBody GameSessionRequestDto gameSessionRequestDto)
-            @Param("roomtype") String roomType, @Param("maxparticipants") Integer maxParticipants, @Param("roomname") String roomName
+            @RequestParam("maxparticipants") String maxParticipants, @RequestParam("roomtype") String roomType, @RequestParam("roomName") String roomName
     )
             throws OpenViduJavaClientException, OpenViduHttpException {
         GameSessionRequestDto gameSessionRequestDto = GameSessionRequestDto.builder()
                 .roomName(roomName)
-                .maxParticipants(maxParticipants)
+                .maxParticipants(Integer.parseInt(maxParticipants))
                 .roomType(RoomType.valueOf(roomType))
                 .build();
         return new ResponseEntity<GameSession>(gameSessionService.makeSession(user, gameSessionRequestDto), HttpStatus.CREATED);
