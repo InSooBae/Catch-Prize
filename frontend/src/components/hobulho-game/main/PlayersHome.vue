@@ -1,26 +1,18 @@
 <template>
-<div>
-  {{ publisher }}
-
-  {{ subscribers }}
-</div>
-  <!-- <transition name="slide-fade">
-    <div
-      v-if="
-        $clientstate.gamestate === 'declare' &&
-        $clientstate.attackerId === $clientstate.myid">
+  <transition name="slide-fade">
+    <div v-if="
+    $clientstate.gamestate === 'declare' &&
+    $clientstate.attackerId === $clientstate.myid">
       <AttackCardDeclare />
     </div>
     <div v-else class="players-container">
       <Player v-for="player in playersList" class="player-container" :player="player" />
     </div>
-  </transition>
-  <DefendJudge
-    v-if="
-      $clientstate.gamestate === 'judge' &&
-      $clientstate.defenderId === $clientstate.myid
-    "
-  /> -->
+      </transition>
+  <DefendJudge v-if="
+    $clientstate.gamestate === 'judge' &&
+    $clientstate.defenderId === $clientstate.myid
+  " />
 </template>
 
 <script setup>
@@ -28,19 +20,15 @@ import AttackCardDeclare from "../select/AttackCardDeclare.vue";
 import DefendJudge from "../select/DefendJudge.vue";
 import { reactive, toRefs, inject, ref } from "vue";
 import Player from "./Player.vue";
+import UserVideo from '@/components/webrtc/UserVideo.vue';
 import { useStore } from 'vuex';
 import { clone } from "lodash";
 
 const props = defineProps({
-  publisher: Object,
-  subscribers: Array,
+  cam: Object,
 })
 
 // 이걸로 publisher랑 subscrbers를 합쳐보려고 했는데
-let playerCams = []
-let cams = []
-console.log(props.publisher)
-console.log(props.subscribers)
 
 // playerCams.push(...props.subscribers)
 
@@ -51,8 +39,8 @@ console.log(props.subscribers)
 
 // Stream에서 데이터 꺼내기
 const getConnectionData = (streamManager) => {
-    const { connection } = streamManager.stream;
-    return JSON.parse(connection.data.substring(0, connection.data.indexOf('%/%')));
+  const { connection } = streamManager.stream;
+  return JSON.parse(connection.data.substring(0, connection.data.indexOf('%/%')));
 }
 
 const clientData = (streamManager) => {
@@ -79,42 +67,36 @@ const players = reactive({
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
-      streamManager: undefined,
     },
     {
       name: "player2",
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
-      streamManager: undefined,
     },
     {
       name: "player3",
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
-      streamManager: undefined,
     },
     {
       name: "player4",
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
-      streamManager: undefined,
     },
     {
       name: "player5",
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
-      streamManager: undefined,
     },
     {
       name: "player6",
       isAlive: false,
       fieldlist: [0, 0, 0, 0, 0, 0],
       remain: 0,
-      streamManager: undefined,
     },
   ],
 });
@@ -129,30 +111,23 @@ function whichData(roomid) {
   }
 }
 
-const matchPlayers = () => {
-  for (let t = 0; t < 6; t++) {
-    console.log(playerCams)
-    for (let playerCam in playerCams) {
-      console.log(getConnectionData(playerCam).clientData.myname)
-      if(clientData(playerCam).clientData.myname == $dataBox[whichData($clientstate.roomid)].players[t].playerId){
-        cams.push(playerCam)
-      }
-    }
-  }
-  console.log(cams)
-}
+// const matchPlayers = () => {
+//   for (let t = 0; t < 6; t++) {
+//     for (let playerCam in playerCams) {
+//       console.log(getConnectionData(playerCam).clientData.myname)
+//       if (clientData(playerCam).clientData.myname == $dataBox[whichData($clientstate.roomid)].players[t].playerId) {
+//         cams.push(playerCam)
+//       }
+//     }
+//   }
+//   console.log(cams)
+// }
 
-matchPlayers()
+// matchPlayers()
 
 
 function playersSetting() {
   for (let t = 0; t < 6; t++) {
-    for (let playerCam in playerCams) {
-      console.log(getConnectionData(playerCam).clientData.myname)
-      if(clientData(playerCam).clientData.myname == $dataBox[whichData($clientstate.roomid)].players[t].playerId){
-        players.playersList[t].streamManager = playerCam
-      }
-      console.log(playerCam.getConnectionData().clientData)
       players.playersList[t].name =
         $dataBox[whichData($clientstate.roomid)].players[t].playerId;
       players.playersList[t].isAlive =
@@ -171,9 +146,8 @@ function playersSetting() {
         $dataBox[whichData($clientstate.roomid)].players[t].cards.board.mint;
       players.playersList[t].fieldlist[5] =
         $dataBox[whichData($clientstate.roomid)].players[t].cards.board.pizza;
-      }
+    }
   }
-}
 
 //처음 게임이 시작하고 첫 공격자 함수
 function firstattacker() {
@@ -207,6 +181,7 @@ $hobulhoSocket.on("players-refresh", function () {
   width: 100%;
   height: 100%;
 }
+
 .player-container {
   margin: 0.5% 1%;
   min-height: 200px;
@@ -216,8 +191,9 @@ $hobulhoSocket.on("players-refresh", function () {
   flex-grow: 0;
   min-width: 400px;
   width: 47%;
-  
+
 }
+
 /* .slide-fade-enter-active {
   transition: all 0.8s ease;
 }

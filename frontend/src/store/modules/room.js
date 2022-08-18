@@ -60,9 +60,10 @@ const room = {
           sessionStorage.setItem('roomId', res.data.roomId)
           sessionStorage.setItem('sessionId', 'ses_' + res.data.roomId)
           commit('SET_IS_HOST', true)
+          console.log(res.data.roomId)
           router.push({
             name: 'gameroom',
-            params: { roomId: res.data.roomId }
+            params: { roomid: res.data.roomId }
           })
         })
     },
@@ -77,7 +78,7 @@ const room = {
         commit('SET_IS_HOST', false)
         router.push({
           name: 'gameroom',
-          params: { roomId: roomId }
+          params: { roomid: roomId }
         })
       })
     },

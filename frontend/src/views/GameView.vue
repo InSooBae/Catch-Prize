@@ -26,7 +26,6 @@ if (route.query.isHost) {
   };
 
   console.log(gameData);
-  console.log("2123123123123123123");
   $hobulhoSocket.emit("start-data-set", gameData);
 }
 
