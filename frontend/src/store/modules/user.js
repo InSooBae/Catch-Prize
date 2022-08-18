@@ -39,12 +39,12 @@ const user = {
       sessionStorage.setItem('token', token)
     },
     logout({ commit, getters }) {
-      router.push({ name: 'home' })
       if (getters.isLoggedIn) {
         logout(getters.authHeader)
-          .then(res => {
-            sessionStorage.setItem('token', '')
-            commit('SET_TOKEN', '')
+        .then(res => {
+          sessionStorage.setItem('token', '')
+          commit('SET_TOKEN', '')
+          router.push({ name: 'home' })
           })
       }
     },
