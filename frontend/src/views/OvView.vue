@@ -1,12 +1,16 @@
 <template>
-  <h1>
-    개같은 OpenVidu 개같은
-  </h1>
   <RouterView />
+  <div class="main-person-container">
+    <user-video :stream-manager="cam.publisher"></user-video>
+  </div>
   <div class="people-container">
-    <div v-for="n in 6" :key="n" class="person-container">
+    <div class="person-container">
       <user-video :stream-manager="cam.publisher"></user-video>
     </div>
+    <div v-for="sub in cam.subscribers" class="person-container">
+      <user-video v-if="sub" :stream-manager="sub"></user-video>
+    </div>
+    <div v-for="i in 5 - cam.subscribers.length" class="person-container"></div>
     <!-- <div v-for="sub in cam.subscribers" class="person-container">
       <user-video v-if="sub" :stream-manager="sub"></user-video>
     </div> -->
@@ -133,10 +137,37 @@ joinSession()
 </script>
 
 <style>
+.main-person-container {
+  position: absolute;
+  top: 140px;
+  left: 90px;
+}
+
+.main-person-container video{
+  width: 330px;
+}
+
 .people-container {
   position: absolute;
-  top: 175px;
-  left: 580px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  top: 100px;
+  left: 490px;
+  height: 88%;
+  z-index: -1;
+}
+
+.people-container .person-container {
+  margin: 0.5% 1%;
+  padding: 17px 20px 0px 60px;
+  height: 100%;
+  min-height: 200px;
+  max-height: 238px;
+  flex-grow: 0;
+  min-width: 400px;
+  width: 47%;
+
 }
 
 .person-container div video {

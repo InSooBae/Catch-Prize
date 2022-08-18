@@ -177,7 +177,7 @@ $hobulhoSocket.on("players-refresh", function () {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-content: center;
+  align-content: flex-start;
   width: 100%;
   height: 100%;
 }
@@ -186,11 +186,12 @@ $hobulhoSocket.on("players-refresh", function () {
   margin: 0.5% 1%;
   min-height: 200px;
   max-height: 26vh;
-  background-color: rgba(15, 30, 51, 0.5);
+  background-color: transparent;
   border-radius: 30px;
   flex-grow: 0;
   min-width: 400px;
   width: 47%;
+  box-shadow: 0 0 20px rgb(23, 42, 68) inset;
 
 }
 
