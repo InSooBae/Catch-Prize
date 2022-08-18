@@ -121,7 +121,7 @@ const router = useRouter()
 
 const acceptFriend = (friendNickname) => store.dispatch('acceptFriend', friendNickname)
 const deleteFriend = (friendNickname) => store.dispatch('deleteFriend', friendNickname)
-const joinFriend = (roomId) =>   router.push({ name: 'gameroom', params: { roomId: roomId } })
+const joinFriend = (roomId) =>   router.push({ name: 'gameroom', params: { roomid: roomId } })
 const getProfileImage = (friendNickname) => numToImage[friendNickname.substr(-1).charCodeAt() % 20]
 
 store.dispatch('subscribeFriends')

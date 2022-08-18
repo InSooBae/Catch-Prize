@@ -44,7 +44,7 @@ const room = {
     fetchRooms({ commit, getters }) {
       fetchRooms(getters.authHeader)
       .then(res => {
-        if (res.status != 500){
+        if (res?.status == 200){
           commit('SET_ROOMS', res.data)
         }
       })

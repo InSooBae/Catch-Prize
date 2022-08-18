@@ -1,5 +1,5 @@
 <template>
-  <RouterView/>
+  <RouterView class="ov-layout" />
   <div v-if="!isWait" class="main-person-container">
     <user-video :stream-manager="cam.publisher"></user-video>
   </div>
@@ -186,6 +186,12 @@ const gray = (manager) => {
 </script>
 
 <style>
+.ov-layout {
+  background-image: url(@/assets/background-img.png);
+  background-size: cover;
+  background-position: center;
+}
+
 .main-person-container {
   position: absolute;
   top: 140px;

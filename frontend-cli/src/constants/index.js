@@ -1,6 +1,6 @@
-export const BASE_DEV_URL = 'https://catch-prize.com';
+export const BASE_DEV_URL = 'http://localhost:3000';
 
-export const API_BASE_URL = 'https://usv.catch-prize.com';
+export const API_BASE_URL = 'https://localhost:8080';
 
 export const OAUTH2_REDIRECT_URI = `?redirect_uri=${BASE_DEV_URL}/redirect`
 
