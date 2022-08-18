@@ -38,24 +38,29 @@ const router = createRouter({
             notice: () => import('../components/lobby/Modal/LobbyNotice.vue'),
           }
         },
-        {
-          path: ':roomId',
-          name: 'gameroom',
-          component: () => import('../components/lobby/WaitingRoom.vue'),
-        },
       ],
     },
     {
       path: '/game/:roomid',
-      name: 'game',
-      component: () => import('../views/GameView.vue'),
+      name: 'gameView',
+      component: () => import('../views/OvView.vue'),
       beforeEnter: () => checkAuth(store.getters.isLoggedIn),
       children: [
+        {
+          path: 'wait',
+          name: 'gameroom',
+          component: () => import('../components/lobby/WaitingRoom.vue'),
+        },
+        {
+          path: '',
+          name: 'game',
+          component: () => import('../views/GameView.vue'),
+        },
         {
           path: ':myid',
           name: 'gameplayroom',
           component: () => import('../components/hobulho-game/HobulhoGame.vue')
-        }
+        },
       ]
     },
     {

@@ -31,11 +31,11 @@ export default {
 }
 .large-face-cam-wrapper{
   margin-top: 20px;
-  height:25%;
+  height:20%;
   flex-grow: 3;
 }
 .mycard-list {
-  height:30%;
+  height:35%;
   flex-grow: 3;
 }
 .item-shop {

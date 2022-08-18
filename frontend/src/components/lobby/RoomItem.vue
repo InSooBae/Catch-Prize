@@ -20,9 +20,8 @@ const props = defineProps({
   room: Object
 })
 
-const enter = (roomId) => {
-  store.dispatch('enterRoom', roomId)
-  router.push({ name: 'gameroom', params: { roomId: roomId } })
+const enter = (roomid) => {
+  store.dispatch('enterRoom', roomid)
 }
 
 </script>

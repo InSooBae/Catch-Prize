@@ -3,45 +3,51 @@
     <el-container class="el-header-container">
       <el-header height="100px"><HeaderHome /></el-header>
     </el-container>
-    <el-container class="el-body-container">
-      <el-aside class="game-aside-container" width="470px"
-        ><LeftHome
-      /></el-aside>
-      <el-main class="game-main-container"><RightHome /></el-main>
+      <el-container class="el-body-container">
+        <el-aside class="game-aside-container" width="470px"><LeftHome/></el-aside>
+        <el-main class="game-main-container" ><PlayersHome :cam="cam"/></el-main>
     </el-container>
   </div>
 </template>
 
 <script setup>
-import { reactive, toRefs, inject } from "vue";
+import { reactive, ref, inject, onBeforeUnmount, computed } from "vue";
 import { useRoute } from "vue-router";
+import { ElMessage } from 'element-plus'
+import { fetchRoomById } from '../../util/api';
+import { OpenVidu } from 'openvidu-browser';
 import HeaderHome from "./header/HeaderHome.vue";
 import LeftHome from "./main/LeftHome.vue";
-import RightHome from "./main/PlayersHome.vue";
+import PlayersHome from "./main/PlayersHome.vue";
 import { useStore } from "vuex";
 import { Data } from "phaser";
 
-// const store = useStore();
+
+// 기본 값
+const route = useRoute();
+const store = useStore()
+const roomid = route.params.roomid;
+const token = { Authorization: `Bearer ${sessionStorage.getItem('token')}`}
+
+// 게임변수
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
 const $dataBox = inject("$dataBox");
-const route = useRoute();
-// const myid = route.params.myid;
-const roomid = route.params.roomid;
-// $clientstate.myid = myid;
+
+const myid = route.params.myid;
+$clientstate.myid = myid;
 $clientstate.roomid = roomid;
-// console.log(myid);
-console.log($clientstate.myid);
+console.log(myid);
 
 //스타트 데이터 준비 완료
 $hobulhoSocket.on("start-data-ready", function () {
-  // console.log("111");
-  // console.log(roomid);
+  console.log("111");
+  console.log(roomid);
   console.log("111222");
   $hobulhoSocket.emit("server-get-roomid", $clientstate.roomid);
-  // if (roomid === $clientstate.roomid) {
-  //     console.log("222");
-  // }
+  if (roomid === $clientstate.roomid) {
+      console.log("222");
+  }
 });
 
 function whichData(roomid) {
@@ -62,12 +68,7 @@ const gameStart = () => {
   }
 };
 
-$hobulhoSocket.on("to-player", function (roomid, myid, item) {
-  //VideoRotate, PitchVoice, Chroma
-  console.log(roomid);
-  console.log(myid);
-  console.log(item);
-});
+
 
 $hobulhoSocket.on("game-start-ready", function () {
   if ($clientstate.roomid != "") {
@@ -111,6 +112,9 @@ $hobulhoSocket.on("whose-judge", function () {
     $clientstate.gamestate = "judge-turn";
   }
 });
+
+
+
 </script>
 <style scoped>
 .el-header-container {
