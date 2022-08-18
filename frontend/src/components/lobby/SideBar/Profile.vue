@@ -3,8 +3,6 @@
     <el-avatar shape="circle" class="me-1" :size="45" :src="numToImage[currentUser.profileImage]" />
     <div class="profile-box">
       <p class="profile-nickname">{{ currentUser.username }}</p>
-      <p class="profile-point">MyPoint : <span class="text-yello">{{ currentUser }}</span></p>
-      <p class="profile-email">{{ currentUser }}</p>
     </div>
     <img class="profile-logout" src="@/assets/icons/logout.svg" align="right" alt="logout" @click="logout">
   </div>
