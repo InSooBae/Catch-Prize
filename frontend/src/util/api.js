@@ -148,7 +148,7 @@ async function fetchRoomById(headers, roomId) {
 
 async function createRoom(headers, data) {
   try {
-    const res = await api.post('/gamesession', data, { headers })
+    const res = await api.get('/gamesession/make/test', { params: data, headers: headers })
     return res
   } catch (err) {
     console.log(err)

@@ -7,10 +7,12 @@
 import Game from "../components/hobulho-game/HobulhoGame.vue";
 import StarBackground from "../components/StarBackground.vue";
 import { inject } from "vue";
+import { useStore } from 'vuex'
 import { useRoute, useRouter } from "vue-router";
 import jwt_decode from "jwt-decode";
 import io from "socket.io-client";
 
+const store = useStore();
 const route = useRoute();
 const router = useRouter();
 const $hobulhoSocket = inject("$hobulhoSocket");
@@ -29,6 +31,7 @@ if (route.query.isHost) {
   $hobulhoSocket.emit("start-data-set", gameData);
 }
 
+store.commit('SET_ISWAIT', false)
 router.push({
   name: "gameplayroom",
   params: { roomid: route.params.roomid, myid: username },

@@ -17,8 +17,7 @@ store.dispatch('fetchRooms')
 const rooms = computed(() => store.getters.rooms)
 
 onMounted(() => {
-  store.commit('SET_ISWAIT', false)
-
+  store.commit('SET_ISWAIT', true)
 })
 
 </script>
