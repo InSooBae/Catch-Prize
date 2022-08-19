@@ -46,7 +46,6 @@ const players = reactive({
 const { playerList } = toRefs(players)
 
 onMounted(() => {
-  console.log(playerList.value[0].cards)
 })
 </script>
 <style>
@@ -60,14 +59,13 @@ onMounted(() => {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  height: 20rem;
-  width: 30rem;
+  height: 100rem;
   min-width: 32rem;
   flex-flow: row wrap;
 }
 
 .select-card button {
-  height: 11rem;
+  height: 22rem;
   width: 25%;
   padding: 0px;
   margin: 0;

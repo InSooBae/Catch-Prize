@@ -1,25 +1,22 @@
 <template>
-  <el-row class="wait-container" align="middle" style="height: calc(100vh - 80px);">
-    <el-col :sm="14" class="hidden-md-and-down">
-      <el-row class="mb-5">
-        <el-col class="person-container" :lg="8" v-for="person in 6" :key="person">
-          <img class="person-image" src="@/components/hobulho-game/assets/person.png" alt="">
-        </el-col>
-      </el-row>
-    </el-col>
-    <el-col :xs="24" :lg="10" style="height: 90%;">
+  <el-row id="elem" class="wait-container" style="height: calc(100vh - 80px);">
+      <!-- <div  class="people-container">
+        <div class="person-container">
+          <user-video :stream-manager="cam.publisher"></user-video>
+        </div>
+        <div v-for="sub in cam.subscribers" class="person-container">
+          <user-video  v-if="sub" :stream-manager="sub"></user-video>
+        </div>
+      </div> -->
+    <el-col :xs="24" :lg="9" style="height: calc(100vh - 125px);">
       <div class="chat-container">
         <div class="chat-view">
-          <div v-for="person in 10" :key="person">
-            <p>황태희 바보</p>
-            <p>바보가 맞다</p>
-            <p>{{ gameid }}</p>
-          </div>
+          {{ roomMessages }}
         </div>
         <div>
-          <el-input v-model="addFriend" placeholder="대화를 입력하세요.">
+          <el-input v-model="chatdata" placeholder="대화를 입력하세요.">
             <template #suffix>
-              <el-button color="#7608d3" type="info" class="add-button" @click="startVisible = true">
+              <el-button color="#7608d3" type="info" class="add-button" @click="startGame">
                 <img src="@/assets/icons/person_add.svg" alt="add_friends">
               </el-button>
             </template>
@@ -27,39 +24,73 @@
         </div>  
       </div>
       <div class>
-        <el-button color="#7608d3" type="info" id="start-ready-button"></el-button>
+        <el-button color="#7608d3" type="info" id="start-ready-button" @click="leaveSession()"></el-button>
       </div>
     </el-col>
   </el-row>
 </template>
 
 <script setup>
+import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { onMounted } from 'vue';
+import { useStore } from 'vuex';
 
-const route = useRoute();
-const gameid = route.params.gameid;
+// ----
+const route = useRoute()
+const store = useStore()
+const roomId = route.params.roomid
+const chatdata = ref('')
+const roomMessages = computed(() => store.getters.roomMessages)
+const isHost = computed(() => store.getters.isHost)
 
-onMounted(() => {
-  const startReady = document.getElementById('start-ready-button');
-  startReady.innerText = 'Ready!';
-})
+// const joinGame = (roomId, token) => {
+//   ws.send(`/pub/${roomId}/join`,token, {})
+// }
+
+// const getName = (roomId) => {
+//     ws.subscribe("/sub/" + roomId, (res) => {
+//     console.log(res)
+//   })
+// }
+
+const startGame = () => {
+  if (isHost) {
+    console.log('넌 방장이구나')
+    store.dispatch('startGame', roomId)
+  } else {
+    console.log('방장이 아니잖아요')
+  }
+}
 </script>
 
 <style>
-.wait-container .person-container {
-  padding: 0 20px 20px 0;
-}
+.wait-container .people-container {
+  /* layout */
+    display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  /* BOX */
+  min-width: 56rem;
+  max-width: 38rem;
+  min-height: 38rem;
+  padding: 2.1%;
+  margin: 1rem;
+  /* background */
+  background-color: rgba(255, 255, 255, 0.15);
+  /* font */
+  /* border */
 
-.person-container .person-image {
-  width: 100%;
+}
+.wait-container .person-container video{
+  margin-bottom: 1rem;
+  margin-right: 0.3rem;
 }
 
 .wait-container .chat-container {
   margin-bottom: 10px;
   padding: 10px;
   height: calc(100% - 90px);
-  background-color: #0F1E33;
+  background-color: var(--main-bg-color);
   border-radius: 10px;
 }
 
@@ -72,7 +103,6 @@ onMounted(() => {
   /* font */
   color: whitesmoke;
   /* border */
-
 }
 
 .chat-container .chat-view::-webkit-scrollbar {
@@ -110,7 +140,6 @@ onMounted(() => {
   box-shadow: 0 0 0 1px #00bd9d inset;
 }
 
-
 #start-ready-button {
   /* layout */
   height: 60px;
@@ -125,4 +154,19 @@ onMounted(() => {
   border: none;
   border-radius: 10px;
 }
+
+#ready-btn {
+  width: 98%;
+}
+
+#ready-btn-ready {
+  width: 98%;
+  background-color:#262C3A;
+}
+  /* layout */
+  /* BOX */
+  /* background */
+  /* font */
+  /* border */
 </style>
+
