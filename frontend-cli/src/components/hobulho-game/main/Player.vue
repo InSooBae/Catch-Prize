@@ -1,8 +1,7 @@
 <template>
-  <!-- <div
-    :class="[player.isAlive === true ? 'player-container' : 'player-container-death',]"
-  > -->
-  <div class="game-player-container">
+  <div
+    :class="[player.isAlive === true ? 'game-player-container' : 'game-player-container-death',]"
+  >
     <div class="status-container">
       <!-- <img v-on:click="videoClick()" src="../assets/image15.png" alt="" /> -->
       <UserVideo :stream-manager="player.streamManager"></UserVideo>
@@ -114,6 +113,12 @@ function videoClick() {
   margin-right: 0px;
 }
 .game-player-container-death {
+  padding: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0px;
   opacity: 0.3;
 }
 /* .player-container {

@@ -1,4 +1,5 @@
 <template>
+  <StarBackground />
   <RouterView class="ov-layout" />
   <div v-if="!isWait" class="main-person-container">
     <user-video :stream-manager="cam.publisher"></user-video>
@@ -24,6 +25,7 @@ import {useStore} from 'vuex';
 import {OpenVidu} from 'openvidu-browser';
 import {fetchRoomById} from '@/util/api';
 import UserVideo from '@/components/webrtc/UserVideo.vue';
+import StarBackground from '@/components/StarBackground.vue'
 
 const $clientstate = inject("$clientstate");
 const $hobulhoSocket = inject("$hobulhoSocket");
@@ -186,12 +188,6 @@ const gray = (manager) => {
 </script>
 
 <style>
-.ov-layout {
-  background-image: url(@/assets/background-img.png);
-  background-size: cover;
-  background-position: center;
-}
-
 .main-person-container {
   position: absolute;
   top: 140px;
