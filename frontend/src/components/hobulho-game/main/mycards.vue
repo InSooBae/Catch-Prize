@@ -1,8 +1,6 @@
 <template>
   <div class="mycards-container">
     <div class="card-text">
-      <div class="current-player-text">{{ $clientstate.myid }}&nbsp;</div>
-      <div>님의 카드입니다.</div>
     </div>
     <transition name="card-fade">
       <div class="mycards-wrapper" v-if="myHandcardsList != ''">
