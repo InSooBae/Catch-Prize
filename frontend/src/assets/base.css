@@ -71,10 +71,11 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-right: 0 !important;
 }
 
 .text-white {
-  color: #ffffff;
+  color: whitesmoke;
 }
 
 .text-green {
@@ -83,4 +84,84 @@ body {
 
 .text-yello {
   color: #f2e63c;
+}
+
+@keyframes blink-effect {
+
+  40%,
+  60% {
+    opacity: 0.9;
+    text-shadow: 0 0 8px rgba(242, 230, 60, 0.7);
+  }
+
+  50% {
+    opacity: 0.85;
+    text-shadow: 0 0 5px rgba(242, 230, 60, 0.3);
+  }
+
+  10%,
+  90% {
+    opacity: 1.0;
+    text-shadow: 0 0 12px rgba(242, 230, 60, 0.9);
+  }
+}
+
+@keyframes logo-blink-effect {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 7px #7608d3);
+  }
+
+  25% {
+    filter: drop-shadow(0 0 10px #7608d3);
+  }
+
+  50% {
+    filter: drop-shadow(0 0 5px #7608d3);
+  }
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0;
+    scale: 0.95;
+  }
+
+  40% {
+    scale: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+}
+
+@keyframes size-effect {
+  0% {
+    opacity: 0;
+    transform: scale(0.0) rotate(-0.01turn);
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.3) rotate(0.001turn);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }

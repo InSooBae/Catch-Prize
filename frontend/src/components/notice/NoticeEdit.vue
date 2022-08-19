@@ -1,15 +1,10 @@
 <template>
-  <div class="container">
-    <notice-form 
-      :notice="{
-        id: notice.id,
-        title: notice.title,
-        content: notice.content,
-      }"
-      action="수정">
-    </notice-form>
-  </div>
-
+  <notice-form :notice="{
+    id: notice.id,
+    title: notice.title,
+    content: notice.content,
+  }" action="update">
+  </notice-form>
 </template>
 
 
@@ -30,6 +25,6 @@ onMounted(() => {
 
 </script>
 
-<style>
+<style scoped>
 @import '../../assets/notice.css';
 </style> 

@@ -1,6 +1,6 @@
 <template>
   <ul class="d-flex flex-wrap room-list">
-    <li v-for="room in roomsList" >
+    <li v-for="room in rooms" >
       <RoomItem :room="room" />
     </li>
   </ul>
@@ -9,17 +9,17 @@
 <script setup>
 import RoomItem from '@/components/lobby/RoomItem.vue'
 import { useStore } from 'vuex'
-import { reactive, toRefs, computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 const store = useStore()
 
-const rooms = reactive({
-  roomsList: []
+store.dispatch('fetchRooms')
+const rooms = computed(() => store.getters.rooms)
+
+onMounted(() => {
+  store.commit('SET_ISWAIT', true)
 })
 
-const { roomsList } = toRefs(rooms)
-
-roomsList.value = computed(() => store.getters.roomsList)
 </script>
 
 <style> 

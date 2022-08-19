@@ -10,14 +10,15 @@
         <p class="text-white text-animation" style="letter-spacing:-5px;">H</p>
         <p class="text-white text-animation me-3">!</p>
         <p class="text-green text-animation">P</p>
-        <p class="text-yello text-animation blink" @click="gameOpen" style="letter-spacing:-5px; cursor: pointer;">
+        <p class="text-yello text-animation blink" id="catch-prize-r" @click="drawer = true"
+          style="letter-spacing:-5px; cursor: pointer;">
           R</p>
         <p class="text-green text-animation">I</p>
         <p class="text-green text-animation">Z</p>
         <p class="text-green text-animation">E</p>
       </div>
       <div class="d-flex justify-content-center">
-        <div id="login_button_group">
+        <div id="login_button_group" class="fade-animation">
           <button type="button" class="login_button">
             <img class="login_button_image" src="@/assets/login/google.png" alt="login with google"
               @click="loginPopup('google')" />
@@ -34,7 +35,7 @@
       </div>
     </el-col>
   </el-row>
-  <el-drawer v-model="drawer" title="I am the game" :with-header="false" direction="ltr" size="840px"
+  <el-drawer v-if="!isMobile" v-model="drawer" title="I am the game" :with-header="false" direction="ltr" size="840px"
     custom-class="game-modal">
     <Game />
   </el-drawer>
@@ -56,49 +57,51 @@ const drawer = ref(false)
 const isMobile = ref(false)
 const option = 'menubar=no, status=no, toolbar=no'
 
-store.dispatch('saveToken', localStorage.getItem('token'));
-
-const gameOpen = () => {
-  if (!isMobile.value) drawer.value = true
-}
-
 const loginPopup = (url) => window.open(`${BASE_URL}/login/${url}`, '_blank', option);
 
 const detectMobile = () => {
   try {
     document.createEvent("TouchEvent");
-    document.getElementById('login_button_group').style.width = '280px';
-    document.getElementById('catch_prize').style.fontSize = '28px';
-    document.getElementById('catch_prize').style.margin = '10px 0';
     return true;
   } catch (err) {
     return false;
   }
 };
 
+window.checkLogin = () => {
+  store.dispatch('saveToken', localStorage.getItem('token'));
+  localStorage.setItem('token', '')
+  if (isLoggedIn.value) {
+    router.push({ name: 'lobbyMain' })
+  }
+}
+
 onMounted(() => {
   isMobile.value = detectMobile();
-  if (isLoggedIn.value) router.push({ name:'lobbyMain' })
+  if (isMobile.value) {
+    document.getElementById('login_button_group').style.width = '280px';
+    document.getElementById('catch_prize').style.fontSize = '28px';
+    document.getElementById('catch_prize').style.margin = '10px 0';
+    document.getElementById('catch-prize-r').style.cursor = '';
+  }
+  if (isLoggedIn.value) {
+    router.push({ name: 'lobbyMain' })
+  } else {
+    store.dispatch('logout')
+  }
+  window.addEventListener('unload', (event) => {
+    if (isLoggedIn.value) {
+      router.push({ name: 'lobbyMain' })
+    } else {
+      store.dispatch('logout')
+    }
+  });
 })
 </script>
 
 <style>
 .login-layout {
   height: 100vh;
-}
-
-@keyframes size-effect {
-  0% {
-    transform: scale(0.0) rotate(-0.01turn);
-  }
-
-  50% {
-    transform: scale(1.3) rotate(0.001turn);
-  }
-
-  100% {
-    transform: scale(1);
-  }
 }
 
 #catch_prize {
@@ -112,6 +115,7 @@ onMounted(() => {
 
 #login_button_group {
   width: 380px;
+  animation: fadein 1.55s;
 }
 
 .login_button {
@@ -154,24 +158,12 @@ onMounted(() => {
   padding-bottom: 30px;
 }
 
-@keyframes blink-effect {
-  10% {
-    opacity: 1.0;
-  }
-
-  25% {
-    opacity: 0.05;
-  }
-
-  40% {
-    opacity: 1.0;
-  }
-}
-
 .blink {
   animation-name: blink-effect;
-  animation-duration: 2.5s;
-  animation-delay: 1.5s;
+  animation-timing-function: ease;
+  animation-duration: 3s;
+  animation-delay: 2.2s;
   animation-iteration-count: infinite;
+  text-shadow: 0 0 1px rgba(242, 230, 60, 0.8);
 }
 </style>

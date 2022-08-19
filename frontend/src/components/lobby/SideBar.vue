@@ -1,24 +1,15 @@
 <template>
-  <img src="@/assets/logo.svg" width="250" alt="logo" style="opacity: 0.9; margin: 0px 0px 0px 0px;">
+  <img src="@/assets/logo.svg" class="side-logo-image" width="250" alt="logo" style="opacity: 0.9; margin: 0px 0px 0px 0px;">
   <el-tabs id="sidebar" tabPosition="bottom" :stretch=true @tab-click="changeTab">
-    <SideProfile />
-    <div v-if="isAddFriends" class="d-flex add-friend-container">
-      <el-input v-model="addFriend" placeholder="이름을 입력하세요.">
-        <template #suffix>
-          <el-button color="#262C3A" type="info" class="add-button" @click="startVisible = true">
-            <img src="@/assets/icons/person_add.svg" alt="add_friends">
-          </el-button>
-        </template>
-      </el-input>
-
-    </div>
+    <Profile />
+    <AddFriend v-if="isFriends" />
     <el-tab-pane label="friends" class="sidebar-friends-element">
       <template #label>
         <div class="custom-tabs-label">
           <img src="@/assets/icons/group.svg" alt="group">
         </div>
       </template>
-      <SideBarFriends />
+      <Friends />
     </el-tab-pane>
     <el-tab-pane label="record" class="sidebar-element">
       <template #label>
@@ -26,7 +17,7 @@
           <img src="@/assets/icons/auto_stories.svg" alt="group">
         </div>
       </template>
-      <SideBarMyRecord />
+      <MyRecord />
     </el-tab-pane>
     <el-tab-pane label="edit" class="sidebar-element">
       <template #label>
@@ -34,28 +25,53 @@
           <img src="@/assets/icons/manage_accounts.svg" alt="group">
         </div>
       </template>
-      <SideBarSetProfile />
+      <SetProfile />
     </el-tab-pane>
   </el-tabs>
-  <GameStart />
+  <transition name="invert" mode="out-in">
+    <div v-if="!isWait" key="exit-button">
+      <ExitGame />
+    </div>
+    <div v-else key="start-button">
+      <el-button color="#00bd9d" type="info" class="start-button" @click="startVisible = true">GAME START!
+      </el-button>
+    </div>
+  </transition>
+  <el-dialog v-model="startVisible" custom-class="start-modal" :destroy-on-close="true"	>
+    <template #header="{ titleId, titleClass }">
+      <div class="my-header ">
+        <h4 :id="titleId" :class="titleClass" style="text-align: center; font-size: 1.3rem; line-height: 50px;">
+          MAKE YOUR GAME!
+        </h4>
+      </div>
+    </template>
+    <MakeRoom @startVisible="() => startVisible = false"/>
+  </el-dialog>
 </template>
 
 <script setup>
-import SideProfile from '@/components/lobby/SideProfile.vue'
-import SideBarFriends from '@/components/lobby/SideBarFriends.vue'
-import SideBarMyRecord from '@/components/lobby/SideBarMyRecord.vue'
-import SideBarSetProfile from '@/components/lobby/SideBarSetProfile.vue'
-import GameStart from '@/components/lobby/GameStart.vue';
-import { ref } from 'vue';
+import Profile from './SideBar/Profile.vue'
+import Friends from './SideBar/Friends.vue'
+import MyRecord from './SideBar/MyRecord.vue'
+import SetProfile from './SideBar/SetProfile.vue'
+import ExitGame from './SideBar/ExitGame.vue'
+import AddFriend from './SideBar/AddFriend.vue';
+import MakeRoom from './Modal/MakeRoom.vue';
 
-const isAddFriends = ref(true)
-const addFriend = ref('')
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore()
+
+const isFriends = ref(true)
+const startVisible = ref(false)
+const isWait = ref(computed(() => store.getters.isWait))
 
 const changeTab = (data) => {
   if (data.props.label == "friends")
-    isAddFriends.value = true
+    isFriends.value = true
   else
-    isAddFriends.value = false
+    isFriends.value = false
 }
 </script>
 

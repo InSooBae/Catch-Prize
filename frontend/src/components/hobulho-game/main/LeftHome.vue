@@ -20,16 +20,38 @@ export default {
   },
 };
 </script>
-
-<style>
+<style scoped>
+.left-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #1b2130;
+  border-radius: 20px;
+  height: 80vh;
+}
+.large-face-cam-wrapper{
+  margin-top: 20px;
+  height:20%;
+  flex-grow: 3;
+}
+.mycard-list {
+  height:35%;
+  flex-grow: 3;
+}
+.item-shop {
+  height:8%;
+  flex-grow: 0;
+}
+</style>
+<!-- <style>
 .left-container {
   padding-top: 20px;
   padding-bottom: 10px;
-  background-color: #1b2130;
+  
   display: flex;
   flex-direction: column;
   border-radius: 20px;
-  width: 100%;
+  /* width: 100%; */
   height: 83vh;
   align-items: center;
   justify-content: center;
@@ -47,4 +69,4 @@ export default {
   height: 10vh;
   margin-top: 20px;
 }
-</style>
+</style> -->
