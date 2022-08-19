@@ -32,7 +32,7 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 // const notice = computed(() => store.getters.notice)
-const notice = { title: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.' }
+const notice = { title: '(2022-08-19) HOBULHO POKER OPEN!!' }
 
 const fetchNotice = (id) => store.dispatch('fetchNotice', id)
 

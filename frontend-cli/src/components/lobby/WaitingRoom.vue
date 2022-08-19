@@ -9,22 +9,19 @@
         </div>
       </div> -->
     <el-col :xs="24" :lg="9" style="height: calc(100vh - 125px);">
-      <div class="chat-container">
-        <div class="chat-view">
-          {{ roomMessages }}
-        </div>
+      <div class="chat-container" style="font-size: 1.5rem; color:whitesmoke;">
+        참여 중...
+          <div v-for="message in roomMessages">
+            {{ message }}
+          </div>
         <div>
-          <el-input v-model="chatdata" placeholder="대화를 입력하세요.">
-            <template #suffix>
-              <el-button color="#7608d3" type="info" class="add-button" @click="startGame">
+              <!-- <el-button color="#7608d3" type="info" class="add-button">
                 <img src="@/assets/icons/person_add.svg" alt="add_friends">
-              </el-button>
-            </template>
-          </el-input>
+              </el-button> -->
         </div>  
       </div>
       <div class>
-        <el-button color="#7608d3" type="info" id="start-ready-button" @click="leaveSession()"></el-button>
+        <el-button color="#7608d3" type="info" id="start-ready-button" @click="startGame()">START GAME!</el-button>
       </div>
     </el-col>
   </el-row>
@@ -141,10 +138,11 @@ const startGame = () => {
 }
 
 #start-ready-button {
+  margin-left: 70px;
   /* layout */
   height: 60px;
   /* BOX */
-  width: 100%;
+  width: 50%;
   /* background */
   /* font */
   font-family: "PressStart2P";
