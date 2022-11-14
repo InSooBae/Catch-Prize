@@ -1,5 +1,8 @@
-package com.ssafy.webrtc.domain.game;
+package com.ssafy.webrtc.domain.game.service;
 
+import com.ssafy.webrtc.domain.game.dto.GameDto;
+import com.ssafy.webrtc.domain.game.entity.Game;
+import com.ssafy.webrtc.domain.game.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
