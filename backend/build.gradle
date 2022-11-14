@@ -1,13 +1,13 @@
-buildscript {
-    ext {
-        queryDslVersion = "5.0.0"
-    }
-}
+//buildscript {
+//    ext {
+//        queryDslVersion = "5.0.0"
+//    }
+//}
 
 plugins {
     id 'org.springframework.boot' version '2.7.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+//    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id 'java'
 }
 
@@ -37,19 +37,33 @@ dependencies {
     implementation "com.fasterxml.uuid:java-uuid-generator:4.0.1"
     // jjwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    // RandomStringUtils
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-
-
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
+    // RandomStringUtils
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    // webClient
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
+
     // querydsl 추가
-    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+//    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+//    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+    // spring-boot-starter-data-redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.7.2'
+
+    // openvidu
+    implementation 'io.openvidu:openvidu-java-client:2.22.0'
+
+    // httpclient
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+
+
 
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -66,20 +80,20 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-//querydsl 추가 시작
-def querydslDir = "$buildDir/generated/querydsl"
-
-querydsl {
-    jpa = true
-    querydslSourcesDir = querydslDir
-}
-sourceSets {
-    main.java.srcDir querydslDir
-}
-configurations {
-    querydsl.extendsFrom compileClasspath
-}
-compileQuerydsl {
-    options.annotationProcessorPath = configurations.querydsl
-}
+////querydsl 추가 시작
+//def querydslDir = "$buildDir/generated/querydsl"
+//
+//querydsl {
+//    jpa = true
+//    querydslSourcesDir = querydslDir
+//}
+//sourceSets {
+//    main.java.srcDir querydslDir
+//}
+//configurations {
+//    querydsl.extendsFrom compileClasspath
+//}
+//compileQuerydsl {
+//    options.annotationProcessorPath = configurations.querydsl
+//}
 //querydsl 추가 끝
