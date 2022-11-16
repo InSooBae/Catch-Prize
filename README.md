@@ -70,7 +70,7 @@
 
 <br/>
 
-![image](https://lab.ssafy.com/s07-webmobile1-sub2/S07P12A203/uploads/ba27050cec32290077e9f56f47dc051d/architecture.jpg)
+![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6526b712-5d7c-4d0a-aeff-fd25d4f39944/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221116%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221116T015535Z&X-Amz-Expires=86400&X-Amz-Signature=d4ab403503f27c50b1caa615c0063f53db536832137a767ff5e01cd60214fcd5&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 - Frontend
   - Vue - 3.x
