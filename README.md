@@ -72,25 +72,30 @@
 
 ![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6526b712-5d7c-4d0a-aeff-fd25d4f39944/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221116%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221116T015535Z&X-Amz-Expires=86400&X-Amz-Signature=d4ab403503f27c50b1caa615c0063f53db536832137a767ff5e01cd60214fcd5&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
-- Frontend
-  - Vue - 3.x
-  - Vuex - x*.x.x*
-  - Vue Router - x.x.x
-  - sockjs-client - x.x.x
-  - webstomp-client x.x.x
-- Backend
-  - MySQL - 8.0.28
-  - Redis - x.x.x
-  - Spring Boot - 2.7.1
-- WebRTC
-  - \*\*\* - x.x.x
-- Deploy
-  - AWS
-    - EC2
-    - RDS
-  - NginX
-  - Docker
-  - Jenkins
+### Back-end [Web & API]
+
+---
+
+- Java 11
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- Spring Boot WebSocket
+- Querydsl
+- DB (MySQL, Redis)
+
+### Front-end
+
+---
+
+- vue 3.2.37
+    - vue-router 4.1.2
+    - vuex 4.0.2
+    - axios 0.27.2
+    - vue-axios 3.4.1
+    - lodash 4.17.21
+- core-js 3.23.4
+- element-plus 2.2.9
 
 <br/>
 
