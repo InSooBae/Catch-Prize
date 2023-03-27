@@ -5,17 +5,6 @@
 
 ---
 
-## 🙉 SSAFY 2반 3팀
-
-- 👨‍💻 배인수 - 팀장, BE 개발 총괄 (친구, 방, 로그인 개발)
-- 👨‍💻 권순석 - BE 개발, OpenVidu 적용
-- 👨‍💻 이상진 - AWS, Docker, 배포 Infra
-- 👨‍💻 황태희 - FE 개발 총괄, 디자인
-- 👨‍💻 김도연 - FE 개발, Socket, 게임 시스템 구현
-- 👨‍💻 염수홍 - FE 개발, OpenVidu 적용
-
----
-
 ## ⚡ 프로젝트 개요
 
 - 기간 : 2022.07.05 ~ 2022.08.19
@@ -198,5 +187,17 @@ INGAME_SV_PORT=<port for ingame server>
 
 - [팀 노션 페이지](https://www.notion.so/3ffec97331794949820351b077cb72a2)
 - [OpenVidu 홈페이지](https://openvidu.io/)
+
+
+## 🙉 SSAFY 2반 3팀
+
+- 👨‍💻 배인수 - 팀장, BE 개발 총괄 (친구, 방, 로그인 개발)
+- 👨‍💻 권순석 - BE 개발, OpenVidu 적용
+- 👨‍💻 이상진 - AWS, Docker, 배포 Infra
+- 👨‍💻 황태희 - FE 개발 총괄, 디자인
+- 👨‍💻 김도연 - FE 개발, Socket, 게임 시스템 구현
+- 👨‍💻 염수홍 - FE 개발, OpenVidu 적용
+
+---
 
 ---
