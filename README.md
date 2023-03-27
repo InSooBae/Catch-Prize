@@ -78,7 +78,7 @@ https://user-images.githubusercontent.com/48831854/202899793-06a61130-2300-4a20-
 
 ### 시스템 아키텍처
 
-![sysarch.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/a99a92a0-6586-4190-9391-d80dc0ccd0e2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221120%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221120T111905Z&X-Amz-Expires=86400&X-Amz-Signature=9c15c01281f3deeb2030cc838f5edea9a5b93511c660397b5a4d6966d8d1dcc7&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
+![sysarch.png](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/6526b712-5d7c-4d0a-aeff-fd25d4f39944/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20230327%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20230327T163130Z&X-Amz-Expires=86400&X-Amz-Signature=0f6aae0508ecb1084ed2fa36904006ef2d43cd80606ee79dc37863db2e0e566f&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22Untitled.png%22&x-id=GetObject)
 
 ### ✨ **Frontend**
 
